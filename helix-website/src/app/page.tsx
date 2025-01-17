@@ -241,7 +241,7 @@ E::Follows {
                         schema.hx
                       </button>
                     </div>
-                    <div className="border" style={{ background: currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)" }}>
+                    <div className="" style={{ background: currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)" }}>
                       <CodeEditor
                         value={schema}
                         onChange={(e) => setSchema(e.target.value)}
@@ -268,7 +268,7 @@ E::Follows {
                         ))}
                       </div>
                     </div>
-                    <div className="border" style={{ background: currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)" }}>
+                    <div className="" style={{ background: currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)" }}>
                       <CodeEditor
                         value={query}
                         onChange={(e) => handleQueryChange(e.target.value)}
@@ -305,11 +305,11 @@ E::Follows {
 
               </div>
             </div>) : (
-            <div className="border rounded-none overflow-hidden bg-background/50 ">
+            <div className="border rounded-none overflow-hidden ">
               <div className="border-b px-3 py-2 text-sm font-medium bg-muted/50">
                 Graph Visualization
               </div>
-              <div>
+              <div className="">
                 <ForceGraph2D
                   graphData={graphData}
                   nodeLabel="name"
