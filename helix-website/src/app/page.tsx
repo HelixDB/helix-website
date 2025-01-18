@@ -3,18 +3,25 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CodeEditor } from "@/components/ui/code-editor";
-import { executeQuery, init } from "./api";
+import API from "./api";
 import { PlayIcon, Github } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { WavyBackground } from "@/components/ui/wavy-background";
-import ForceGraph2D from "react-force-graph-2d";
-import { v4 as uuidv4 } from "uuid";
-import { Edge, GraphVisualizer, InfoBox, Node } from "@/components/ui/graph-visualizer";
+import { Edge, Node } from "@/components/ui/graph-visualizer";
+import dynamic from "next/dynamic";
+
+const GraphVisualizer = dynamic(
+  () =>
+    import("../components/ui/graph-visualizer").then(
+      (module) => module.default
+    ),
+  { ssr: false }
+);
 type QueryFiles = "users.hx" | "followers.hx" | "follows.hx";
 
-export function Logo() {
+function Logo() {
   const { theme } = useTheme();
 
   return (
@@ -32,7 +39,6 @@ export function Logo() {
 
 export default function Home() {
   const { theme, systemTheme } = useTheme();
-  const id = useRef(uuidv4());
   const currentTheme = theme === "system" ? systemTheme : theme;
   const [schema, setSchema] = useState(`V::User {
   Name: String,
@@ -54,10 +60,10 @@ E::Follows {
   AddE<Follows>()::From(user1)::To(user2)
   RETURN user1, user2`,
     "followers.hx": `QUERY getFollowers() =>
-  followers <- V<User>({Name:"Bob"})::In<Follows>
+  followers <- V<User>()::In<Follows>
   RETURN followers`,
     "follows.hx": `QUERY getFollows() =>
-  user <- V<User>({Name: "Alice"})
+  user <- V<User>()::WHERE(_::Props(Age)::GT(26))
   follows <- user::Out<Follows>
   RETURN user, follows`,
   };
@@ -77,17 +83,6 @@ E::Follows {
   const [graphWidth, setGraphWidth] = useState(800);
   const graphContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    async function initHandler() {
-      try {
-        await init(id.current);
-      } catch (err) {
-        console.error("Error initializing handler:", err);
-      }
-    }
-
-    initHandler();
-  }, []);
 
   useEffect(() => {
     const updateGraphWidth = () => {
@@ -115,7 +110,7 @@ E::Follows {
   const handleRun = async () => {
     setIsLoading(true);
     try {
-      const result = await executeQuery(id.current, activeQuery, query, schema);
+      const result = await API.executeQuery( activeQuery, query, schema);
       const query_res = result.result;
       const new_graph_data = result.newGraphData;
 
@@ -151,7 +146,7 @@ E::Follows {
             }
 
             edges.push(edge);
-          } 
+          }
         });
 
         Object.entries(g_nodes).forEach(([key, value]) => {
@@ -171,7 +166,7 @@ E::Follows {
 
             nodes.push(node);
           }
-        })
+        });
 
         console.log(nodes, edges);
         setGraphData({ nodes, edges });
@@ -336,17 +331,17 @@ E::Follows {
                 </div>
               </div>
               <div className="flex justify-end items-center gap-2 my-4">
-                  <Button
-                    onClick={handleRun}
-                    disabled={isLoading}
-                    className="gap-2 rounded-none"
-                  >
-                    <PlayIcon className="w-4 h-4" />
-                    Run Query
-                  </Button>
-                </div>
+                <Button
+                  onClick={handleRun}
+                  disabled={isLoading}
+                  className="gap-2 rounded-none"
+                >
+                  <PlayIcon className="w-4 h-4" />
+                  Run Query
+                </Button>
+              </div>
 
-                <div className="space-y-4">
+              <div className="space-y-4">
                 <div
                   className="border rounded-none "
                   style={{
@@ -372,7 +367,6 @@ E::Follows {
               </div>
 
               <GraphVisualizer
-
                 data={{
                   nodes: graphData?.nodes || [],
                   links: graphData?.edges || [],

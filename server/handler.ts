@@ -27,11 +27,11 @@ export default class Handler {
           RETURN nodes, links 
         `;
 
-            const queryStartTime = process.hrtime();
-            const res = this.helix.query(event.queryContent, []);
-            const queryTime = process.hrtime(queryStartTime);
+        const queryStartTime = process.hrtime();
+        const res = this.helix.query(event.queryContent, []);
+        const queryTime = process.hrtime(queryStartTime);
+        const graph_data = this.helix.query(get_graph, []);
 
-            const graph_data = this.helix.query(get_graph, []);
 
             console.log("res", res, "graph_data", graph_data);
             return {
@@ -46,6 +46,10 @@ export default class Handler {
 
         } catch (error) {
             console.error("Error:", error);
+            return {
+                success: false,
+                error: error
+            }
         }
     }
 }
