@@ -11,7 +11,7 @@ import Image from "next/image";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import ForceGraph2D from "react-force-graph-2d";
 import { v4 as uuidv4 } from "uuid";
-import { Edge, GraphVisualizer, Node } from "@/components/ui/graph-visualizer";
+import { Edge, GraphVisualizer, InfoBox, Node } from "@/components/ui/graph-visualizer";
 type QueryFiles = "users.hx" | "followers.hx" | "follows.hx";
 
 export function Logo() {
@@ -69,6 +69,7 @@ E::Follows {
   const [activeView, setActiveView] = useState<"terminal" | "graph">(
     "terminal"
   );
+
   const [graphData, setGraphData] = useState<{
     nodes: Array<Node>;
     edges: Array<Edge>;
@@ -365,11 +366,13 @@ E::Follows {
               </div>
             </div>
           ) : (
-            <div className="border rounded-none overflow-hidden ">
+            <div className="relative border rounded-none overflow-hidden ">
               <div className="border-b px-3 py-2 text-sm font-medium bg-muted/50">
                 Graph Visualization
               </div>
+
               <GraphVisualizer
+
                 data={{
                   nodes: graphData?.nodes || [],
                   links: graphData?.edges || [],
