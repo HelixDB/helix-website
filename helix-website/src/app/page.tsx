@@ -3,19 +3,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CodeEditor } from "@/components/ui/code-editor";
-import { executeQuery } from "./api";
+import { executeQuery, init } from "./api";
 import { PlayIcon, Github } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import ForceGraph2D from "react-force-graph-2d";
-import { GraphVisualizer } from "@/components/ui/graph-visualizer";
-
+import { v4 as uuidv4 } from "uuid";
+import { Edge, GraphVisualizer, Node } from "@/components/ui/graph-visualizer";
 type QueryFiles = "users.hx" | "followers.hx" | "follows.hx";
 
 export function Logo() {
-  const { theme } = useTheme()
+  const { theme } = useTheme();
 
   return (
     <div className="relative h-12 w-12">
@@ -27,13 +27,13 @@ export function Logo() {
         priority
       />
     </div>
-  )
+  );
 }
 
 export default function Home() {
-  const { theme, systemTheme } = useTheme()
-
-  const currentTheme = theme === 'system' ? systemTheme : theme;
+  const { theme, systemTheme } = useTheme();
+  const id = useRef(uuidv4());
+  const currentTheme = theme === "system" ? systemTheme : theme;
   const [schema, setSchema] = useState(`V::User {
   Name: String,
   Age: Integer
@@ -51,7 +51,7 @@ E::Follows {
     "users.hx": `QUERY addUsers() =>
   user1 <- AddV<User>({Name: "Alice", Age: 30})
   user2 <- AddV<User>({Name: "Bob", Age: 25})
-  AddE<Follows>(user1, user2, {Since: 1.0})
+  AddE<Follows>({Since: "1.0"})::From(user1)::To(user2)
   RETURN user1, user2`,
     "followers.hx": `QUERY getFollowers() =>
   followers <- V<User>({Name:"Bob"})::In<Follows>
@@ -62,34 +62,31 @@ E::Follows {
   RETURN user, follows`,
   };
 
-  const sampleGraphData = {
-    nodes: [
-      { id: "1", name: "Alice", val: 1 },
-      { id: "2", name: "Bob", val: 1 },
-      { id: "3", name: "Charlie", val: 1 },
-      { id: "4", name: "David", val: 1 },
-      { id: "5", name: "Eve", val: 1 }
-    ],
-    links: [
-      { source: "1", target: "2" },
-      { source: "2", target: "3" },
-      { source: "3", target: "4" },
-      { source: "4", target: "5" },
-      { source: "5", target: "1" },
-      { source: "1", target: "3" }
-    ]
-  };
   const [activeQuery, setActiveQuery] = useState<QueryFiles>("users.hx");
   const [query, setQuery] = useState(queries[activeQuery]);
   const [output, setOutput] = useState("// Output will appear here...");
   const [isLoading, setIsLoading] = useState(false);
-  const [activeView, setActiveView] = useState<"terminal" | "graph">("terminal");
+  const [activeView, setActiveView] = useState<"terminal" | "graph">(
+    "terminal"
+  );
   const [graphData, setGraphData] = useState<{
-    nodes: Array<{ id: string; name: string; val: number }>;
-    links: Array<{ source: string; target: string }>;
-  }>(sampleGraphData);
+    nodes: Array<Node>;
+    edges: Array<Edge>;
+  }>();
   const [graphWidth, setGraphWidth] = useState(800);
   const graphContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function initHandler() {
+      try {
+        await init(id.current);
+      } catch (err) {
+        console.error("Error initializing handler:", err);
+      }
+    }
+
+    initHandler();
+  }, []);
 
   useEffect(() => {
     const updateGraphWidth = () => {
@@ -99,10 +96,9 @@ E::Follows {
     };
 
     updateGraphWidth();
-    window.addEventListener('resize', updateGraphWidth);
-    return () => window.removeEventListener('resize', updateGraphWidth);
+    window.addEventListener("resize", updateGraphWidth);
+    return () => window.removeEventListener("resize", updateGraphWidth);
   }, []);
-
 
   const handleQueryChange = (value: string) => {
     setQuery(value);
@@ -118,66 +114,100 @@ E::Follows {
   const handleRun = async () => {
     setIsLoading(true);
     try {
-      const result = await executeQuery(activeQuery, query, schema);
+      const result = await executeQuery(id.current, activeQuery, query, schema);
+      const query_res = result.result;
+      const new_graph_data = result.newGraphData;
+
       const newOutput = `[${new Date().toLocaleTimeString()}] Running ${activeQuery}...\n\nResult:\n${JSON.stringify(
-        result,
+        query_res,
         null,
         2
       )}\n\n`;
       setOutput((prev) => prev + "\n" + newOutput);
 
-      // Update graph data if result contains nodes and edges
-      if (result && typeof result === 'object') {
-        const nodes: Array<{ id: string; name: string; val: number }> = [];
-        const links: Array<{ source: string; target: string }> = [];
+      if (new_graph_data && typeof new_graph_data === "object") {
+        const nodes: Array<Node> = [];
+        const edges: Array<Edge> = [];
 
-        // Extract nodes and edges from the result
-        Object.entries(result).forEach(([key, value]) => {
-          if (value && typeof value === 'object' && 'id' in value) {
-            const node = {
+        let links = new_graph_data.links;
+        let g_nodes = new_graph_data.nodes;
+
+        Object.entries(links).forEach(([key, value]) => {
+          if (value && typeof value === "object" && "from_node" in value) {
+            let edge: Edge = {
               id: String(value.id),
-              name: String('Name' in value ? value.Name : value.id),
-              val: 1
+              source: String(value.from_node),
+              target: String(value.to_node),
+              label: value.label,
             };
-            nodes.push(node);
-          }
+
+            if ("properties" in value) {
+              Object.entries(value.properties).forEach(
+                ([propKey, propValue]) => {
+                  edge[propKey] = propValue;
+                }
+              );
+            }
+
+            edges.push(edge);
+          } 
         });
 
-        // Add links if we have multiple nodes
-        if (nodes.length >= 2) {
-          links.push({
-            source: nodes[0].id,
-            target: nodes[1].id
-          });
-        }
+        Object.entries(g_nodes).forEach(([key, value]) => {
+          if (value && typeof value === "object" && "id" in value) {
+            let node: Node = {
+              id: String(value.id),
+            };
 
-        setGraphData({ nodes, links });
+            if ("properties" in value) {
+              Object.entries(value.properties).forEach(
+                ([propKey, propValue]) => {
+                  node[propKey] = propValue;
+                }
+              );
+            }
+
+            nodes.push(node);
+          }
+        })
+
+        console.log(nodes, edges);
+        setGraphData({ nodes, edges });
       }
     } catch (err: any) {
-      const errorOutput = `[${new Date().toLocaleTimeString()}] Error running query: ${err.message}\n\n`;
+      const errorOutput = `[${new Date().toLocaleTimeString()}] Error running query: ${
+        err.message
+      }\n\n`;
       setOutput((prev) => prev + "\n" + errorOutput);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadSampleData = () => {
-    setGraphData(sampleGraphData);
-  };
+  // const loadSampleData = () => {
+  //   setGraphData();
+  // };
 
   return (
     <main className="justify-center">
-      <WavyBackground className="min-h-screen w-full" backgroundFill={currentTheme === "dark" ? "#000000" : "#ffffff"}>
-        <div className="max-w-5xl mx-auto p-4 sm:p-8">
+      <WavyBackground
+        className="min-h-screen w-full"
+        backgroundFill={currentTheme === "dark" ? "#000000" : "#ffffff"}
+      >
+        <div
+          style={{ maxWidth: "1280px" }}
+          className="w-full mx-auto p-4 sm:p-8"
+        >
           <div className="flex items-center w-full justify-between mb-6">
             <Logo />
             <div className="flex gap-2">
               <button
                 onClick={() => setActiveView("terminal")}
-                className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all ${activeView === "terminal"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
+                className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all ${
+                  activeView === "terminal"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
                 <svg
                   className="-ms-0.5 me-1.5 opacity-60"
@@ -196,11 +226,15 @@ E::Follows {
                 Terminal
               </button>
               <button
-                onClick={() => { setActiveView("graph"); loadSampleData() }}
-                className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all ${activeView === "graph"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-                  }`}
+                onClick={() => {
+                  setActiveView("graph");
+                  // loadSampleData();
+                }}
+                className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all ${
+                  activeView === "graph"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
                 <svg
                   className="-ms-0.5 me-1.5 opacity-60"
@@ -223,7 +257,11 @@ E::Follows {
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <Button variant="outline" size="icon" asChild>
-                <a href="https://github.com/HelixDB/helix-db" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://github.com/HelixDB/helix-db"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Github className="h-4 w-4 text-neutral-500" />
                 </a>
               </Button>
@@ -234,19 +272,26 @@ E::Follows {
             <div className="mx-auto">
               <div className="w-full">
                 <div className="grid md:grid-cols-2 gap-6">
-
                   <div className="">
                     <div className="border border-b-0 bg-muted/50">
                       <button className="px-3 py-2 text-sm font-medium border-r relative text-foreground bg-background mb-[2px]">
                         schema.hx
                       </button>
                     </div>
-                    <div className="" style={{ background: currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)" }}>
+                    <div
+                      className=""
+                      style={{
+                        background:
+                          currentTheme === "dark"
+                            ? "rgba(255,255,255,0.1)"
+                            : "rgba(255,255,255,0.5)",
+                      }}
+                    >
                       <CodeEditor
                         value={schema}
                         onChange={(e) => setSchema(e.target.value)}
                         placeholder="Enter your schema here..."
-                        style={{ resize: 'none', background: 'transparent' }}
+                        style={{ resize: "none", background: "transparent" }}
                       />
                     </div>
                   </div>
@@ -258,67 +303,80 @@ E::Follows {
                           <button
                             key={filename}
                             onClick={() => handleTabClick(filename)}
-                            className={`px-3 py-2 text-sm font-medium border-r relative ${activeQuery === filename
-                              ? "text-foreground bg-background mb-[2px]"
-                              : "text-muted-foreground hover:text-foreground hover:bg-muted/70"
-                              }`}
+                            className={`px-3 py-2 text-sm font-medium border-r relative ${
+                              activeQuery === filename
+                                ? "text-foreground bg-background mb-[2px]"
+                                : "text-muted-foreground hover:text-foreground hover:bg-muted/70"
+                            }`}
                           >
                             {filename}
                           </button>
                         ))}
                       </div>
                     </div>
-                    <div className="" style={{ background: currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)" }}>
+                    <div
+                      className=""
+                      style={{
+                        background:
+                          currentTheme === "dark"
+                            ? "rgba(255,255,255,0.1)"
+                            : "rgba(255,255,255,0.5)",
+                      }}
+                    >
                       <CodeEditor
                         value={query}
                         onChange={(e) => handleQueryChange(e.target.value)}
                         placeholder="Enter your query here..."
-                        style={{ resize: 'none', background: 'transparent' }}
+                        style={{ resize: "none", background: "transparent" }}
                       />
                     </div>
                   </div>
                 </div>
               </div>
               <div className="flex justify-end items-center gap-2 my-4">
+                  <Button
+                    onClick={handleRun}
+                    disabled={isLoading}
+                    className="gap-2 rounded-none"
+                  >
+                    <PlayIcon className="w-4 h-4" />
+                    Run Query
+                  </Button>
+                </div>
 
-
-                <Button
-                  onClick={handleRun}
-                  disabled={isLoading}
-                  className="gap-2 rounded-none"
+                <div className="space-y-4">
+                <div
+                  className="border rounded-none "
+                  style={{
+                    background:
+                      currentTheme === "dark"
+                        ? "rgba(255,255,255,0.1)"
+                        : "rgba(255,255,255,0.5)",
+                  }}
                 >
-                  <PlayIcon className="w-4 h-4" />
-                  Run Query
-                </Button>
-              </div>
-
-              <div className="space-y-4">
-
-                <div className="border rounded-none overflow-hidden " style={{ background: currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)" }}>
                   <div className="border-b px-3 py-2 text-sm font-medium bg-muted/50">
                     output.log
                   </div>
-                  <pre className="p-4 font-mono text-sm overflow-auto">
+                  <pre className="p-4 font-mono text-sm overflow-auto max-h-[300px]">
                     {output}
                   </pre>
                 </div>
-
               </div>
-            </div>) : (
+            </div>
+          ) : (
             <div className="border rounded-none overflow-hidden ">
               <div className="border-b px-3 py-2 text-sm font-medium bg-muted/50">
                 Graph Visualization
               </div>
-              <div className="">
-                <ForceGraph2D
-                  graphData={graphData}
-                  nodeLabel="name"
-                  nodeColor="#3b82f6"
-                  linkColor="red"
-                  backgroundColor={currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)"}
-                  height={600}
-                />
-              </div>
+              <GraphVisualizer
+                data={{
+                  nodes: graphData?.nodes || [],
+                  links: graphData?.edges || [],
+                }}
+                height={800}
+                width={2048}
+                currentTheme={currentTheme}
+              />
             </div>
           )}
         </div>

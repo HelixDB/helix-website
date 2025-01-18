@@ -4,20 +4,24 @@ import cors from 'cors';
 import pkg from 'body-parser';
 const { json } = pkg;
 import handler from './handler';
+import { HelixJs } from '@helix/db';
+import Handler from './handler';
 
 const app = express();
-const port = 3001; 
+const port = 3001;
 // Middleware
-app.use(cors()); 
+app.use(cors());
 app.use(json());
+
+let instances = new Map<string, Handler>();
 
 // Execute query
 app.post('/api/query', (req: any, res: any) => {
   try {
-    const { queryName, queryContent } = req.body;
-    
-    const result = handler({queryName, queryContent});
-    console.log(result);  
+    const { queryName, queryContent, id } = req.body;
+    let helix = instances.get(id);
+    console.log("id", id);
+    const result = helix.handle({ queryName, queryContent, id });
     res.json({
       success: true,
       result,
@@ -32,6 +36,19 @@ app.post('/api/query', (req: any, res: any) => {
   }
 });
 
+app.post('/api/init', (req: any, res: any) => {
+  try {
+    const { userID } = req.body;
+    console.log("userID", userID);
+    instances.set(userID, new Handler(userID));
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error
+    });
+  }
+}
+);
 
 
 app.listen(port, () => {
