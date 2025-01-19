@@ -23,7 +23,6 @@ class API {
 
   init(id: string): void {
     let body = JSON.stringify({ userID: id });
-    console.log("body", body);
     fetch(`${API_CONFIG.BASE_URL}/init`, {
       method: 'POST',
       headers: API_CONFIG.DEFAULT_HEADERS,

@@ -1,7 +1,7 @@
 "use client";
 import { Copy, X } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
@@ -38,8 +38,8 @@ export interface Edge {
 
 interface GraphVisualizerProps {
   data: GraphData;
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
   currentTheme?: string;
 }
 
@@ -99,7 +99,6 @@ const InfoBox = ({
       <CardContent className="px-6 py-4 space-y-2">
         {displayProperties.map((key) => {
           const value = data[key];
-          console.log(value);
           let displayValue = "";
           if (key == "source" || key == "target") {
             displayValue = value.Name || value.id || JSON.stringify(value);
@@ -137,11 +136,8 @@ const InfoBox = ({
     </Card>
   );
 };
-
 const GraphVisualizer: React.FC<GraphVisualizerProps> = ({
   data,
-  height,
-  width,
   currentTheme,
 }) => {
   const { resolvedTheme } = useTheme();
@@ -150,6 +146,28 @@ const GraphVisualizer: React.FC<GraphVisualizerProps> = ({
     data: any;
     type: "node" | "edge";
   } | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        setDimensions({ width, height });
+      }
+    };
+    updateDimensions();
+    const resizeObserver = new ResizeObserver(updateDimensions);
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   const handleClick = (element: any, type: "node" | "edge") => {
     if (element) {
@@ -163,10 +181,12 @@ const GraphVisualizer: React.FC<GraphVisualizerProps> = ({
   };
 
   return (
-    <div className="relative h-[500px] w-[500px]">
-      <div className="z-[-1]">
+    <div ref={containerRef} className="relative w-full h-full">
+      <div className="absolute inset-0">
         <ForceGraph2D
           graphData={data}
+          width={dimensions.width}
+          height={dimensions.height}
           nodeLabel={(val) => val.Name || val.label || val.id}
           nodeColor={() => (isDark ? "rgb(255, 255, 255)" : "rgb(64, 64, 65)")}
           linkColor={() =>
@@ -181,8 +201,6 @@ const GraphVisualizer: React.FC<GraphVisualizerProps> = ({
           nodeRelSize={6}
           linkDirectionalParticles={2}
           linkDirectionalParticleWidth={8}
-          height={height}
-          width={width}
           onNodeClick={(node) => handleClick(node, "node")}
           onLinkClick={(link) => handleClick(link, "edge")}
         />

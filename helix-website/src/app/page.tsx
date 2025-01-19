@@ -83,7 +83,6 @@ E::Follows {
   const [graphWidth, setGraphWidth] = useState(800);
   const graphContainerRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     const updateGraphWidth = () => {
       if (graphContainerRef.current) {
@@ -110,7 +109,7 @@ E::Follows {
   const handleRun = async () => {
     setIsLoading(true);
     try {
-      const result = await API.executeQuery( activeQuery, query, schema);
+      const result = await API.executeQuery(activeQuery, query, schema);
       const query_res = result.result;
       const new_graph_data = result.newGraphData;
 
@@ -168,7 +167,6 @@ E::Follows {
           }
         });
 
-        console.log(nodes, edges);
         setGraphData({ nodes, edges });
       }
     } catch (err: any) {
@@ -367,15 +365,16 @@ E::Follows {
                 Graph Visualization
               </div>
 
-              <GraphVisualizer
-                data={{
-                  nodes: graphData?.nodes || [],
-                  links: graphData?.edges || [],
-                }}
-                height={800}
-                width={2048}
-                currentTheme={currentTheme}
-              />
+              <div className="h-[500px] w-full">
+                <GraphVisualizer
+                  data={{
+                    nodes: graphData?.nodes || [],
+                    links: graphData?.edges || [],
+                  }}
+                  // width={}
+                  currentTheme={currentTheme}
+                />
+              </div>
             </div>
           )}
         </div>
