@@ -1,5 +1,5 @@
 "use client";
-import { X } from "lucide-react";
+import { Copy, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import ForceGraph2D from "react-force-graph-2d";
@@ -76,8 +76,13 @@ const InfoBox = ({
     );
   });
 
+  const truncateId = (str: string, startChars = 5, endChars = 5) => {
+    if (str.length <= startChars + endChars + 3) return str;
+    return `${str.slice(0, startChars)}...${str.slice(-endChars)}`;
+  };
+
   return (
-    <Card className="absolute z-[10000000000] top-4 left-4 rounded-none w-120 bg-muted/50 backdrop-blur ">
+    <Card className="absolute z-[10000000000] top-4 left-4 rounded-none w-160 bg-muted/50 backdrop-blur ">
       <CardHeader className="p-2 border-b">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium">
@@ -105,11 +110,26 @@ const InfoBox = ({
                 : String(value);
           }
           return (
-            <div key={key} className="flex justify-between  gap-4">
+            <div key={key} className="flex justify-between gap-4">
               <span className="text-sm font-medium text-muted-foreground">
                 {String(key).charAt(0).toUpperCase() + String(key).slice(1)}:
               </span>
-              <span className="text-sm">{displayValue}</span>
+              {displayValue.length > 20 ? (
+                <div className="flex items-center gap-2 ml-8">
+                  <span
+                    className="text-sm cursor-pointer hover:opacity-80 group relative"
+                    onClick={() => {
+                      navigator.clipboard.writeText(`"${displayValue}"`);
+                    }}
+                    title={`Click to copy: ${displayValue}`}
+                  >
+                    {truncateId(displayValue)}
+                    <Copy className="h-3 w-3 inline ml-1 opacity-50 group-hover:opacity-100" />
+                  </span>
+                </div>
+              ) : (
+                <span className="text-sm">{displayValue}</span>
+              )}
             </div>
           );
         })}
@@ -119,11 +139,11 @@ const InfoBox = ({
 };
 
 const GraphVisualizer: React.FC<GraphVisualizerProps> = ({
-    data,
-    height,
-    width,
-    currentTheme,
-  }) => {
+  data,
+  height,
+  width,
+  currentTheme,
+}) => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
   const [selectedElement, setSelectedElement] = useState<{
@@ -173,6 +193,6 @@ const GraphVisualizer: React.FC<GraphVisualizerProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default GraphVisualizer;
