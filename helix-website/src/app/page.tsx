@@ -285,6 +285,7 @@ E::Follows {
                       }}
                     >
                       <CodeEditor
+                        isEditable={false}
                         value={schema}
                         onChange={(e) => setSchema(e.target.value)}
                         placeholder="Enter your schema here..."
