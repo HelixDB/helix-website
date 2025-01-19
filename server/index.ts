@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import pkg from 'body-parser';
@@ -9,13 +8,12 @@ import Handler from './handler';
 
 const app = express();
 const port = 3001;
-// Middleware
+
 app.use(cors());
 app.use(json());
 
 let instances = new Map<string, Handler>();
 
-// Execute query
 app.post('/api/query', (req: any, res: any) => {
   try {
     const { queryName, queryContent, id } = req.body;
