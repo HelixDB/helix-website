@@ -3,10 +3,6 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Providers } from "@/components/providers";
-import { Amplify } from "aws-amplify";
-import config from "../aws-exports";
-
-Amplify.configure(config);
 
 const geist = Geist({
   subsets: ["latin"],
