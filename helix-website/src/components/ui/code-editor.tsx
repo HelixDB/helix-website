@@ -20,7 +20,7 @@ const CodeEditor = React.forwardRef<HTMLTextAreaElement, CodeEditorProps>(
         )}
         <textarea
           className={cn(
-            "absolute inset-0 w-full rounded-none border border-input bg-card px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 font-mono",
+            "absolute inset-0 w-full rounded-none bg-card px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:bg-card/50 disabled:cursor-not-allowed disabled:opacity-50 font-mono",
             className
           )}
           ref={ref}

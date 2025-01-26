@@ -1,0 +1,116 @@
+"use client";
+
+import React from "react";
+import { File, Github, Linkedin, Twitter } from "lucide-react";
+import Link from "next/link";
+import { ThemeToggle } from "./ui/theme-toggle";
+
+const navigation = {
+    social: [
+        {
+            name: "GitHub",
+            href: "https://github.com/HelixDB/helix-db",
+            icon: Github,
+        },
+        {
+            name: "Docs",
+            href: "https://helix.mintlify.app",
+            icon: File,
+        },
+    ],
+    social1: [
+        {
+            name: "Twitter",
+            href: "https://x.com/xavdb",
+            icon: Twitter,
+        },
+        {
+            name: "LinkedIn",
+            href: "https://www.linkedin.com/in/xaviercochran/",
+            icon: Linkedin,
+        },
+    ],
+    social2: [
+        {
+            name: "Twitter",
+            href: "https://x.com/georgecurtiss",
+            icon: Twitter,
+        },
+        {
+            name: "LinkedIn",
+            href: "https://www.linkedin.com/in/george-curtis-12b232a5/",
+            icon: Linkedin,
+        },
+    ],
+};
+
+export function Footer() {
+    return (
+        <footer className="bg-muted/50">
+            <div className="container mx-auto px-4 py-12">
+                <div className="flex flex-row justify-between">
+                    <div>
+                        <h3 className="text-sm font-semibold mb-4">Pages</h3>
+                        <ul className="space-y-3">
+                            {navigation.social.map((item) => (
+                                <li key={item.name}>
+                                    <a
+                                        href={item.href}
+                                        className="text-muted-foreground hover:text-foreground flex items-center"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <item.icon className="h-5 w-5 mr-2" />
+                                        {item.name}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold mb-4">Xav's Contact</h3>
+                        <ul className="space-y-3">
+                            {navigation.social1.map((item) => (
+                                <li key={item.name}>
+                                    <a
+                                        href={item.href}
+                                        className="text-muted-foreground hover:text-foreground flex items-center"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <item.icon className="h-5 w-5 mr-2" />
+                                        {item.name}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold mb-4">George's Contact</h3>
+                        <ul className="space-y-3">
+                            {navigation.social2.map((item) => (
+                                <li key={item.name}>
+                                    <a
+                                        href={item.href}
+                                        className="text-muted-foreground hover:text-foreground flex items-center"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <item.icon className="h-5 w-5 mr-2" />
+                                        {item.name}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <ThemeToggle className="mt-auto" />
+                </div>
+                <div className="mt-12 pt-8 border-t">
+                    <p className="text-center text-muted-foreground">
+                        &copy; {new Date().getFullYear()} HelixDB. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    );
+} 

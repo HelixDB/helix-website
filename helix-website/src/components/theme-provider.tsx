@@ -2,14 +2,31 @@
 
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { type ThemeProviderProps } from "next-themes"
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+export function ThemeProvider({
+    children,
+    ...props
+}: {
+    children: React.ReactNode;
+}) {
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return <div style={{ visibility: "hidden" }}>{children}</div>;
+    }
+
     return (
-        <NextThemesProvider {...props}>
-            <div className="transition-colors duration-300">
-                {children}
-            </div>
+        <NextThemesProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            {...props}
+        >
+            {children}
         </NextThemesProvider>
-    )
+    );
 } 

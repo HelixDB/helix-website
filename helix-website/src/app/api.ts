@@ -7,12 +7,29 @@ const API_CONFIG = {
   },
 };
 
-interface Return {
-  result: Record<string, any>;
-  newGraphData: Record<string, Record<string, any>>;
+interface GraphNode {
+  id: string;
+  label?: string;
+  properties?: Record<string, unknown>;
 }
 
+interface GraphLink {
+  id: string;
+  from_node: string;
+  to_node: string;
+  label: string;
+  properties?: Record<string, unknown>;
+}
 
+interface GraphData {
+  nodes: Record<string, GraphNode>;
+  links: Record<string, GraphLink>;
+}
+
+interface Return {
+  result: Record<string, any>;
+  newGraphData: GraphData;
+}
 
 class API {
   id: string;
@@ -46,20 +63,20 @@ class API {
       });
       let query_response = await response.json();
       if (!query_response.result.success) {
-        return { result: query_response.result.error, newGraphData: {} };
+        return { result: query_response.result.error, newGraphData: { nodes: {}, links: {} } };
       }
 
       return { result: query_response.result.result, newGraphData: query_response.result.graph_data };
     } catch (error) {
       console.error('Error executing query:', error);
-      return { result: {}, newGraphData: {} };
+      return { result: {}, newGraphData: { nodes: {}, links: {} } };
     }
   }
-
 }
 
 const instance = new API();
 
+export type { GraphData, GraphNode, GraphLink };
 export default instance;
 
 
