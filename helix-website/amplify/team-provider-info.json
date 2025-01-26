@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-helix-dev-bc580-authRole",
+      "UnauthRoleArn": "arn:aws:iam::692859929301:role/amplify-helix-dev-bc580-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::692859929301:role/amplify-helix-dev-bc580-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-helix-dev-bc580-deployment",
+      "UnauthRoleName": "amplify-helix-dev-bc580-unauthRole",
+      "StackName": "amplify-helix-dev-bc580",
+      "StackId": "arn:aws:cloudformation:eu-west-2:692859929301:stack/amplify-helix-dev-bc580/f5612ae0-dbee-11ef-a84e-0a6d2ced6729",
+      "AmplifyAppId": "d34qpmhqb482sr"
+    },
+    "categories": {
+      "auth": {
+        "helix4503b98c": {}
+      }
+    }
+  }
+}

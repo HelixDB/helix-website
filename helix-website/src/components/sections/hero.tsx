@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { Github } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getCurrentUser } from "@/amplify-functions";
+import { AuthModal } from "@/components/ui/auth-modal";
 
 const codeExamples = [
     `// Define your schema
@@ -33,19 +35,38 @@ export function HeroSection() {
     const { theme, systemTheme } = useTheme();
     const currentTheme = theme === "system" ? systemTheme : theme;
     const router = useRouter();
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        checkAuthStatus();
+    }, []);
+
+    const checkAuthStatus = async () => {
+        try {
+            const user = await getCurrentUser();
+            setIsAuthenticated(!!user);
+        } catch (err) {
+            setIsAuthenticated(false);
+        }
+    };
 
     const handleGetStarted = () => {
-        router.push("/dashboard");
+        if (isAuthenticated) {
+            router.push("/dashboard");
+        } else {
+            setShowAuthModal(true);
+        }
     };
 
     return (
         <section className="relative py-16">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-3xl mx-auto">
-                        The Developer's Graph Database
+                    <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-2xl mx-auto">
+                        The Graph Database For Developers
                     </h1>
-                    <p className="text-xl md:text-xl text-muted-foreground max-w-3xl mx-auto">
+                    <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
                         Say goodbye to complexity, high costs, and clunky query languages. Helix
                         is designed to be fast, intuitive, and powerful.
                     </p>
@@ -108,6 +129,13 @@ export function HeroSection() {
                     </div>
                 </div>
             </div>
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={() => {
+                    setShowAuthModal(false);
+                    checkAuthStatus();
+                }}
+            />
         </section>
     );
 }
