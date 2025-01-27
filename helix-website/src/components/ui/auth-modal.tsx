@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./dialog"
 import { Button } from "./button"
 import { Input } from "./input"
@@ -15,6 +16,7 @@ export function AuthModal({
     isOpen: boolean
     onClose: () => void
 }) {
+    const router = useRouter()
     const [authMode, setAuthMode] = useState<AuthMode>("signin")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -29,6 +31,7 @@ export function AuthModal({
         try {
             await signIn(email, password)
             onClose()
+            router.push("/dashboard")
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setError(err.message)

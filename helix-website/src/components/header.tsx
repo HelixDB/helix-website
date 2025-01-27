@@ -62,7 +62,7 @@ export function Header() {
                     </Link>
 
                     <div className="flex items-center gap-4">
-                        <Button variant="outline" className="text-neutral-500">
+                        <Button variant="outline" className="">
                             <a
                                 href="https://helix.mintlify.app/introduction"
                                 target="_blank"
@@ -76,7 +76,7 @@ export function Header() {
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         variant="outline"
-                                        className="text-neutral-500"
+                                        className=""
                                         size="icon"
                                     >
                                         <User className="h-4 w-4" />
