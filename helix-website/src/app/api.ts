@@ -2,10 +2,25 @@ import { v4 as uuidv4 } from "uuid";
 
 const API_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api',
+  GET_USER_RESOURCES_URL: "https://hbdu3d1tz2.execute-api.eu-west-2.amazonaws.com/v1",
   DEFAULT_HEADERS: {
     'Content-Type': 'application/json',
   },
 };
+
+export type InstanceDetails = {
+    instance_id: string
+    cluster_id: string
+    user_id: string
+    instance_type: string
+    vcpus: number
+    memory: number
+    status: string
+    api_endpoint: string
+    ebs_volumes: string[]
+    created_at: string
+    updated_at: string
+}
 
 interface GraphNode {
   id: string;
@@ -71,6 +86,14 @@ class API {
       console.error('Error executing query:', error);
       return { result: {}, newGraphData: { nodes: {}, links: {} } };
     }
+  }
+  public async getUserResources(userID: string, jwtToken: string): Promise<InstanceDetails[]> {
+    const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/getUserResources`, {
+      method: 'POST',
+      headers: API_CONFIG.DEFAULT_HEADERS,
+      body: JSON.stringify({ userID, jwtToken }),
+    });
+    return response.json();
   }
 }
 
