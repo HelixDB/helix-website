@@ -17,18 +17,19 @@ export type InstanceConfig = {
 }
 
 export type InstanceDetails = {
-    instance_id: string
-    instance_name: string
-    cluster_id: string
-    user_id: string
-    instance_type: string
-    vcpus: number
-    memory: number
-    status: string
-    api_endpoint: string
-    ebs_volumes: string[]
-    created_at: string
-    updated_at: string
+  instance_id: string
+  instance_name: string
+  cluster_id: string
+  user_id: string
+  instance_type: string
+  vcpus: number
+  memory: number
+  instance_status: string
+  instance_size: string
+  api_endpoint: string
+  ebs_volumes: string[]
+  created_at: string
+  updated_at: string
 }
 
 interface GraphNode {
@@ -67,7 +68,7 @@ class API {
     fetch(`${API_CONFIG.BASE_URL}/init`, {
       method: 'POST',
       headers: API_CONFIG.DEFAULT_HEADERS,
-      body:body,
+      body: body,
     }).then((response) => {
       if (!response.ok) {
         throw new Error('Failed to initialize handler');
@@ -106,7 +107,7 @@ class API {
     const result = await response.json() as { resources: InstanceDetails[] };
     return result.resources;
   }
-  
+
   public async createInstace(userID: string, jwtToken: string, instanceConfig: InstanceConfig): Promise<InstanceDetails> {
     const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/createServer`, {
       method: 'POST',

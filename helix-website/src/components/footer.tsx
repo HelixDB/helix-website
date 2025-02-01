@@ -21,13 +21,8 @@ const navigation = {
     social1: [
         {
             name: "Twitter",
-            href: "https://x.com/xavdb",
+            href: "https://x.com/xav_db",
             icon: Twitter,
-        },
-        {
-            name: "LinkedIn",
-            href: "https://www.linkedin.com/in/xaviercochran/",
-            icon: Linkedin,
         },
     ],
     social2: [
@@ -35,11 +30,6 @@ const navigation = {
             name: "Twitter",
             href: "https://x.com/georgecurtiss",
             icon: Twitter,
-        },
-        {
-            name: "LinkedIn",
-            href: "https://www.linkedin.com/in/george-curtis-12b232a5/",
-            icon: Linkedin,
         },
     ],
 };
