@@ -67,13 +67,13 @@ export default function DashboardPage() {
                                             <Database className="mr-2 h-5 w-5" />
                                             {instance.instance_name}
                                         </div>
-                                        <span className={`text-sm px-3 py-1 rounded-full ${instance.status === 'running'
+                                        <span className={`text-sm px-3 py-1 rounded-full ${instance.instance_status.toLowerCase() === 'active'
                                             ? 'bg-green-100 text-green-700'
-                                            : instance.status === 'stopped'
+                                            : instance.instance_status.toLowerCase() === 'stopped'
                                                 ? 'bg-red-100 text-red-700'
                                                 : 'bg-yellow-100 text-yellow-700'
                                             }`}>
-                                            {instance.status}
+                                            {instance.instance_status.charAt(0).toUpperCase() + instance.instance_status.slice(1)}
                                         </span>
                                     </CardTitle>
                                     <CardDescription>
@@ -106,7 +106,7 @@ export default function DashboardPage() {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-muted-foreground">Type</p>
-                                                <p className="capitalize text-sm">{instance.instance_type}</p>
+                                                <p className="capitalize text-sm">{instance.instance_size}</p>
                                             </div>
                                         </div>
                                         <div className="text-sm text-muted-foreground">
