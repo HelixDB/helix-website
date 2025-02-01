@@ -137,7 +137,7 @@ export default function CreateInstancePage() {
             )
 
             // Start the countdown after successful creation
-            setCountdown(7)
+            setCountdown(15)
         } catch (error: any) {
             console.error('Error creating instance:', error)
             setError(error.message || 'Failed to create instance. Please try again.')
@@ -170,7 +170,7 @@ export default function CreateInstancePage() {
                 <div className="w-full max-w-md h-2 bg-secondary rounded-full overflow-hidden">
                     <div
                         className="h-full bg-primary transition-all duration-1000 ease-linear rounded-full"
-                        style={{ width: `${((7 - countdown) / 7) * 100}%` }}
+                        style={{ width: `${((15 - countdown) / 15) * 100}%` }}
                     />
                 </div>
             </div>
