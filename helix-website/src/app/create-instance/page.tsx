@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { Loader2, AlertCircle } from "lucide-react"
+import { Loader2, AlertCircle, CheckCircle2, Rocket } from "lucide-react"
 import { Footer } from "@/components/footer"
 import api, { InstanceConfig } from "@/app/api"
 
@@ -44,6 +44,7 @@ export default function CreateInstancePage() {
     const [loading, setLoading] = useState(true)
     const [creating, setCreating] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [countdown, setCountdown] = useState<number | null>(null)
     const [formData, setFormData] = useState({
         name: "",
         instanceType: "sm",
@@ -91,10 +92,24 @@ export default function CreateInstancePage() {
         }
     }, [formData.instanceType, selectedType])
 
+    useEffect(() => {
+        if (countdown !== null) {
+            if (countdown === 0) {
+                router.push("/dashboard")
+                return
+            }
+            const timer = setTimeout(() => {
+                setCountdown(countdown - 1)
+            }, 1000)
+            return () => clearTimeout(timer)
+        }
+    }, [countdown, router])
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setCreating(true)
-        setError(null) // Clear any previous errors
+        setError(null)
+        setCountdown(null)
 
         try {
             const user = await getCurrentUser()
@@ -112,20 +127,20 @@ export default function CreateInstancePage() {
                 instanceName: formData.name,
                 vcpus: selectedType.vcpus,
                 memory: selectedType.memory,
-                storage: Math.round(formData.storage / 2) * 2 // Ensure storage is rounded to nearest 2
+                storage: Math.round(formData.storage / 2) * 2
             }
 
-            const instance = await api.createInstace(
+            await api.createInstace(
                 user.userId,
-                "", // jwtToken
+                "",
                 instanceConfig
             )
 
-            router.push("/dashboard")
+            // Start the countdown after successful creation
+            setCountdown(7)
         } catch (error: any) {
             console.error('Error creating instance:', error)
             setError(error.message || 'Failed to create instance. Please try again.')
-        } finally {
             setCreating(false)
         }
     }
@@ -134,6 +149,30 @@ export default function CreateInstancePage() {
         return (
             <div className="flex min-h-screen items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        )
+    }
+
+    if (countdown !== null) {
+        return (
+            <div className="flex min-h-[85vh] flex-col items-center justify-center gap-6 px-4">
+                <div className="flex flex-col items-center gap-4 text-center">
+                    <div className="relative">
+                        <Rocket className="h-16 w-16 text-primary animate-bounce" />
+                    </div>
+                    <div className="space-y-2">
+                        <h2 className="text-2xl font-bold">Instance Created Successfully!</h2>
+                        <p className="text-muted-foreground">
+                            Your HelixDB instance is being prepared. You will be redirected to the dashboard in {countdown} seconds.
+                        </p>
+                    </div>
+                </div>
+                <div className="w-full max-w-md h-2 bg-secondary rounded-full overflow-hidden">
+                    <div
+                        className="h-full bg-primary transition-all duration-1000 ease-linear rounded-full"
+                        style={{ width: `${((7 - countdown) / 7) * 100}%` }}
+                    />
+                </div>
             </div>
         )
     }
@@ -248,8 +287,13 @@ export default function CreateInstancePage() {
                                 </>
                             )}
 
-                            <Button type="submit" className="w-full" disabled={creating}>
-                                {creating ? (
+                            <Button type="submit" className="w-full" disabled={creating || countdown !== null}>
+                                {countdown !== null ? (
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                        <span>Instance created! Redirecting in {countdown}s...</span>
+                                    </div>
+                                ) : creating ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Creating Instance...
