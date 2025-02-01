@@ -5,7 +5,7 @@ import { Terminal, Cloud, Code2, Zap, ArrowDownUp } from "lucide-react";
 
 const features = [
     {
-        title: "Managed Service",
+        title: "Serverless Database",
         description:
             "Set up in minutes. We handle the infrastructure so you can focus on your product.",
         icon: Terminal,
