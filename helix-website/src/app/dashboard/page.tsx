@@ -14,34 +14,30 @@ export default function DashboardPage() {
     const [resources, setResources] = useState<InstanceDetails[] | null>(null)
     const [loading, setLoading] = useState(true)
 
-
     useEffect(() => {
-        checkAuth()
-        let res: string = ""
-        api.getUserResources("b6d2e234-30a1-702a-963b-bb6f612bbbc8", "").then((res) => {
-
-            setResources(res)
-        })
-        console.log(resources)
-    }, [])
-
-    const checkAuth = async () => {
-        try {
-            const user = await getCurrentUser()
-            if (!user) {
+        const fetchData = async () => {
+            try {
+                const user = await getCurrentUser()
+                if (!user) {
+                    router.push("/")
+                    return
+                }
+                const instances = await api.getUserResources(user.userId, "")
+                console.log('Fetched instances:', instances)
+                // Ensure we're setting an array
+                setResources(Array.isArray(instances) ? instances : [instances])
+                // alert(JSON.stringify(instances))
+            } catch (err) {
+                console.error('Error fetching data:', err)
                 router.push("/")
+            } finally {
+                setLoading(false)
             }
-        } catch (err) {
-            router.push("/")
         }
-    }
 
-    const formatMemory = (memory: number) => {
-        if (memory >= 1024) {
-            return `${(memory / 1024).toFixed(1)} GB`
-        }
-        return `${memory} MB`
-    }
+        fetchData()
+    }, [router])
+
 
     if (loading) {
         return (
@@ -51,26 +47,25 @@ export default function DashboardPage() {
         )
     }
 
+    const hasInstances = Array.isArray(resources) && resources.length > 0
+
     return (
         <div className="">
             <div className="mx-auto max-w-6xl px-4 py-8 container min-h-screen">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-4xl font-bold">Dashboard</h1>
-                    <Button onClick={() => router.push("/create-instance")}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Create Instance
-                    </Button>
+
                 </div>
 
-                {resources && resources.length > 0 ? (
-                    <div className="grid gap-6">
-                        {resources.map((instance) => (
-                            <Card key={instance.instance_id}>
+                {hasInstances ? (
+                    <div className="grid gap-6" >
+                        {resources.map((instance, index) => (
+                            <Card key={index}>
                                 <CardHeader>
                                     <CardTitle className="flex items-center justify-between">
                                         <div className="flex items-center">
                                             <Database className="mr-2 h-5 w-5" />
-                                            Instance {instance.instance_id}
+                                            {instance.instance_name}
                                         </div>
                                         <span className={`text-sm px-3 py-1 rounded-full ${instance.status === 'running'
                                             ? 'bg-green-100 text-green-700'
@@ -88,30 +83,30 @@ export default function DashboardPage() {
                                 <CardContent>
                                     <div className="grid gap-4">
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                            <div className="flex items-center gap-2">
-                                                <Cpu className="h-4 w-4 text-muted-foreground" />
+                                            <div className="flex  gap-2">
+                                                <Cpu className="my-0.5 h-4 w-4 text-muted-foreground" />
                                                 <div>
                                                     <p className="text-sm font-medium text-muted-foreground">vCPUs</p>
                                                     <p className="text-sm">{instance.vcpus}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <CircuitBoard className="h-4 w-4 text-muted-foreground" />
+                                            <div className="flex  gap-2">
+                                                <CircuitBoard className="my-0.5 h-4 w-4 text-muted-foreground" />
                                                 <div>
                                                     <p className="text-sm font-medium text-muted-foreground">Memory</p>
-                                                    <p className="text-sm">{formatMemory(instance.memory)}</p>
+                                                    <p className="text-sm">{instance.memory} GB</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <HardDrive className="h-4 w-4 text-muted-foreground" />
+                                            <div className="flex  gap-2">
+                                                <HardDrive className="my-0.5 h-4 w-4 text-muted-foreground" />
                                                 <div>
                                                     <p className="text-sm font-medium text-muted-foreground">Volumes</p>
-                                                    <p className="text-sm">{instance.ebs_volumes.length}</p>
+                                                    <p className="text-sm">{instance.ebs_volumes?.length || 0}</p>
                                                 </div>
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-muted-foreground">Type</p>
-                                                <p className="text-sm">{instance.instance_type}</p>
+                                                <p className="capitalize text-sm">{instance.instance_type}</p>
                                             </div>
                                         </div>
                                         <div className="text-sm text-muted-foreground">

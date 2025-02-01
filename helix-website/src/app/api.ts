@@ -8,8 +8,17 @@ const API_CONFIG = {
   },
 };
 
+export type InstanceConfig = {
+  region: string
+  instanceName: string
+  vcpus: number
+  memory: number
+  storage: number
+}
+
 export type InstanceDetails = {
     instance_id: string
+    instance_name: string
     cluster_id: string
     user_id: string
     instance_type: string
@@ -93,7 +102,19 @@ class API {
       headers: API_CONFIG.DEFAULT_HEADERS,
       body: JSON.stringify({ userID, jwtToken }),
     });
-    return response.json();
+    console.log(response)
+    const result = await response.json() as { resources: InstanceDetails[] };
+    return result.resources;
+  }
+  
+  public async createInstace(userID: string, jwtToken: string, instanceConfig: InstanceConfig): Promise<InstanceDetails> {
+    const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/createServer`, {
+      method: 'POST',
+      headers: API_CONFIG.DEFAULT_HEADERS,
+      body: JSON.stringify({ userID, jwtToken, instanceConfig }),
+    });
+    const result = await response.json();
+    return result;
   }
 }
 
