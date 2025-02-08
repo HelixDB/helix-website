@@ -8,6 +8,7 @@ import { Github } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@/amplify-functions";
 import { AuthModal } from "@/components/ui/auth-modal";
+import { motion } from "framer-motion";
 
 const codeExamples = [
     `// Define your schema
@@ -30,6 +31,75 @@ QUERY findActiveUsers() =>
   followers <- users::In<Follows>()::WHERE(_::Props(Since)::GT(1.0))
   RETURN followers`
 ];
+
+const titleVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 15,
+            duration: 0.7
+        }
+    }
+};
+
+const descriptionVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 15,
+            delay: 0.2
+        }
+    }
+};
+
+const codeBlockVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.4
+        }
+    }
+};
+
+const buttonGroupVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 15,
+            delay: 0.6
+        }
+    }
+};
+
+const dotVariants = {
+    hidden: { scale: 0 },
+    visible: (delay: number) => ({
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+            delay
+        }
+    })
+};
 
 export function HeroSection() {
     const { theme, systemTheme } = useTheme();
@@ -63,16 +133,36 @@ export function HeroSection() {
         <section className="relative py-16">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-2xl mx-auto">
-                        The Graph Database For Developers
-                    </h1>
-                    <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                        Say goodbye to complexity, high costs, and clunky query languages. Helix
-                        is designed to be fast, intuitive, and powerful.
-                    </p>
+                    <motion.div
+                        variants={titleVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.8 }}
+                        className="relative"
+                    >
+                        <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-2xl mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
+                            The Ultimate Graph-Vector Database
+                        </h1>
+                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/4 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+                    </motion.div>
+                    <motion.p
+                        variants={descriptionVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.8 }}
+                        className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto"
+                    >
+                        We combine the power of graph databases with vector types natively to build RAG applications easily.
+                    </motion.p>
                 </div>
 
-                <div className="max-w-xl mx-auto shadow-lg overflow-hidden rounded-lg">
+                <motion.div
+                    variants={codeBlockVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.8 }}
+                    className="max-w-xl mx-auto shadow-lg overflow-hidden rounded-lg"
+                >
                     <div
                         className="rounded-lg overflow-hidden"
                         style={{
@@ -82,11 +172,22 @@ export function HeroSection() {
                                     : "rgba(255,255,255,0.5)",
                         }}
                     >
-                        <div className="px-4 py-2 bg-muted/50 flex items-center">
+                        <div
+
+                            className="px-4 py-2 bg-muted/50 flex items-center"
+                        >
                             <div className="flex space-x-2">
-                                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                {[0, 1, 2].map((i) => (
+                                    <motion.div
+                                        key={i}
+                                        custom={0.7 + i * 0.1}
+                                        variants={dotVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        className={`w-3 h-3 rounded-full ${i === 0 ? "bg-red-500" : i === 1 ? "bg-yellow-500" : "bg-green-500"
+                                            }`}
+                                    />
+                                ))}
                             </div>
                             <span className="ml-4 text-sm font-medium">example.hx</span>
                         </div>
@@ -99,36 +200,62 @@ export function HeroSection() {
                             />
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="text-center mt-12">
+                <motion.div
+                    variants={buttonGroupVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.8 }}
+                    className="text-center mt-12"
+                >
                     <div className="flex gap-4 justify-center">
-                        <Button
-                            size="lg"
-                            className="text-lg px-8 py-6"
-                            onClick={handleGetStarted}
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 17
+                            }}
                         >
-                            Get Started
-                        </Button>
-                        <Button
-                            size="lg"
-                            variant="outline"
-                            className="text-lg px-8 py-6 gap-2"
-                            asChild
-                        >
-                            <a
-                                href="https://github.com/HelixDB/helix-db"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center"
+                            <Button
+                                size="lg"
+                                className="text-lg px-8 py-6"
+                                onClick={handleGetStarted}
                             >
-                                <Github className="h-5 w-5" />
-                                View on GitHub
-                            </a>
-                        </Button>
+                                Get Started
+                            </Button>
+                        </motion.div>
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 17
+                            }}
+                        >
+                            <Button
+                                size="lg"
+                                variant="outline"
+                                className="text-lg px-8 py-6 gap-2"
+                                asChild
+                            >
+                                <a
+                                    href="https://github.com/HelixDB/helix-db"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center"
+                                >
+                                    <Github className="h-5 w-5" />
+                                    View on GitHub
+                                </a>
+                            </Button>
+                        </motion.div>
                     </div>
-                </div>
-            </div>
+                </motion.div>
+            </div >
             <AuthModal
                 isOpen={showAuthModal}
                 onClose={() => {
@@ -136,6 +263,6 @@ export function HeroSection() {
                     checkAuthStatus();
                 }}
             />
-        </section>
+        </section >
     );
 }
