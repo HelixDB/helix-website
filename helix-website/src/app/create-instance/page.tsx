@@ -63,11 +63,6 @@ export default function CreateInstancePage() {
                     router.push("/")
                     return
                 }
-                const instances = await api.getUserResources(user.userId, "")
-                if (Array.isArray(instances) && instances.length > 0) {
-                    router.push("/dashboard")
-                    return
-                }
             } catch (err) {
                 console.error('Error checking auth:', err)
                 router.push("/")
