@@ -40,8 +40,22 @@ export default function DashboardPage() {
         const instances = await api.getUserResources(user.userId, "");
         console.log("Fetched instances:", instances);
         const instancesArray = Array.isArray(instances) ? instances : [instances];
-        setResources(instancesArray);
-
+        //setResources(instancesArray);
+        setResources([{
+          instance_id: "test-instance-123",
+          instance_name: "Test Instance",
+          cluster_id: "test-cluster-456",
+          user_id: "test-user-789",
+          instance_type: "t3.micro",
+          vcpus: 2,
+          memory: 4,
+          instance_status: "active",
+          instance_size: "small",
+          api_endpoint: "https://api.test-endpoint.com",
+          ebs_volumes: ["vol-123", "vol-456"],
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z"
+        }]);
         const hasInitializingInstances = instancesArray.some(
           (instance) => instance.instance_status.toLowerCase() !== "active"
         );
@@ -64,14 +78,14 @@ export default function DashboardPage() {
 
     fetchData();
 
-    intervalId = setInterval(fetchData, 20000); 
+    intervalId = setInterval(fetchData, 20000);
 
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
       }
     };
-  }, [router]); 
+  }, [router]);
 
   if (loading) {
     return (
@@ -101,13 +115,12 @@ export default function DashboardPage() {
                       {instance.instance_name}
                     </div>
                     <span
-                      className={`text-sm px-3 py-1 rounded-full ${
-                        instance.instance_status.toLowerCase() === "active"
-                          ? "bg-green-100 text-green-700"
-                          : instance.instance_status.toLowerCase() === "stopped"
+                      className={`text-sm px-3 py-1 rounded-full ${instance.instance_status.toLowerCase() === "active"
+                        ? "bg-green-100 text-green-700"
+                        : instance.instance_status.toLowerCase() === "stopped"
                           ? "bg-red-100 text-red-700"
                           : "bg-yellow-100 text-yellow-700"
-                      }`}
+                        }`}
                     >
                       {instance.instance_status.charAt(0).toUpperCase() +
                         instance.instance_status.slice(1)}
@@ -156,8 +169,17 @@ export default function DashboardPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      Created {new Date(instance.created_at).toLocaleDateString()}
+                    <div className="flex justify-between items-center">
+                      <div className="text-sm text-muted-foreground">
+                        Created {new Date(instance.created_at).toLocaleDateString()}
+                      </div>
+                      <Button
+                        variant="outline"
+                        onClick={() => router.push(`/instances/${instance.instance_id}/queries`)}
+                        className="flex items-center gap-2"
+                      >
+                        View Queries
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
