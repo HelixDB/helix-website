@@ -24,9 +24,11 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
     const [editingContent, setEditingContent] = useState("");
     const [isCreating, setIsCreating] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
             const user = await getCurrentUser();
             if (user) {
                 setUserID(user.userId);
@@ -38,6 +40,7 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
                     setQueries([]);
                 }
             }
+            setIsLoading(false);
         }
         fetchData();
     }, [resolvedParams.instanceId]);
@@ -120,21 +123,27 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
                                 <div className="font-medium truncate">New Query</div>
                             </div>
                         </button>
-                        {queries.map((query) => (
-                            <button
-                                key={query.id}
-                                onClick={() => selectQuery(query)}
-                                className={cn(
-                                    "w-full text-left mb-2 rounded-md px-4 py-3 flex items-center gap-2 hover:bg-muted/50 transition-colors",
-                                    selectedQuery?.id === query.id && "bg-muted hover:bg-muted"
-                                )}
-                            >
-                                <FileText className="w-4 h-4 text-muted-foreground" />
-                                <div className="truncate">
-                                    <div className="font-medium truncate">Query {query.id}</div>
-                                </div>
-                            </button>
-                        ))}
+                        {isLoading ? (
+                            <div className="flex items-center justify-center py-4">
+                                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                            </div>
+                        ) : (
+                            queries.map((query) => (
+                                <button
+                                    key={query.id}
+                                    onClick={() => selectQuery(query)}
+                                    className={cn(
+                                        "w-full text-left mb-2 rounded-md px-4 py-3 flex items-center gap-2 hover:bg-muted/50 transition-colors",
+                                        selectedQuery?.id === query.id && "bg-muted hover:bg-muted"
+                                    )}
+                                >
+                                    <FileText className="w-4 h-4 text-muted-foreground" />
+                                    <div className="truncate">
+                                        <div className="font-medium truncate">Query {query.id}</div>
+                                    </div>
+                                </button>
+                            ))
+                        )}
                     </div>
                 </div>
 

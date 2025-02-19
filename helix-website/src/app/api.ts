@@ -151,11 +151,20 @@ class API {
     try {
       const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/get-queries`, {
         method: 'POST',
-        headers: API_CONFIG.DEFAULT_HEADERS,
-        body: JSON.stringify({ userID, instanceId }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          instanceId: instanceId
+        })
       });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch queries: ${response.status}`);
+      }
+
       const result = await response.json();
-      return result;
+      return result.queries || [];
     } catch (error) {
       console.error('Error getting queries:', error);
       throw error;
