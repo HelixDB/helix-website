@@ -117,6 +117,50 @@ class API {
     const result = await response.json();
     return result;
   }
+
+  public async pushQueries(userID: string, instanceId: string, queries: { id: string, content: string }[]) {
+    try {
+        const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: userID,
+                instance_id: instanceId,
+                queries: queries.map((query, index) => ({
+                    id: query.id,
+                    content: query.content
+                }))
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to upload queries');
+        }
+
+        const result = await response.json();
+        console.log('Queries uploaded successfully:', result);
+    } catch (error) {
+        console.error('Error uploading queries:', error);
+        throw error;
+    }
+  }
+
+  public async getQueries(userID: string, instanceId: string): Promise<{ id: string, content: string }[]> {
+    try {
+      const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/get-queries`, {
+        method: 'POST',
+        headers: API_CONFIG.DEFAULT_HEADERS,
+        body: JSON.stringify({ userID, instanceId }),
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error getting queries:', error);
+      throw error;
+    }
+  }
 }
 
 const instance = new API();
