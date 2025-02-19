@@ -155,7 +155,7 @@ class API {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userID: userID,
+          user_id: userID,
           instanceId: instanceId,
         })
       });
