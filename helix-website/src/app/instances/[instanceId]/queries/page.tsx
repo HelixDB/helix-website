@@ -10,13 +10,10 @@ import { Plus, Edit2, Save, Trash, FileText, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import API from "@/app/api";
 import { getCurrentUser } from "@/amplify-functions";
+
 interface Query {
     id: string;
-    name: string;
     content: string;
-    createdAt: string;
-    updatedAt: string;
-    isPushed?: boolean;
 }
 
 export default function QueriesPage({ params }: { params: Promise<{ instanceId: string }> }) {
@@ -25,9 +22,8 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
     const [queries, setQueries] = useState<Query[]>([]);
     const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
     const [editingContent, setEditingContent] = useState("");
-    const [editingName, setEditingName] = useState("");
     const [isCreating, setIsCreating] = useState(false);
-    const [isPushing, setIsPushing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,20 +31,10 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
             if (user) {
                 setUserID(user.userId);
                 try {
-                    const fetchedQueries = await API.getQueries(user.userId, resolvedParams.instanceId);
-                    // Transform the API response to match our Query interface
-                    const transformedQueries: Query[] = fetchedQueries.map(query => ({
-                        id: query.id,
-                        name: query.id, // Using id as name since API doesn't provide name
-                        content: query.content,
-                        createdAt: new Date().toISOString(), // Default since API doesn't provide these
-                        updatedAt: new Date().toISOString(),
-                        isPushed: true // Queries from API are considered pushed
-                    }));
-                    setQueries(transformedQueries);
+                    const queries = await API.getQueries(user.userId, resolvedParams.instanceId);
+                    setQueries(queries);
                 } catch (error) {
                     console.error('Error fetching queries:', error);
-                    // Initialize with empty array on error
                     setQueries([]);
                 }
             }
@@ -57,17 +43,14 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
     }, [resolvedParams.instanceId]);
 
     const handleCreateQuery = async () => {
-        const query = {
-            id: Date.now().toString(),
-            name: editingName || "Untitled Query",
-            content: editingContent,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            isPushed: false
+        const query: Query = {
+            id: `query-${Date.now()}`,
+            content: editingContent
         };
         setQueries([...queries, query]);
         setSelectedQuery(query);
         setIsCreating(false);
+        await handleSaveQueries([...queries, query]);
     };
 
     const handleUpdateQuery = async () => {
@@ -75,10 +58,7 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
 
         const updatedQuery = {
             ...selectedQuery,
-            name: editingName || "Untitled Query",
-            content: editingContent,
-            updatedAt: new Date().toISOString(),
-            isPushed: false
+            content: editingContent
         };
 
         const updatedQueries = queries.map((q) =>
@@ -86,29 +66,20 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
         );
         setQueries(updatedQueries);
         setSelectedQuery(updatedQuery);
+        await handleSaveQueries(updatedQueries);
     };
 
-    const handlePushChanges = async () => {
-        setIsPushing(true);
+    const handleSaveQueries = async (queriesToSave: Query[]) => {
+        setIsSaving(true);
         try {
             if (!userID) {
                 throw new Error("User ID is required");
             }
-            await API.pushQueries(userID, resolvedParams.instanceId, queries);
-
-            const updatedQueries = queries.map(query => ({
-                ...query,
-                isPushed: true
-            }));
-            setQueries(updatedQueries);
-            if (selectedQuery) {
-                setSelectedQuery({
-                    ...selectedQuery,
-                    isPushed: true
-                });
-            }
+            await API.pushQueries(userID, resolvedParams.instanceId, queriesToSave);
+        } catch (error) {
+            console.error('Error saving queries:', error);
         } finally {
-            setIsPushing(false);
+            setIsSaving(false);
         }
     };
 
@@ -118,20 +89,18 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
         if (selectedQuery?.id === queryId) {
             setSelectedQuery(null);
             setEditingContent("");
-            setEditingName("");
         }
+        await handleSaveQueries(updatedQueries);
     };
 
     const startNewQuery = () => {
         setIsCreating(true);
         setSelectedQuery(null);
-        setEditingName("");
         setEditingContent("");
     };
 
     const selectQuery = (query: Query) => {
         setSelectedQuery(query);
-        setEditingName(query.name);
         setEditingContent(query.content);
         setIsCreating(false);
     };
@@ -141,23 +110,6 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
             <div className="mx-auto max-w-7xl flex border rounded-lg my-8 mx-auto bg-background">
                 {/* Sidebar */}
                 <div className="w-64 border-r rounded-l-lg">
-                    <div className="p-4 border-b flex flex-col gap-2">
-
-                        <Button
-                            className="w-full flex items-center justify-center"
-                            onClick={handlePushChanges}
-                            disabled={isPushing || queries.every(q => q.isPushed)}
-                        >
-                            {isPushing ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Pushing...
-                                </>
-                            ) : (
-                                'Push Changes'
-                            )}
-                        </Button>
-                    </div>
                     <div className="overflow-y-auto px-2 py-2 h-full">
                         <button
                             onClick={startNewQuery}
@@ -177,15 +129,9 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
                                     selectedQuery?.id === query.id && "bg-muted hover:bg-muted"
                                 )}
                             >
-                                <FileText className={cn(
-                                    "w-4 h-4",
-                                    query.isPushed ? "text-muted-foreground" : "text-primary"
-                                )} />
+                                <FileText className="w-4 h-4 text-muted-foreground" />
                                 <div className="truncate">
-                                    <div className="font-medium truncate">{query.name}</div>
-                                    <div className="text-xs text-muted-foreground">
-                                        {new Date(query.updatedAt).toLocaleDateString()}
-                                    </div>
+                                    <div className="font-medium truncate">Query {query.id}</div>
                                 </div>
                             </button>
                         ))}
@@ -197,7 +143,7 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
                     <div className="border-b p-4 flex justify-between items-center">
                         <div className="flex-1 gap-2">
                             <div className="text-lg font-medium">
-                                {editingName || "Untitled Query"}
+                                {selectedQuery ? `Query ${selectedQuery.id}` : "New Query"}
                             </div>
                         </div>
                         <div className="flex gap-2">
@@ -212,9 +158,16 @@ export default function QueriesPage({ params }: { params: Promise<{ instanceId: 
                             )}
                             <Button
                                 onClick={isCreating ? handleCreateQuery : handleUpdateQuery}
-                                disabled={!editingContent}
+                                disabled={!editingContent || isSaving}
                             >
-                                Save
+                                {isSaving ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    'Save'
+                                )}
                             </Button>
                         </div>
                     </div>
