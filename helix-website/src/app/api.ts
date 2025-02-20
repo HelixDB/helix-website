@@ -161,17 +161,24 @@ class API {
       });
 
       if (!response.ok) {
-          throw new Error('Failed to get queries');
+          throw new Error(`Failed to get queries: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('Queries successfully fetched:', result);
-      console.log(result)
-      return result.queries;
-  } catch (error) {
+      const text = await response.text();
+      console.log('Raw response:', text);
+      
+      try {
+          const result = JSON.parse(text);
+          console.log('Parsed response:', result);
+          return result.queries || [];
+      } catch (e) {
+          console.error('JSON parse error:', e);
+          throw new Error(`Invalid JSON response: ${text}`);
+      }
+    } catch (error) {
       console.error('Error fetching queries:', error);
       throw error;
-  }
+    }
   }
 }
 
