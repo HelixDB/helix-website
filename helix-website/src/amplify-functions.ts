@@ -81,3 +81,31 @@ export const confirmRegistration = async ({ username, code}: { username: string,
   };
    */
 
+  async function pushQueries(instanceId: string, queries: { id: string, content: string }[]) {
+    try {
+        const response = await fetch('http://your-server:6969/upload-queries', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                instance_id: instanceId,
+                queries: queries.map((query, index) => ({
+                    id: query.id,
+                    content: query.content,
+                    position: index
+                }))
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to upload queries');
+        }
+
+        const result = await response.json();
+        console.log('Queries uploaded successfully:', result);
+    } catch (error) {
+        console.error('Error uploading queries:', error);
+        throw error;
+    }
+}
