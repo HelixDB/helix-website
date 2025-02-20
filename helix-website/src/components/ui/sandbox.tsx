@@ -156,7 +156,7 @@ E::Follows {
 
     return (
         <div className={className}>
-            <div className="w-full">
+            <div className="">
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="rounded-lg overflow-hidden shadow-lg">
                         <div className="bg-muted/50">

@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
-import { File, Github, Linkedin, Twitter } from "lucide-react";
+import React, { useState } from "react";
+import { File, Github, Linkedin, Twitter, Bug } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "./ui/theme-toggle";
+import { BugReportPopup } from "./bug-report-popup";
+import { Button } from "./ui/button";
 
 const navigation = {
     social: [
@@ -35,8 +37,10 @@ const navigation = {
 };
 
 export function Footer() {
+    const [isBugReportOpen, setIsBugReportOpen] = useState(false);
+
     return (
-        <footer className="bg-muted/50">
+        <footer className="bg-muted/50 relative">
             <div className="container mx-auto px-4 py-12">
                 <div className="flex flex-row justify-between">
                     <div>
@@ -93,7 +97,17 @@ export function Footer() {
                             ))}
                         </ul>
                     </div>
-                    <ThemeToggle className="mt-auto" />
+                    <div className="flex flex-col gap-2">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setIsBugReportOpen(true)}
+                            className="hover:text-destructive"
+                        >
+                            <Bug className="h-4 w-4" />
+                        </Button>
+                        <ThemeToggle />
+                    </div>
                 </div>
                 <div className="mt-12 pt-8 border-t">
                     <p className="text-center text-muted-foreground">
@@ -101,6 +115,11 @@ export function Footer() {
                     </p>
                 </div>
             </div>
+
+            <BugReportPopup
+                isOpen={isBugReportOpen}
+                onClose={() => setIsBugReportOpen(false)}
+            />
         </footer>
     );
 } 

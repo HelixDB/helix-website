@@ -11,7 +11,7 @@ import { FeaturesSection } from "@/components/sections/features";
 import { Footer } from "@/components/footer";
 import { HeroSection } from "@/components/sections/hero";
 import { Logo } from "@/components/ui/logo";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -30,6 +30,13 @@ const staggerContainer = {
 export default function Home() {
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { scrollY } = useScroll();
+
+  const blurOpacity = useTransform(
+    scrollY,
+    [0, 200], // Adjust scroll range
+    [0, 1]    // Opacity range
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -42,16 +49,26 @@ export default function Home() {
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   return (
-    <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="justify-center"
-    >
-      <WavyBackground
-        className="min-h-screen w-full"
-        blur={25}
-        backgroundFill={currentTheme === "dark" ? "#000000" : "#ffffff"}
+    <div className="relative w-full">
+      {/* Background */}
+      <div className="fixed inset-0 z-0">
+        <WavyBackground
+          className="w-full h-full"
+          blur={25}
+          backgroundFill={currentTheme === "dark" ? "#000000" : "#ffffff"}
+        />
+        <motion.div
+          className="absolute inset-0 backdrop-blur-3xl bg-background/50"
+          style={{ opacity: blurOpacity }}
+        />
+      </div>
+
+      {/* Content */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10"
       >
         <motion.div
           variants={staggerContainer}
@@ -93,15 +110,8 @@ export default function Home() {
               <Sandbox />
             </div>
           </motion.div>
-
-          {/* Footer */}
-          <motion.div
-            variants={fadeInUp}
-          >
-            <Footer />
-          </motion.div>
         </motion.div>
-      </WavyBackground>
-    </motion.main>
+      </motion.div>
+    </div>
   );
 }

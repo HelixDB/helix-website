@@ -83,7 +83,6 @@ export function FeaturesSection() {
                         <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
                             Why Use Helix?
                         </h2>
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/3 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
                     </div>
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-6">
                         A graph-vector database that puts developers first.
@@ -95,21 +94,23 @@ export function FeaturesSection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-100px" }}
-                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto"
+                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto"
                 >
                     {features.map((feature, index) => (
                         <motion.div
                             key={index}
                             variants={itemVariants}
-                            className="p-6 rounded-xl bg-card"
+                            className="p-3 rounded-xl bg-card transition-colors duration-300"
                             whileHover={{
                                 scale: 1.05,
-                                backgroundColor: "var(--card-hover)",
                                 transition: {
                                     type: "spring",
                                     stiffness: 300,
                                     damping: 20
                                 }
+                            }}
+                            style={{
+                                backgroundColor: "var(--card)",
                             }}
                         >
                             <motion.div

@@ -51,7 +51,7 @@ export function Header() {
     }
 
     return (
-        <header className="relative top-0 z-50 w-full backdrop-blur-xl mx-auto px-4 sm:px-8">
+        <header className="relative h-16 top-0 z-50 w-full backdrop-blur-xl mx-auto px-4 sm:px-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-8">
                 <div className="flex items-center w-full justify-between py-6">
                     <Link href="/" className="mr-6 flex items-center space-x-2">

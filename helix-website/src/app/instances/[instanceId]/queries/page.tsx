@@ -1,172 +1,222 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { use, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Plus, Edit2, Save, Trash, FileText, Loader2 } from "lucide-react";
+import { Plus, ChevronLeft, Loader2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import API from "@/app/api";
-import { getCurrentUser } from "@/amplify-functions";
+import { Query } from "@/app/api";
+import { useRouter, useSearchParams } from "next/navigation";
+import { QueryIcon } from "./components/QueryIcon";
+import { StatusLegend } from "./components/StatusLegend";
+import { ConfirmationPopup } from "./components/ConfirmationPopup";
+import { QueryEditor } from "./components/QueryEditor";
+import { useQueryManager } from "./hooks/useQueryManager";
 
-interface Query {
-    id: string;
-    content: string;
+interface PageProps {
+    params: Promise<{ instanceId: string }>;
 }
 
-export default function QueriesPage({ params }: { params: Promise<{ instanceId: string }> }) {
+export default function QueriesPage({ params }: PageProps) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const resolvedParams = use(params);
-    const [userID, setUserID] = useState<string | null>(null);
-    const [queries, setQueries] = useState<Query[]>([]);
-    const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
-    const [editingContent, setEditingContent] = useState("");
-    const [isCreating, setIsCreating] = useState(false);
+    const {
+        queries,
+        selectedQuery,
+        editingContent,
+        editingName,
+        isPushing,
+        popup,
+        hasUnsavedChanges,
+        hasUnpushedChanges,
+        deletedQueries,
+        originalQueries,
+        actions
+    } = useQueryManager(resolvedParams.instanceId);
 
+    // Load selected query from URL on initial load
     useEffect(() => {
-        const fetchData = async () => {
-            const user = await getCurrentUser();
-            if (user) {
-                setUserID(user.userId);
-                const apiQueries = await API.getQueries(user.userId, resolvedParams.instanceId);
-                setQueries(apiQueries);
+        const queryId = searchParams.get('queryId');
+        if (queryId && queries.length > 0) {
+            const query = queries.find(q => q.id === queryId);
+            if (query && !deletedQueries.has(query.id)) {
+                actions.selectQuery(query);
             }
         }
-        fetchData();
-    }, [resolvedParams.instanceId]);
-
-    const handleCreateQuery = async () => {
-        const query: Query = {
-            id: `query-${Date.now()}`,
-            content: editingContent
-        };
-        setQueries([...queries, query]);
-        setSelectedQuery(query);
-        setIsCreating(false);
-    };
-
-    const handleUpdateQuery = async () => {
-        if (!selectedQuery) return;
-
-        const updatedQuery: Query = {
-            ...selectedQuery,
-            content: editingContent
-        };
-
-        const updatedQueries = queries.map((q) =>
-            q.id === selectedQuery.id ? updatedQuery : q
-        );
-        setQueries(updatedQueries);
-        setSelectedQuery(updatedQuery);
-    };
+    }, [queries, searchParams]);
 
     const handlePushChanges = async () => {
-        // Implementation for pushing changes
-    };
-
-    const handleDeleteQuery = async (queryId: string) => {
-        const updatedQueries = queries.filter((q) => q.id !== queryId);
-        setQueries(updatedQueries);
-        if (selectedQuery?.id === queryId) {
-            setSelectedQuery(null);
-            setEditingContent("");
+        if (hasUnsavedChanges) {
+            actions.setPopup({
+                type: 'save',
+                action: 'push',
+                onConfirm: async () => {
+                    actions.setPopup(null);
+                    await actions.saveQuery();
+                    actions.doPush();
+                },
+                onCancel: () => {
+                    actions.setPopup(null);
+                    actions.doPush();
+                }
+            });
+            return;
         }
+        actions.doPush();
     };
 
-    const startNewQuery = () => {
-        setIsCreating(true);
-        setSelectedQuery(null);
-        setEditingContent("");
+    const handleCreateQuery = () => {
+        if (hasUnsavedChanges) {
+            actions.setPopup({
+                type: 'save',
+                action: 'new',
+                onConfirm: async () => {
+                    actions.setPopup(null);
+                    await actions.saveQuery();
+                    actions.createQuery();
+                },
+                onCancel: () => {
+                    actions.setPopup(null);
+                    actions.createQuery();
+                }
+            });
+            return;
+        }
+        actions.createQuery();
     };
 
-    const selectQuery = (query: Query) => {
-        setSelectedQuery(query);
-        setEditingContent(query.content);
-        setIsCreating(false);
+    const handleSelectQuery = (query: Query) => {
+        if (hasUnsavedChanges) {
+            actions.setPopup({
+                type: 'save',
+                action: 'switch',
+                onConfirm: async () => {
+                    actions.setPopup(null);
+                    await actions.saveQuery();
+                    actions.selectQuery(query);
+                    updateQueryInUrl(query.id);
+                },
+                onCancel: () => {
+                    actions.setPopup(null);
+                    actions.selectQuery(query);
+                    updateQueryInUrl(query.id);
+                }
+            });
+            return;
+        }
+        actions.selectQuery(query);
+        updateQueryInUrl(query.id);
+    };
+
+    const updateQueryInUrl = (queryId: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('queryId', queryId);
+        router.push(`${window.location.pathname}?${params.toString()}`, { scroll: false });
     };
 
     return (
-        <div className="min-h-screen bg-background">
-            <div className="mx-auto max-w-7xl flex border rounded-lg my-8 mx-auto bg-background">
-                {/* Sidebar */}
-                <div className="w-64 border-r rounded-l-lg">
-                    <div className="p-4 border-b flex flex-col gap-2">
+        <div className="min-h-screen bg-background p-8">
+            {/* Header */}
+            <div className="flex justify-between items-center mt-8 max-w-7xl mx-auto">
+                <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => router.push("/dashboard")}
+                    className="flex items-center"
+                >
+                    <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <StatusLegend />
+            </div>
 
-                        <Button
-                            className="w-full flex items-center justify-center"
-                            onClick={handlePushChanges}
-                        >
-                            Push Changes
-                        </Button>
-                    </div>
-                    <div className="overflow-y-auto px-2 py-2 h-full">
+            {/* Main Content */}
+            <div className="mx-auto mt-4 max-w-7xl h-[65vh] flex flex-row rounded-lg bg-background space-x-4">
+                {/* Sidebar */}
+                <div className="w-64 flex flex-col h-full">
+                    <Button
+                        className="w-full rounded-xl shadow-md mb-4"
+                        onClick={handlePushChanges}
+                        disabled={!hasUnpushedChanges || isPushing}
+                    >
+                        {isPushing ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Pushing...
+                            </>
+                        ) : hasUnpushedChanges ? (
+                            'Push Changes'
+                        ) : (
+                            <>
+                                <CheckCircle2 className="w-4 h-4 mr-2" />
+                                All Changes Synced
+                            </>
+                        )}
+                    </Button>
+
+                    <div className="flex-1 overflow-y-auto px-2 pt-2 pb-16 rounded-2xl bg-muted/50">
                         <button
-                            onClick={startNewQuery}
-                            className="w-full text-left mb-2 rounded-md px-4 py-3 flex items-center gap-2 hover:bg-muted transition-colors bg-muted/50"
+                            onClick={handleCreateQuery}
+                            className="w-full text-left mb-2 rounded-xl px-4 py-3 flex items-center gap-2 hover:bg-foreground/10 bg-foreground/5"
                         >
-                            <Plus className="w-4 h-4 text-primary" />
-                            <div className="truncate">
-                                <div className="font-medium truncate">New Query</div>
-                            </div>
+                            <Plus className="w-4 h-4 text-primary flex-shrink-0" />
+                            <span className="font-medium">New Query</span>
                         </button>
+
                         {queries.map((query) => (
                             <button
                                 key={query.id}
-                                onClick={() => selectQuery(query)}
+                                onClick={() => {
+                                    if (deletedQueries.has(query.id)) {
+                                        actions.setPopup({
+                                            type: 'recover',
+                                            queryId: query.id,
+                                            action: 'switch',
+                                            onConfirm: () => actions.recoverQuery(query.id),
+                                            onCancel: () => actions.setPopup(null)
+                                        });
+                                    } else if (selectedQuery?.id == query.id) { }
+                                    else
+                                        handleSelectQuery(query);
+                                }}
                                 className={cn(
-                                    "w-full text-left mb-2 rounded-md px-4 py-3 flex items-center gap-2 hover:bg-muted/50 transition-colors",
-                                    selectedQuery?.id === query.id && "bg-muted hover:bg-muted"
+                                    "w-full text-left mb-2 rounded-xl px-4 py-3 flex items-center gap-2 hover:bg-foreground/[0.025]",
+                                    selectedQuery?.id === query.id && "bg-foreground/5",
+                                    deletedQueries.has(query.id) && "opacity-50"
                                 )}
                             >
-                                <FileText className={cn(
-                                    "w-4 h-4",
-                                    selectedQuery?.id === query.id && "text-primary"
-                                )} />
-                                <div className="truncate">
-                                    <div className="font-medium truncate">{query.id}</div>
-                                </div>
+                                <QueryIcon
+                                    query={query}
+                                    selectedQuery={selectedQuery}
+                                    hasUnsavedChanges={hasUnsavedChanges}
+                                    deletedQueries={deletedQueries}
+                                    originalQueries={originalQueries}
+                                />
+                                <span className="font-medium truncate">{query.name}</span>
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Main Editor Area */}
-                <div className="flex-1 flex flex-col overflow-hidden rounded-r-lg">
-                    <div className="border-b p-4 flex justify-between items-center">
-                        <div className="flex-1 gap-2">
-                            <div className="text-lg font-medium">
-                                {selectedQuery?.id || "Untitled Query"}
-                            </div>
-                        </div>
-                        <div className="flex gap-2">
-                            {selectedQuery && (
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={() => handleDeleteQuery(selectedQuery.id)}
-                                >
-                                    <Trash className="w-4 h-4" />
-                                </Button>
-                            )}
-                            <Button
-                                onClick={isCreating ? handleCreateQuery : handleUpdateQuery}
-                                disabled={!editingContent}
-                            >
-                                Save
-                            </Button>
-                        </div>
-                    </div>
-                    <div className="flex-1 p-4 overflow-y-auto">
-                        <Textarea
-                            value={editingContent}
-                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditingContent(e.target.value)}
-                            placeholder="Enter your query here..."
-                            className="min-h-[60vh] font-mono resize-none bg-muted/50"
-                        />
-                    </div>
-                </div>
+                <QueryEditor
+                    selectedQuery={selectedQuery}
+                    editingName={editingName}
+                    editingContent={editingContent}
+                    hasUnsavedChanges={hasUnsavedChanges}
+                    onNameChange={actions.setEditingName}
+                    onContentChange={actions.setEditingContent}
+                    onSave={actions.saveQuery}
+                    onDelete={actions.deleteQuery}
+                    onStartEditingName={actions.setEditingName}
+                />
             </div>
+
+            {popup && (
+                <ConfirmationPopup
+                    popup={popup}
+                    onCancel={popup.onCancel}
+                    onConfirm={popup.onConfirm}
+                />
+            )}
         </div>
     );
 } 

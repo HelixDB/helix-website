@@ -18,6 +18,8 @@ import {
   HardDrive,
   Cpu,
   CircuitBoard,
+  Copy,
+  Check,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import api, { InstanceDetails } from "@/app/api";
@@ -26,6 +28,13 @@ export default function DashboardPage() {
   const router = useRouter();
   const [resources, setResources] = useState<InstanceDetails[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [copiedEndpoint, setCopiedEndpoint] = useState<string | null>(null);
+
+  const handleCopyEndpoint = async (endpoint: string) => {
+    await navigator.clipboard.writeText(endpoint);
+    setCopiedEndpoint(endpoint);
+    setTimeout(() => setCopiedEndpoint(null), 2000);
+  };
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -40,22 +49,8 @@ export default function DashboardPage() {
         const instances = await api.getUserResources(user.userId, "");
         console.log("Fetched instances:", instances);
         const instancesArray = Array.isArray(instances) ? instances : [instances];
-        //setResources(instancesArray);
-        setResources([{
-          instance_id: "test-instance-123",
-          instance_name: "Test Instance",
-          cluster_id: "test-cluster-456",
-          user_id: "test-user-789",
-          instance_type: "t3.micro",
-          vcpus: 2,
-          memory: 4,
-          instance_status: "active",
-          instance_size: "small",
-          api_endpoint: "https://api.test-endpoint.com",
-          ebs_volumes: ["vol-123", "vol-456"],
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        }]);
+        setResources(instancesArray);
+
         const hasInitializingInstances = instancesArray.some(
           (instance) => instance.instance_status.toLowerCase() !== "active"
         );
@@ -100,16 +95,16 @@ export default function DashboardPage() {
   return (
     <div className="">
       <div className="mx-auto max-w-6xl px-4 py-8 container min-h-screen">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center my-8">
           <h1 className="text-4xl font-bold">Dashboard</h1>
         </div>
 
         {hasInstances ? (
           <div className="grid gap-6">
             {resources.map((instance, index) => (
-              <Card key={index}>
+              <Card key={index} className="bg-muted/50 rounded-2xl shadow-sm border-0">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
+                  <CardTitle className="flex justify-between">
                     <div className="flex items-center">
                       <Database className="mr-2 h-5 w-5" />
                       {instance.instance_name}
@@ -126,7 +121,28 @@ export default function DashboardPage() {
                         instance.instance_status.slice(1)}
                     </span>
                   </CardTitle>
-                  <CardDescription>{instance.api_endpoint}</CardDescription>
+                  <CardDescription className="pt-2 flex items-center gap-2 text-sm">
+                    {instance.api_endpoint && (
+                      <>
+                        <span className="text-muted-foreground font-medium">Endpoint:</span>
+                        <code className="px-2 py-0.5 rounded bg-muted font-mono text-xs">
+                          {instance.api_endpoint}
+                        </code>
+                        <button
+                          onClick={() => handleCopyEndpoint(instance.api_endpoint)}
+                          className="p-1 hover:bg-muted rounded-md transition-colors"
+                          title="Copy to clipboard"
+                        >
+                          {copiedEndpoint === instance.api_endpoint ? (
+                            <Check className="h-3.5 w-3.5 text-green-500" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                          )}
+                        </button>
+                      </>
+
+                    )}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4">
@@ -170,13 +186,13 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <div className="text-sm text-muted-foreground">
-                        Created {new Date(instance.created_at).toLocaleDateString()}
+                      <div className="text-sm text-muted-foreground mt-auto">
+                        <span className="font-medium">Created:</span> {new Date(instance.created_at).toLocaleDateString()}
                       </div>
+
                       <Button
-                        variant="outline"
                         onClick={() => router.push(`/instances/${instance.instance_id}/queries`)}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 rounded-xl"
                       >
                         View Queries
                       </Button>
@@ -187,7 +203,7 @@ export default function DashboardPage() {
             ))}
           </div>
         ) : (
-          <Card className="text-center py-12">
+          <Card className="text-center bg-muted/50 py-12 border-0 rounded-2xl">
             <CardHeader>
               <CardTitle>No Instances Found</CardTitle>
               <CardDescription>
@@ -197,7 +213,7 @@ export default function DashboardPage() {
             <CardContent>
               <Button
                 onClick={() => router.push("/create-instance")}
-                className="mt-4"
+                className="mt-4 rounded-xl"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Create Your First Instance
@@ -206,7 +222,6 @@ export default function DashboardPage() {
           </Card>
         )}
       </div>
-      <Footer />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Providers } from "@/components/providers";
+import { Footer } from "@/components/footer";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -25,7 +26,8 @@ export default function RootLayout({
         <Providers>
           <div className="relative flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="">{children}</main>
+            <Footer />
           </div>
         </Providers>
       </body>

@@ -244,7 +244,7 @@ export default function CreateInstancePage() {
 
                             {selectedType && (
                                 <>
-                                    <div className="rounded-lg border p-4">
+                                    <div className="rounded-xl bg-background border  p-4">
                                         <h3 className="font-medium mb-2">Instance Specifications</h3>
                                         <div className="grid grid-cols-2 gap-4 text-sm">
                                             <div>
@@ -313,7 +313,6 @@ export default function CreateInstancePage() {
                     </CardContent>
                 </Card>
             </div>
-            <Footer />
         </div>
     )
 }

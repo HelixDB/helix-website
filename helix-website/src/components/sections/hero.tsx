@@ -143,7 +143,6 @@ export function HeroSection() {
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-2xl mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
                             The Ultimate Graph-Vector Database
                         </h1>
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/4 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
                     </motion.div>
                     <motion.p
                         variants={descriptionVariants}
