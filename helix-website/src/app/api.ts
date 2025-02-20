@@ -148,17 +148,29 @@ class API {
   }
 
   public async getQueries(userID: string, instanceId: string): Promise<{ id: string, content: string }[]> {
-    // Return mock data for now
-    return [
-      {
-        id: "1qwe",
-        content: "QUERY findUsers() => V<User>()"
-      },
-      {
-        id: "2qwe",
-        content: "QUERY getUserConnections(userId: String) =>\n  user <- V<User>()::WHERE(_::Props(id)::EQ(userId))\n  connections <- user::Out<Follows>()\n  RETURN connections"
+    try {
+      const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/get-queries`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              user_id: userID,
+              instance_id: instanceId
+          })
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to upload queries');
       }
-    ];
+
+      const result = await response.json();
+      console.log('Queries uploaded successfully:', result);
+      return result;
+  } catch (error) {
+      console.error('Error uploading queries:', error);
+      throw error;
+  }
   }
 }
 
