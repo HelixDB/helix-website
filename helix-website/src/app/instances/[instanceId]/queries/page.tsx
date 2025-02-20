@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Plus, Edit2, Save, Trash, FileText, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import API from "@/app/api";
+import { getCurrentUser } from "@/amplify-functions";
 interface Query {
     id: string;
     name: string;
@@ -18,7 +19,9 @@ interface Query {
     isPushed?: boolean;
 }
 
-export default function QueriesPage({ params }: { params: { instanceId: string } }) {
+export default function QueriesPage({ params }: { params: Promise<{ instanceId: string }> }) {
+    const resolvedParams = use(params);
+    const [userID, setUserID] = useState<string | null>(null);
     const [queries, setQueries] = useState<Query[]>([]);
     const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
     const [editingContent, setEditingContent] = useState("");
@@ -27,27 +30,31 @@ export default function QueriesPage({ params }: { params: { instanceId: string }
     const [isPushing, setIsPushing] = useState(false);
 
     useEffect(() => {
-        // TODO: Fetch queries for this instance
-        const mockQueries: Query[] = [
-            {
-                id: "1",
-                name: "Find all users",
-                content: "QUERY findUsers() => V<User>()",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-                isPushed: true
-            },
-            {
-                id: "2",
-                name: "Get user connections",
-                content: "QUERY getUserConnections(userId: String) =>\n  user <- V<User>()::WHERE(_::Props(id)::EQ(userId))\n  connections <- user::Out<Follows>()\n  RETURN connections",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-                isPushed: false
-            },
-        ];
-        setQueries(mockQueries);
-    }, [params.instanceId]);
+        const fetchData = async () => {
+            const user = await getCurrentUser();
+            if (user) {
+                setUserID(user.userId);
+                try {
+                    const fetchedQueries = await API.getQueries(user.userId, resolvedParams.instanceId);
+                    // Transform the API response to match our Query interface
+                    const transformedQueries: Query[] = fetchedQueries.map(query => ({
+                        id: query.id,
+                        name: query.id, // Using id as name since API doesn't provide name
+                        content: query.content,
+                        createdAt: new Date().toISOString(), // Default since API doesn't provide these
+                        updatedAt: new Date().toISOString(),
+                        isPushed: true // Queries from API are considered pushed
+                    }));
+                    setQueries(transformedQueries);
+                } catch (error) {
+                    console.error('Error fetching queries:', error);
+                    // Initialize with empty array on error
+                    setQueries([]);
+                }
+            }
+        }
+        fetchData();
+    }, [resolvedParams.instanceId]);
 
     const handleCreateQuery = async () => {
         const query = {
@@ -84,8 +91,10 @@ export default function QueriesPage({ params }: { params: { instanceId: string }
     const handlePushChanges = async () => {
         setIsPushing(true);
         try {
-            // TODO: Implement actual push to backend
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+            if (!userID) {
+                throw new Error("User ID is required");
+            }
+            await API.pushQueries(userID, resolvedParams.instanceId, queries);
 
             const updatedQueries = queries.map(query => ({
                 ...query,
