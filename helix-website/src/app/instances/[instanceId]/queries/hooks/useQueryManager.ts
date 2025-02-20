@@ -24,7 +24,7 @@ export function useQueryManager(instanceId: string) {
         (editingName !== null && editingName !== selectedQuery.name)
     ));
 
-    const hasUnpushedChanges = queries.some(query => {
+    const hasUnpushedChanges = queries.length === 0 ? false : queries.some(query => {
         const isDeleted = deletedQueries.has(query.id);
         const originalQuery = originalQueries.find(q => q.id === query.id);
         const isNew = !originalQuery;
