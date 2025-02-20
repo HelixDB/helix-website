@@ -12,12 +12,49 @@ import { Slider } from "@/components/ui/slider"
 import { Loader2, AlertCircle, CheckCircle2, Rocket } from "lucide-react"
 import { Footer } from "@/components/footer"
 import api, { InstanceConfig } from "@/app/api"
+import { loadStripe } from '@stripe/stripe-js';
 
 const INSTANCE_TYPES = [
-    { value: "sm", label: "Small (2 vCPU, 4GB RAM) - Recommended", vcpus: 2, memory: 4, minimumStorage: 8, maximumStorage: 16 },
-    { value: "md", label: "Medium (2 vCPU, 8GB RAM)", vcpus: 2, memory: 8, minimumStorage: 16, maximumStorage: 32 },
-    { value: "lg", label: "Large (4 vCPU, 16GB RAM)", vcpus: 4, memory: 16, minimumStorage: 16, maximumStorage: 32 },
-    { value: "xl", label: "Extra large (8 vCPU, 32GB RAM)", vcpus: 8, memory: 32, minimumStorage: 32, maximumStorage: 64 },
+    {
+        value: "sm",
+        label: "Small (2 vCPU, 4GB RAM) - Recommended",
+        vcpus: 2,
+        memory: 4,
+        minimumStorage: 8,
+        maximumStorage: 16,
+        price: 50,
+        priceId: "price_sm" // You'll replace this with your actual Stripe price ID
+    },
+    {
+        value: "md",
+        label: "Medium (2 vCPU, 8GB RAM)",
+        vcpus: 2,
+        memory: 8,
+        minimumStorage: 16,
+        maximumStorage: 32,
+        price: 100,
+        priceId: "price_md" // You'll replace this with your actual Stripe price ID
+    },
+    {
+        value: "lg",
+        label: "Large (4 vCPU, 16GB RAM)",
+        vcpus: 4,
+        memory: 16,
+        minimumStorage: 16,
+        maximumStorage: 32,
+        price: 200,
+        priceId: "price_lg" // You'll replace this with your actual Stripe price ID
+    },
+    {
+        value: "xl",
+        label: "Extra large (8 vCPU, 32GB RAM)",
+        vcpus: 8,
+        memory: 32,
+        minimumStorage: 32,
+        maximumStorage: 64,
+        price: 300,
+        priceId: "price_xl" // You'll replace this with your actual Stripe price ID
+    },
 ]
 
 const REGIONS = [
@@ -38,6 +75,9 @@ function getDefaultRegion(): string {
     // Default to US East if no match found
     return matchedRegion?.value || "us-east-1"
 }
+
+// Initialize Stripe
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CreateInstancePage() {
     const router = useRouter()
@@ -130,14 +170,38 @@ export default function CreateInstancePage() {
                 storage: Math.round(formData.storage / 2) * 2
             }
 
-            await api.createInstace(
-                user.userId,
-                "",
-                instanceConfig
-            )
+            // Create Stripe Checkout Session
+            const response = await fetch('/api/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    priceId: selectedType.priceId,
+                    userId: user.userId,
+                    instanceConfig,
+                }),
+            });
 
-            // Start the countdown after successful creation
-            setCountdown(15)
+            const { sessionId, error } = await response.json();
+
+            if (error) {
+                throw new Error(error);
+            }
+
+            // Redirect to Stripe Checkout
+            const stripe = await stripePromise;
+            if (!stripe) {
+                throw new Error('Failed to load Stripe');
+            }
+
+            const { error: stripeError } = await stripe.redirectToCheckout({
+                sessionId,
+            });
+
+            if (stripeError) {
+                throw new Error(stripeError.message);
+            }
         } catch (error: any) {
             console.error('Error creating instance:', error)
             setError(error.message || 'Failed to create instance. Please try again.')
@@ -244,9 +308,9 @@ export default function CreateInstancePage() {
 
                             {selectedType && (
                                 <>
-                                    <div className="rounded-xl bg-background border  p-4">
+                                    <div className="rounded-xl bg-background border p-4">
                                         <h3 className="font-medium mb-2">Instance Specifications</h3>
-                                        <div className="grid grid-cols-2 gap-4 text-sm">
+                                        <div className="grid grid-cols-3 gap-4 text-sm">
                                             <div>
                                                 <p className="text-muted-foreground">vCPUs</p>
                                                 <p>{selectedType.vcpus}</p>
@@ -254,6 +318,10 @@ export default function CreateInstancePage() {
                                             <div>
                                                 <p className="text-muted-foreground">Memory</p>
                                                 <p>{selectedType.memory} GB</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-muted-foreground">Monthly Price</p>
+                                                <p className="font-medium text-primary">${selectedType.price}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -287,19 +355,14 @@ export default function CreateInstancePage() {
                                 </>
                             )}
 
-                            <Button type="submit" className="w-full" disabled={creating || countdown !== null}>
-                                {countdown !== null ? (
-                                    <div className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                        <span>Instance created! Redirecting in {countdown}s...</span>
-                                    </div>
-                                ) : creating ? (
+                            <Button type="submit" className="w-full" disabled={creating}>
+                                {creating ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Creating Instance...
+                                        Redirecting to payment...
                                     </>
                                 ) : (
-                                    'Create Instance'
+                                    `Subscribe - $${selectedType?.price}/month`
                                 )}
                             </Button>
 

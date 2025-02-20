@@ -121,7 +121,7 @@ export default function QueriesPage({ params }: PageProps) {
                 <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => router.push("/dashboard")}
+                    onClick={() => router.replace("/dashboard")}
                     className="flex items-center"
                 >
                     <ChevronLeft className="h-4 w-4" />
