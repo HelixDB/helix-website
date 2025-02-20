@@ -166,6 +166,7 @@ class API {
 
       const result = await response.json();
       console.log('Queries uploaded successfully:', result);
+      console.log(result)
       return result.queries;
   } catch (error) {
       console.error('Error uploading queries:', error);
