@@ -161,15 +161,15 @@ class API {
       });
 
       if (!response.ok) {
-          throw new Error('Failed to upload queries');
+          throw new Error('Failed to get queries');
       }
 
       const result = await response.json();
-      console.log('Queries uploaded successfully:', result);
+      console.log('Queries successfully fetched:', result);
       console.log(result)
       return result.queries;
   } catch (error) {
-      console.error('Error uploading queries:', error);
+      console.error('Error fetching queries:', error);
       throw error;
   }
   }
