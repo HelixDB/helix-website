@@ -156,7 +156,7 @@ class API {
         },
         body: JSON.stringify({
           user_id: userID,
-          instanceId: instanceId,
+          instance_id: instanceId
         })
       });
 
