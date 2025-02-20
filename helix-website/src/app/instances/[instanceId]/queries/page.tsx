@@ -37,7 +37,7 @@ export default function QueriesPage({ params }: PageProps) {
     // Load selected query from URL on initial load
     useEffect(() => {
         const queryId = searchParams.get('queryId');
-        if (queryId && queries.length > 0) {
+        if (queries !== null && queryId && queries?.length > 0) {
             const query = queries.find(q => q.id === queryId);
             if (query && !deletedQueries.has(query.id)) {
                 actions.selectQuery(query);
@@ -162,7 +162,7 @@ export default function QueriesPage({ params }: PageProps) {
                             <span className="font-medium">New Query</span>
                         </button>
 
-                        {queries.map((query) => (
+                        {queries !== null && queries.map((query) => (
                             <button
                                 key={query.id}
                                 onClick={() => {

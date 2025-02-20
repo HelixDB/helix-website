@@ -19,7 +19,7 @@ export const QueryIcon = ({ query, selectedQuery, hasUnsavedChanges, deletedQuer
         return <Save className="w-5 h-5 flex-shrink-0 text-red-700" />;
     }
 
-    const originalQuery = originalQueries.find(q => q.id === query.id);
+    const originalQuery = originalQueries !== null ? originalQueries.find(q => q.id === query.id) : null;
     const hasChanges = !originalQuery || JSON.stringify(query) !== JSON.stringify(originalQuery);
     if (hasChanges) {
         return <Save className="w-5 h-5 flex-shrink-0 text-orange-300" />;

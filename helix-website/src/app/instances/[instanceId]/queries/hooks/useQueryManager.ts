@@ -24,9 +24,9 @@ export function useQueryManager(instanceId: string) {
         (editingName !== null && editingName !== selectedQuery.name)
     ));
 
-    const hasUnpushedChanges = queries.length === 0 ? false : queries.some(query => {
+    const hasUnpushedChanges = (queries !== null && queries?.length === 0) ? false : queries?.some(query => {
         const isDeleted = deletedQueries.has(query.id);
-        const originalQuery = originalQueries.find(q => q.id === query.id);
+        const originalQuery = originalQueries?.find(q => q.id === query.id);
         const isNew = !originalQuery;
         const hasChanges = originalQuery && JSON.stringify(query) !== JSON.stringify(originalQuery);
         return !isDeleted && (isNew || hasChanges);
@@ -59,7 +59,7 @@ export function useQueryManager(instanceId: string) {
             content: editingContent,
             name: editingName ?? selectedQuery.name
         };
-
+        
         setQueries(queries.map(q => q.id === updatedQuery.id ? updatedQuery : q));
         setSelectedQuery(updatedQuery);
         setEditingName(null);
@@ -68,12 +68,12 @@ export function useQueryManager(instanceId: string) {
 
     const doPush = async () => {
         if (!userID) return;
-        setIsPushing(true);
-
+        setIsPushing(true)
         try {
+            if (queries === null) return;
             const changedQueries = queries.filter(query => {
                 const isDeleted = deletedQueries.has(query.id);
-                const originalQuery = originalQueries.find(q => q.id === query.id);
+                const originalQuery = originalQueries !== null ? originalQueries.find(q => q.id === query.id) : null;
                 return !isDeleted && (!originalQuery || JSON.stringify(query) !== JSON.stringify(originalQuery));
             });
 
@@ -103,7 +103,8 @@ export function useQueryManager(instanceId: string) {
             name: `Untitled Query`,
             content: ""
         };
-        setQueries([...queries, newQuery]);
+        if (queries === null) setQueries([newQuery]);
+        else setQueries([...queries, newQuery]);
         setSelectedQuery(newQuery);
         setEditingContent("");
         setEditingName(null);
