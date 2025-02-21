@@ -23,7 +23,7 @@ const INSTANCE_TYPES = [
         minimumStorage: 8,
         maximumStorage: 16,
         price: 50,
-        priceId: "price_sm" // You'll replace this with your actual Stripe price ID
+        priceId: "price_1Qujmw1ynK4PUoX0eF02NN9z"
     },
     {
         value: "md",
@@ -33,7 +33,7 @@ const INSTANCE_TYPES = [
         minimumStorage: 16,
         maximumStorage: 32,
         price: 100,
-        priceId: "price_md" // You'll replace this with your actual Stripe price ID
+        priceId: "price_1QujnT1ynK4PUoX0Nf8hkAsL"
     },
     {
         value: "lg",
@@ -43,7 +43,7 @@ const INSTANCE_TYPES = [
         minimumStorage: 16,
         maximumStorage: 32,
         price: 200,
-        priceId: "price_lg" // You'll replace this with your actual Stripe price ID
+        priceId: "price_1Qujnx1ynK4PUoX0wTFYeYeI"
     },
     {
         value: "xl",
@@ -53,7 +53,7 @@ const INSTANCE_TYPES = [
         minimumStorage: 32,
         maximumStorage: 64,
         price: 300,
-        priceId: "price_xl" // You'll replace this with your actual Stripe price ID
+        priceId: "price_1QujoH1ynK4PUoX03n7KgjZp"
     },
 ]
 
