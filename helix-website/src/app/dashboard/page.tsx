@@ -207,7 +207,7 @@ export default function DashboardPage() {
             <CardHeader>
               <CardTitle>No Instances Found</CardTitle>
               <CardDescription>
-                Get started by creating your first Helix database instance
+                If you've just created an instance, wait a few seconds and refresh the page.
               </CardDescription>
             </CardHeader>
             <CardContent>
