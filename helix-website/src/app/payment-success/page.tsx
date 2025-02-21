@@ -1,5 +1,8 @@
 "use client"
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'edge'
+
 import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
@@ -67,7 +70,9 @@ function PaymentVerification() {
             }
         }
 
-        verifyPayment()
+        if (typeof window !== 'undefined') {
+            verifyPayment()
+        }
     }, [router, searchParams])
 
     return (
