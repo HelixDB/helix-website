@@ -97,17 +97,17 @@ export function Footer() {
                             ))}
                         </ul>
                     </div>
-                    {/* <div className="flex flex-col gap-2">
-                        <Button
+                    <div className="flex flex-col gap-2">
+                        {/* <Button
                             variant="outline"
                             size="icon"
                             onClick={() => setIsBugReportOpen(true)}
                             className="hover:text-destructive"
                         >
                             <Bug className="h-4 w-4" />
-                        </Button>
+                        </Button> */}
                         <ThemeToggle />
-                    </div> */}
+                    </div>
                 </div>
                 <div className="mt-12 pt-8 border-t">
                     <p className="text-center text-muted-foreground">
