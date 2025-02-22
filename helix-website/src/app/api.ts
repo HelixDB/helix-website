@@ -19,6 +19,7 @@ export interface Query {
 interface GetQueriesResponse {
   instance_id: string;
   queries: Query[]
+  instance_name: string;
 }
 
 // Instance-related types
@@ -160,7 +161,7 @@ class API {
   /**
    * Push queries to an instance
    */
-  public async pushQueries(userID: string, instanceId: string, queries: Query[]): Promise<void> {
+  public async pushQueries(userID: string, instanceId: string, instanceName: string, queries: Query[]): Promise<void> {
     try {
       const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
         method: 'POST',
@@ -170,6 +171,7 @@ class API {
         body: JSON.stringify({
           user_id: userID,
           instance_id: instanceId,
+          instance_name: instanceName,
           queries: queries.map(query => ({
             id: query.id,
             name: query.name,

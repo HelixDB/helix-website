@@ -17,7 +17,7 @@ export function useQueryManager(instanceId: string) {
     const [editingName, setEditingName] = useState<string | null>(null);
     const [isPushing, setIsPushing] = useState(false);
     const [popup, setPopup] = useState<PopupState | null>(null);
-
+    const [instanceName, setInstanceName] = useState<string | null>(null);
     // Computed states
     const hasUnsavedChanges = Boolean(selectedQuery && (
         editingContent !== selectedQuery.content ||
@@ -39,13 +39,14 @@ export function useQueryManager(instanceId: string) {
             if (!user) return;
 
             setUserID(user.userId);
-            const [apiQueries] = await Promise.all([
+            const [apiQueries, resources] = await Promise.all([
                 API.getQueries(user.userId, instanceId),
                 API.getUserResources(user.userId, "")
             ]);
 
             setQueries(apiQueries.queries);
             setOriginalQueries(JSON.parse(JSON.stringify(apiQueries.queries)));
+            setInstanceName(resources[0].instance_name);
         };
         fetchData();
     }, [instanceId]);
@@ -70,7 +71,7 @@ export function useQueryManager(instanceId: string) {
         if (!userID) return;
         setIsPushing(true)
         try {
-            if (queries === null) return;
+            if (queries === null || instanceName === null) return;
             const changedQueries = queries.filter(query => {
                 const isDeleted = deletedQueries.has(query.id);
                 const originalQuery = originalQueries !== null ? originalQueries.find(q => q.id === query.id) : null;
@@ -78,7 +79,7 @@ export function useQueryManager(instanceId: string) {
             });
 
             if (changedQueries.length > 0) {
-                await API.pushQueries(userID, instanceId, changedQueries);
+                await API.pushQueries(userID, instanceId, instanceName, changedQueries);
             }
 
             if (deletedQueries.size > 0) {
