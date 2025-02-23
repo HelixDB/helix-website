@@ -45,6 +45,7 @@ function PaymentVerification() {
                 const data = await response.json()
 
                 if (!response.ok) {
+                    router.push("/dashboard")
                     throw new Error(data.error || 'Failed to verify payment')
                 }
 
@@ -73,7 +74,7 @@ function PaymentVerification() {
         if (typeof window !== 'undefined') {
             verifyPayment()
         }
-    }, [router, searchParams])
+    }, [searchParams])
 
     return (
         <Card className="w-full max-w-md">

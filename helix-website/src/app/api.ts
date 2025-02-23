@@ -144,20 +144,6 @@ class API {
     const result = await response.json() as { resources: InstanceDetails[] };
     return result.resources;
   }
-
-  /**
-   * Create a new instance
-   */
-  public async createInstace(userID: string, jwtToken: string, instanceConfig: InstanceConfig): Promise<InstanceDetails> {
-    const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/createServer`, {
-      method: 'POST',
-      headers: API_CONFIG.DEFAULT_HEADERS,
-      body: JSON.stringify({ userID, jwtToken, instanceConfig }),
-    });
-    
-    return await response.json();
-  }
-
   /**
    * Push queries to an instance
    */

@@ -182,7 +182,6 @@ export default function CreateInstancePage() {
                     instanceConfig,
                 }),
             });
-
             const { sessionId, error } = await response.json();
 
             if (error) {

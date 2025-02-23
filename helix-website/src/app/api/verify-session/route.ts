@@ -32,24 +32,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get the instance configuration from metadata
-    const instanceConfig = session.metadata?.instanceConfig ? 
-      JSON.parse(session.metadata.instanceConfig) : null;
-
-    if (!instanceConfig) {
-      return NextResponse.json(
-        { error: 'No instance configuration found' },
-        { status: 400 }
-      );
-    }
-
-    // Create the instance
-    await api.createInstace(
-      userId,
-      "",
-      instanceConfig
-    );
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error verifying session:', error);

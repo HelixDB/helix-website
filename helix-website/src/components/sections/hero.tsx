@@ -221,15 +221,9 @@ export function HeroSection() {
                             <Button
                                 size="lg"
                                 className="text-lg px-8 py-6"
-                                asChild
+                                onClick={handleGetStarted}
                             >
-                                <a
-                                    href="https://calendly.com/helix-db/new-meeting"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Book Demo
-                                </a>
+                                Get Started
                             </Button>
                         </motion.div>
                         <motion.div

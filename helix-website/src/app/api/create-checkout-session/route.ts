@@ -25,7 +25,11 @@ export async function POST(request: Request) {
       cancel_url: new URL('/create-instance', process.env.NEXT_PUBLIC_BASE_URL!).toString(),
       metadata: {
         userId,
-        instanceConfig: JSON.stringify(instanceConfig),
+        region: instanceConfig.region,
+        instanceName: instanceConfig.instanceName,
+        vcpus: instanceConfig.vcpus,
+        memory: instanceConfig.memory,
+        storage: instanceConfig.storage,
       },
     });
 
