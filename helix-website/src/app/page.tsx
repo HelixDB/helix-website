@@ -124,20 +124,9 @@ export default function Home() {
           {/* Book Demo Section */}
           <motion.div
             variants={fadeInUp}
-            className="py-20 relative overflow-hidden"
+            className="py-20 bg-muted/50"
           >
-            {/* Animated background elements */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background/50"
-              animate={{
-                backgroundPosition: ["0% 0%", "100% 100%"],
-              }}
-              transition={{
-                duration: 15,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            />
+
 
             <div className="max-w-7xl min-h-[calc(50vh)] mx-auto px-4 sm:px-8 flex items-center justify-center">
               <motion.div
