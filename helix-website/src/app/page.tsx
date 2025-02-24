@@ -12,6 +12,16 @@ import { Footer } from "@/components/footer";
 import { HeroSection } from "@/components/sections/hero";
 import { Logo } from "@/components/ui/logo";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { CodeBlock } from "@/components/ui/code-block";
+import { Card } from "@/components/ui/card";
+import { Database, Network, Search, Brain, Shield, Sparkles, Lightbulb, Zap, ArrowRight } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { FAQSection } from "@/components/sections/faq";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -110,6 +120,54 @@ export default function Home() {
               <Sandbox />
             </div>
           </motion.div>
+
+          {/* Book Demo Section */}
+          <motion.div
+            variants={fadeInUp}
+            className="py-20 bg-muted/50"
+          >
+            <div className="max-w-7xl min-h-[calc(50vh)] mx-auto px-4 sm:px-8 flex items-center justify-center drop-shadow-2xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-center p-16 rounded-xl border border-white/5 bg-muted/50 backdrop-blur-sm"
+              >
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
+                  Bring your architecture together
+                </h2>
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16">
+                  Book a call with us to see how Helix can fit into your stack.
+                </p>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 17
+                  }}
+                >
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 py-6"
+                    onClick={() => window.open('https://calendly.com/helix-db/new-meeting', '_blank')}
+                  >
+                    Book Demo
+                  </Button>
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* FAQ Section */}
+          {/* <motion.div
+            variants={fadeInUp}
+            className="py-20 bg-muted/50"
+          >
+            <FAQSection />
+          </motion.div> */}
         </motion.div>
       </motion.div>
     </div>

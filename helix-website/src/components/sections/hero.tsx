@@ -122,15 +122,11 @@ export function HeroSection() {
     };
 
     const handleGetStarted = () => {
-        if (isAuthenticated) {
-            router.push("/dashboard");
-        } else {
-            setShowAuthModal(true);
-        }
+        window.open('https://calendly.com/helix-db/new-meeting', '_blank');
     };
 
     return (
-        <section className="relative py-16">
+        <section className="relative py-16 h-[calc(100vh-4rem)]">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <motion.div
@@ -223,7 +219,7 @@ export function HeroSection() {
                                 className="text-lg px-8 py-6"
                                 onClick={handleGetStarted}
                             >
-                                Get Started
+                                Book Demo
                             </Button>
                         </motion.div>
                         <motion.div

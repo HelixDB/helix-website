@@ -60,6 +60,7 @@ E::Follows {
     const [output, setOutput] = useState("// Output will appear here...");
     const [isLoading, setIsLoading] = useState(false);
     const [activeView, setActiveView] = useState<"terminal" | "graph">("terminal");
+    const [hasRunQuery, setHasRunQuery] = useState(false);
     const [graphData, setGraphData] = useState<{
         nodes: Array<Node>;
         edges: Array<Edge>;
@@ -87,6 +88,7 @@ E::Follows {
 
     const handleRun = async () => {
         setIsLoading(true);
+        setHasRunQuery(true);
         try {
             const result = await API.executeQuery(activeQuery, query, schema);
             const query_res = result.result;
@@ -155,17 +157,18 @@ E::Follows {
     const bgColor = currentTheme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)";
 
     return (
-        <div className={className}>
-            <div className="">
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="rounded-lg overflow-hidden shadow-lg">
-                        <div className="bg-muted/50">
+        <div className={`flex flex-col p-6 ${className}`}>
+            <div className="flex-none">
+                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                    {/* Schema Editor */}
+                    <div className="rounded-lg overflow-hidden shadow-lg flex flex-col h-48 lg:h-56">
+                        <div className="bg-muted/50 flex-none">
                             <button className="px-3 py-2 text-sm font-medium border-r relative text-foreground bg-background mb-[2px]">
                                 schema.hx
                             </button>
                         </div>
                         <div
-                            className=""
+                            className="flex-1 overflow-auto"
                             style={{
                                 background: bgColor,
                             }}
@@ -175,13 +178,14 @@ E::Follows {
                                 value={schema}
                                 onChange={(e) => setSchema(e.target.value)}
                                 placeholder="Enter your schema here..."
-                                style={{ resize: "none", background: "transparent" }}
+                                style={{ resize: "none", background: "transparent", height: "100%", overflow: "auto" }}
                             />
                         </div>
                     </div>
 
-                    <div className="rounded-lg overflow-hidden shadow-lg">
-                        <div className="bg-muted/50">
+                    {/* Query Editor */}
+                    <div className="rounded-lg overflow-hidden shadow-lg flex flex-col h-48 lg:h-56">
+                        <div className="bg-muted/50 flex-none">
                             <div className="flex">
                                 {Object.keys(initialQueries).map((filename) => (
                                     <button
@@ -198,7 +202,7 @@ E::Follows {
                             </div>
                         </div>
                         <div
-                            className=""
+                            className="flex-1 overflow-auto"
                             style={{
                                 background: bgColor,
                             }}
@@ -207,14 +211,15 @@ E::Follows {
                                 value={query}
                                 onChange={(e) => handleQueryChange(e.target.value)}
                                 placeholder="Enter your query here..."
-                                style={{ resize: "none", background: "transparent" }}
+                                style={{ resize: "none", background: "transparent", height: "100%", overflow: "auto" }}
                             />
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="flex justify-between items-center gap-2 my-4 py-2">
-                <div className="flex gap-2">
+
+            <div className="flex justify-between items-center gap-2 flex-none">
+                <div className={`flex gap-2 transition-opacity duration-200 ${!hasRunQuery ? 'opacity-0' : 'opacity-100'}`}>
                     <button
                         onClick={() => setActiveView("terminal")}
                         className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all ${activeView === "terminal"
@@ -269,9 +274,9 @@ E::Follows {
                 </Button>
             </div>
 
-            <div className="space-y-4">
+            <div className={`transition-all duration-300 ease-in-out ${hasRunQuery ? 'h-[400px] opacity-100 mt-6' : 'h-0 opacity-0 overflow-hidden'}`}>
                 <div
-                    className="rounded-lg overflow-hidden shadow-lg"
+                    className="h-full rounded-lg overflow-hidden shadow-lg"
                     style={{
                         background: bgColor,
                     }}
@@ -281,11 +286,11 @@ E::Follows {
                     </div>
 
                     {activeView === "terminal" ? (
-                        <pre className="p-4 font-mono text-sm overflow-auto h-[500px]">
+                        <pre className="p-4 font-mono text-sm overflow-auto h-[calc(100%-40px)]">
                             {output}
                         </pre>
                     ) : (
-                        <div className="h-[500px] w-full">
+                        <div className="h-[calc(100%-40px)] w-full">
                             <GraphVisualizer
                                 data={{
                                     nodes: graphData?.nodes || [],

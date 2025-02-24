@@ -93,9 +93,9 @@ class API {
       headers: API_CONFIG.DEFAULT_HEADERS,
       body,
     }).then((response) => {
-      if (!response.ok) {
+      /* if (!response.ok) {
         throw new Error('Failed to initialize handler');
-      }
+      } */
     }).catch((error) => {
       console.error('Error initializing handler:', error);
       throw error;
