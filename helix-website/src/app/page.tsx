@@ -124,39 +124,97 @@ export default function Home() {
           {/* Book Demo Section */}
           <motion.div
             variants={fadeInUp}
-            className="py-20 bg-muted/50"
+            className="py-20 relative overflow-hidden"
           >
-            <div className="max-w-7xl min-h-[calc(50vh)] mx-auto px-4 sm:px-8 flex items-center justify-center drop-shadow-2xl">
+            {/* Animated background elements */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background/50"
+              animate={{
+                backgroundPosition: ["0% 0%", "100% 100%"],
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+
+            <div className="max-w-7xl min-h-[calc(50vh)] mx-auto px-4 sm:px-8 flex items-center justify-center">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="text-center p-16 rounded-xl border border-white/5 bg-muted/50 backdrop-blur-sm"
+                className="text-center p-16 rounded-xl border border-white/5 bg-muted/50 backdrop-blur-sm relative overflow-hidden group"
+                whileHover={{
+                  scale: 1.01,
+                  transition: {
+                    duration: 0.2,
+                  },
+                }}
               >
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
-                  Bring your architecture together
-                </h2>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16">
-                  Book a call with us to see how Helix can fit into your stack.
-                </p>
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 17
-                  }}
-                >
-                  <Button
-                    size="lg"
-                    className="text-lg px-8 py-6"
-                    onClick={() => window.open('https://calendly.com/helix-db/new-meeting', '_blank')}
+
+                <div className="relative z-10">
+                  <motion.h2
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80"
+                    whileHover={{
+                      scale: 1.02,
+                      transition: { duration: 0.2 },
+                    }}
                   >
-                    Book Demo
-                  </Button>
-                </motion.div>
+                    Bring your architecture together
+                  </motion.h2>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16"
+                    whileHover={{
+                      scale: 1.01,
+                      transition: { duration: 0.2 },
+                    }}
+                  >
+                    Book a call with us to see how Helix can fit into your stack.
+                  </motion.p>
+
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4, type: "spring", stiffness: 200, damping: 20 }}
+                    whileHover={{
+                      scale: 1.05,
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 17
+                      }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      size="lg"
+                      className="text-lg px-8 py-6 relative overflow-hidden group"
+                      onClick={() => window.open('https://calendly.com/helix-db/new-meeting', '_blank')}
+                    >
+                      <motion.span
+                        className="absolute inset-0 bg-gradient-to-r from-primary/20 via-purple-500/20 to-primary/20"
+                        animate={{
+                          x: ["-100%", "100%"],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                      <span className="relative z-10">Book Demo</span>
+                    </Button>
+                  </motion.div>
+                </div>
               </motion.div>
             </div>
           </motion.div>
