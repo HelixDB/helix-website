@@ -126,9 +126,9 @@ export function HeroSection() {
     };
 
     return (
-        <section className="relative py-16 h-[calc(100vh-4rem)]">
+        <section className="relative min-h-[90vh] flex flex-col justify-center py-8 md:py-16">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-16">
+                <div className="text-center mb-8 md:mb-16">
                     <motion.div
                         variants={titleVariants}
                         initial="hidden"
@@ -136,7 +136,7 @@ export function HeroSection() {
                         viewport={{ once: true, amount: 0.8 }}
                         className="relative"
                     >
-                        <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-2xl mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 max-w-3xl mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
                             The Ultimate Graph-Vector Database
                         </h1>
                     </motion.div>
@@ -145,7 +145,7 @@ export function HeroSection() {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.8 }}
-                        className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto"
+                        className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto"
                     >
                         We combine the power of graph databases with vector types natively to build RAG applications easily.
                     </motion.p>
@@ -156,7 +156,7 @@ export function HeroSection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.8 }}
-                    className="max-w-xl mx-auto shadow-lg overflow-hidden rounded-lg"
+                    className="max-w-xl mx-auto shadow-lg overflow-hidden rounded-lg mb-4 hidden [@media(min-height:600px)]:block"
                 >
                     <div
                         className="rounded-lg overflow-hidden"
@@ -168,10 +168,9 @@ export function HeroSection() {
                         }}
                     >
                         <div
-
-                            className="px-4 py-2 bg-muted/50 flex items-center"
+                            className="px-3 py-1.5 bg-muted/50 flex items-center"
                         >
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-1.5">
                                 {[0, 1, 2].map((i) => (
                                     <motion.div
                                         key={i}
@@ -179,14 +178,14 @@ export function HeroSection() {
                                         variants={dotVariants}
                                         initial="hidden"
                                         animate="visible"
-                                        className={`w-3 h-3 rounded-full ${i === 0 ? "bg-red-500" : i === 1 ? "bg-yellow-500" : "bg-green-500"
+                                        className={`w-2 h-2 rounded-full ${i === 0 ? "bg-red-500" : i === 1 ? "bg-yellow-500" : "bg-green-500"
                                             }`}
                                     />
                                 ))}
                             </div>
-                            <span className="ml-4 text-sm font-medium">example.hx</span>
+                            <span className="ml-3 text-xs font-medium">example.hx</span>
                         </div>
-                        <div className="p-4 h-[200px] overflow-hidden">
+                        <div className="p-3 h-[120px] sm:h-[140px] md:h-[160px] overflow-hidden">
                             <TypingAnimation
                                 texts={codeExamples}
                                 typingSpeed={30}
@@ -202,9 +201,9 @@ export function HeroSection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.8 }}
-                    className="text-center mt-12"
+                    className="text-center mt-4 md:mt-8"
                 >
-                    <div className="flex gap-4 justify-center">
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -213,10 +212,11 @@ export function HeroSection() {
                                 stiffness: 400,
                                 damping: 17
                             }}
+                            className="w-full sm:w-auto"
                         >
                             <Button
                                 size="lg"
-                                className="text-lg px-8 py-6"
+                                className="text-base w-full sm:w-auto px-6 py-4 min-w-[160px]"
                                 onClick={handleGetStarted}
                             >
                                 Book Demo
@@ -230,27 +230,28 @@ export function HeroSection() {
                                 stiffness: 400,
                                 damping: 17
                             }}
+                            className="w-full sm:w-auto"
                         >
                             <Button
                                 size="lg"
                                 variant="outline"
-                                className="text-lg px-8 py-6 gap-2"
+                                className="text-base w-full sm:w-auto px-6 py-4 gap-2 min-w-[160px]"
                                 asChild
                             >
                                 <a
                                     href="https://github.com/HelixDB/helix-db"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center"
+                                    className="flex items-center justify-center"
                                 >
-                                    <Github className="h-5 w-5" />
+                                    <Github className="h-4 w-4" />
                                     View on GitHub
                                 </a>
                             </Button>
                         </motion.div>
                     </div>
                 </motion.div>
-            </div >
+            </div>
             <AuthModal
                 isOpen={showAuthModal}
                 onClose={() => {
@@ -258,6 +259,6 @@ export function HeroSection() {
                     checkAuthStatus();
                 }}
             />
-        </section >
+        </section>
     );
 }
