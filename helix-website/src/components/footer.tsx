@@ -109,9 +109,12 @@ export function Footer() {
                         <ThemeToggle />
                     </div>
                 </div>
-                <div className="mt-12 pt-8 border-t">
+                <div className="mt-12 pt-8 border-t flex flex-row justify-between">
                     <p className="text-center text-muted-foreground">
                         &copy; {new Date().getFullYear()} HelixDB. All rights reserved.
+                    </p>
+                    <p className="text-center text-muted-foreground">
+                        Backed by Y Combinator
                     </p>
                 </div>
             </div>

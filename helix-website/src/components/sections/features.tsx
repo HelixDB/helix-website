@@ -36,6 +36,10 @@ const HybridRAGDemo = () => {
     ];
 
     useEffect(() => {
+        // Only run animation if the device is not a mobile device
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) return;
+
         const timer = setInterval(() => {
             setStep((prev) => (prev + 1) % nodes.length);
         }, 1500);
@@ -172,6 +176,10 @@ const GraphDemo = () => {
     ]);
 
     useEffect(() => {
+        // Only run animation if the device is not a mobile device
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) return;
+
         let animationFrame: number | undefined;
         let startTime = Date.now();
 
@@ -179,22 +187,15 @@ const GraphDemo = () => {
             const elapsed = Date.now() - startTime;
 
             setNodes(nodes.map((node, i) => {
-                // Create circular motion with different phases
                 const angle = (elapsed * 0.001 + node.phase * Math.PI / 3);
                 const radius = 5;
-
-                // Base position plus circular motion
                 const newX = node.x + Math.cos(angle) * radius;
                 const newY = node.y + Math.sin(angle * 2) * radius;
-
-                // Add slight random movement
-                const randomX = (Math.random() - 0.5) * 0.5;
-                const randomY = (Math.random() - 0.5) * 0.5;
-
+                // Remove random movement for better performance
                 return {
                     ...node,
-                    x: Math.max(15, Math.min(105, newX + randomX)),
-                    y: Math.max(15, Math.min(85, newY + randomY)),
+                    x: Math.max(15, Math.min(105, newX)),
+                    y: Math.max(15, Math.min(85, newY)),
                 };
             }));
 
@@ -261,8 +262,12 @@ const VectorDemo = () => {
     ];
 
     useEffect(() => {
+        // Only run animation if the device is not a mobile device
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) return;
+
         const timer = setInterval(() => {
-            setStep((prev) => (prev + 1) % (points.length * 3)); // 3 states per point
+            setStep((prev) => (prev + 1) % (points.length * 3));
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -379,6 +384,10 @@ const UnifiedDemo = () => {
     const [active, setActive] = useState(0);
 
     useEffect(() => {
+        // Only run animation if the device is not a mobile device
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) return;
+
         const timer = setInterval(() => {
             setActive((prev) => (prev + 1) % 3);
         }, 2000);
@@ -575,13 +584,8 @@ export function FeaturesSection() {
                         <motion.div
                             key={index}
                             variants={itemVariants}
-                            className={`p-6 rounded-xl backdrop-blur-sm border border-white/5 bg-muted/10 ${index === 2 ? 'md:col-span-2 lg:col-span-1' : ''
+                            className={`p-6 rounded-xl border border-white/5 bg-muted/10 ${index === 2 ? 'md:col-span-2 lg:col-span-1' : ''
                                 }`}
-                            style={{
-                                transform: "translateZ(0)",
-                                backfaceVisibility: "hidden",
-                                WebkitBackfaceVisibility: "hidden"
-                            }}
                             whileHover={{
                                 scale: 1.02,
                                 transition: {
@@ -604,7 +608,6 @@ export function FeaturesSection() {
                                         rgba(139, 92, 246, 0.1) 100%)`
                                 }}
                             >
-                                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-sm" />
                                 <feature.icon className="w-7 h-7 text-primary" />
                             </motion.div>
                             <h3 className="text-xl font-semibold mb-2 text-foreground">
