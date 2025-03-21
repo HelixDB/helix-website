@@ -224,18 +224,18 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                         >
                             <Button
                                 size="lg"
-                                className="text-lg px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 w-full sm:w-1/2"
+                                className="text-lg px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 w-full sm:w-auto"
                                 asChild
                             >
                                 <a
                                     href="https://github.com/HelixDB/helix-db"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-3"
+                                    className="flex items-center justify-center gap-3 min-w-[200px]"
                                 >
                                     <Github className="w-5 h-5" />
                                     <span className="font-medium">Star on GitHub</span>
-                                    {githubStats && (
+                                    {githubStats && typeof githubStats.stars === 'number' && (
                                         <span className="px-2 py-0.5 text-sm bg-white/10 rounded-full">
                                             {githubStats.stars.toLocaleString()}
                                         </span>
