@@ -64,7 +64,7 @@ export function FAQSection() {
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">
                     Frequently Asked Questions
                 </h2>
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                <p className="text-xl text-muted max-w-3xl mx-auto">
                     Common questions about Helix and how it can help your development workflow.
                 </p>
             </motion.div>

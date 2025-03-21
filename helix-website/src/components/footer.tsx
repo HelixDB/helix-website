@@ -41,8 +41,8 @@ export function Footer() {
 
     return (
         <footer className="bg-muted/50 relative">
-            <div className="container mx-auto px-4 py-12">
-                <div className="flex flex-row justify-between">
+            <div className="container mx-auto px-4 py-8 md:py-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
                     <div>
                         <h3 className="text-sm font-semibold mb-4">Pages</h3>
                         <ul className="space-y-3">
@@ -97,23 +97,15 @@ export function Footer() {
                             ))}
                         </ul>
                     </div>
-                    <div className="flex flex-col gap-2">
-                        {/* <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => setIsBugReportOpen(true)}
-                            className="hover:text-destructive"
-                        >
-                            <Bug className="h-4 w-4" />
-                        </Button> */}
+                    <div className="flex flex-row sm:flex-col justify-center sm:justify-start gap-2">
                         <ThemeToggle />
                     </div>
                 </div>
-                <div className="mt-12 pt-8 border-t flex flex-row justify-between">
-                    <p className="text-center text-muted-foreground">
+                <div className="mt-8 md:mt-12 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+                    <p className="text-center text-muted-foreground text-sm">
                         &copy; {new Date().getFullYear()} HelixDB. All rights reserved.
                     </p>
-                    <p className="text-center text-muted-foreground">
+                    <p className="text-center text-muted-foreground text-sm">
                         Backed by Y Combinator
                     </p>
                 </div>

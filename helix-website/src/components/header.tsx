@@ -17,6 +17,7 @@ import {
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import { signOut } from "aws-amplify/auth"
+import { SocialLinks } from "./ui/social-links"
 
 export function Header() {
     const router = useRouter()
@@ -56,10 +57,11 @@ export function Header() {
                 <div className="flex items-center w-full justify-between py-6">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
                         <Logo />
-                        <span className="hidden font-bold sm:inline-block">
+                        <span className="hidden text-xl font-bold sm:inline-block">
                             HelixDB
                         </span>
                     </Link>
+                    <SocialLinks />
 
                     <div className="flex items-center gap-4">
                         <Button variant="outline" className="">
@@ -110,7 +112,7 @@ export function Header() {
                                 variant="default"
                                 onClick={() => setShowAuthModal(true)}
                             >
-                                Sign In
+                                Sign Up
                             </Button>
                         )}
                     </div>

@@ -10,6 +10,8 @@ import { AuthModal } from "@/components/ui/auth-modal";
 import { motion } from "framer-motion";
 import { HeroPill } from "../ui/hero-pill";
 import { SocialLinks } from "../ui/social-links";
+import styles from './hero.module.css';
+import { FaRust } from "react-icons/fa";
 
 const codeExamples = [
     `// Define your schema
@@ -47,19 +49,6 @@ const titleVariants = {
     }
 };
 
-const descriptionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 15,
-            delay: 0.2
-        }
-    }
-};
 
 const codeBlockVariants = {
     hidden: { opacity: 0, scale: 0.95 },
@@ -153,13 +142,6 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                                 announcement="🎉 New"
                                 isExternal
                             />
-                            <HeroPill
-                                className="w-min"
-                                href="https://github.com/HelixDB/helix-db"
-                                label={`${starCount?.toLocaleString()} GitHub stars`}
-                                announcement={<Star className="w-4 h-4" />}
-                                isExternal
-                            />
 
                         </div>
                     </div>
@@ -171,20 +153,21 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                         viewport={{ once: true, amount: 0.8 }}
                         className="relative"
                     >
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
-                            The <span className="italic">Ultimate</span> Graph-Vector <br /> Database
+                        <h1 className={`${styles.mainTitle} font-bold mb-4 md:mb-6 mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80`}>
+                            Build <span className="italic">10x Faster</span> with <br /> Graph-Vector Databases
                         </h1>
                     </motion.div>
-                    <motion.p
-                        variants={descriptionVariants}
+                    <motion.div
+                        variants={titleVariants}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.8 }}
-                        className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto"
+                        className="relative"
                     >
-                        We combine the power of graph and vector types natively to build RAG and AI applications easily.
-                    </motion.p>
-                    <SocialLinks className="mt-4" />
+                        <p className={`${styles.description} text-muted max-w-2xl mb-4 md:mb-6 mx-auto`}>
+                            We combine the power of graph and vector types natively (with <FaRust className="h-5 w-5 mb-1 inline-block" /> Rust), to build RAG and AI applications easily.
+                        </p>
+                    </motion.div>
                 </div>
 
                 <motion.div
@@ -194,7 +177,7 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                     viewport={{ once: true, amount: 0.8 }}
                     className="text-center mt-4 md:mt-8"
                 >
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         <motion.div
                             whileTap={{ scale: 0.95 }}
                             transition={{
@@ -202,11 +185,11 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                                 stiffness: 400,
                                 damping: 17
                             }}
-                            className="w-full sm:w-auto order-2 sm:order-1"
+                            className="w-full sm:w-auto "
                         >
                             <Button
                                 size="lg"
-                                className="text-base w-full sm:w-auto px-6 py-4 min-w-[160px]"
+                                className={`${styles.buttonText} w-full sm:w-auto px-6 py-4 min-w-[160px]`}
                                 onClick={handleGetStarted}
                                 variant="outline"
                             >
@@ -220,11 +203,11 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                                 stiffness: 400,
                                 damping: 17
                             }}
-                            className="w-full sm:w-auto order-1 sm:order-2"
+                            className="w-full sm:w-auto"
                         >
                             <Button
                                 size="lg"
-                                className="text-lg px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 w-full sm:w-auto"
+                                className={`${styles.buttonText} px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 w-full sm:w-auto`}
                                 asChild
                             >
                                 <a
@@ -235,13 +218,9 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                                 >
                                     <Github className="w-5 h-5" />
                                     <span className="font-medium">Star on GitHub</span>
-                                    {githubStats && typeof githubStats.stars === 'number' && (
-                                        <span className="px-2 py-0.5 text-sm bg-white/10 rounded-full">
-                                            {githubStats.stars.toLocaleString()}
-                                        </span>
-                                    )}
                                 </a>
                             </Button>
+                            <p className={`${styles.smallText} text-muted-foreground mt-2 italic`}>Takes 3 seconds 🙏🏻</p>
                         </motion.div>
                     </div>
                 </motion.div>

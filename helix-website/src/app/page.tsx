@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Download, Github } from "lucide-react";
+import { Download, Github, Code2, Terminal, Shield } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -14,7 +14,7 @@ import { Logo } from "@/components/ui/logo";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { CodeBlock } from "@/components/ui/code-block";
 import { Card } from "@/components/ui/card";
-import { Database, Network, Search, Brain, Shield, Sparkles, Lightbulb, Zap, ArrowRight, Star, GitFork, Users } from "lucide-react";
+import { Database, Network, Search, Brain, Sparkles, Lightbulb, Zap, ArrowRight, Star, GitFork, Users } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -36,6 +36,43 @@ const staggerContainer = {
   animate: {
     transition: {
       staggerChildren: 0.2
+    }
+  }
+};
+
+const titleVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      duration: 0.3
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
     }
   }
 };
@@ -81,11 +118,38 @@ function setCachedData(data: CachedData['data']) {
   }
 }
 
+// Add comparison query examples
+const comparisonExamples = {
+  cypher: {
+    name: "Cypher",
+    code: `MATCH (user:User)
+WHERE user.age > 25
+WITH user
+MATCH (user)-[:FOLLOWS]->(friend)
+RETURN friend
+ORDER BY friend.name
+LIMIT 10`,
+    lines: 7
+  },
+  gremlin: {
+    name: "Gremlin",
+    code: `g.V().hasLabel('User')
+  .has('age', gt(25))
+  .out('FOLLOWS')
+  .dedup()
+  .order()
+    .by('name')
+  .limit(10)`,
+    lines: 7
+  }
+};
+
 export default function Home() {
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<'cypher' | 'gremlin'>('cypher');
   const [githubStats, setGithubStats] = useState<{
     stars: number;
     forks: number;
@@ -228,6 +292,286 @@ export default function Home() {
             <FeaturesSection />
           </motion.div>
 
+          {/* Query Language Comparison Section */}
+          <motion.div
+            variants={fadeInUp}
+            className="py-20 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background/50" />
+            <div className="absolute inset-0 bg-grid-white/[0.01] bg-grid-primary/[0.01]" />
+            <div className="container relative mx-auto px-4">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={titleVariants}
+                className="text-center mb-16 max-w-7xl mx-auto"
+              >
+                <div className="relative inline-block">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
+                    Simple, Powerful, and Intuitive
+                  </h2>
+                  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    See how HelixQL simplifies complex queries compared to traditional query languages
+                  </p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-7xl mx-auto"
+              >
+                {/* HelixQL Example */}
+                <motion.div
+                  variants={itemVariants}
+                  className="p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
+                    <span className="text-sm text-muted-foreground">3 lines of code</span>
+                  </div>
+                  <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
+                    <code className="text-sm">
+                      {`QUERY findFriends() =>
+  users <- V<User>::WHERE(_::{age}::GT(25))
+  RETURN users::Out<Follows> LIMIT 10`}
+                    </code>
+                  </pre>
+                </motion.div>
+
+                {/* Comparison Example */}
+                <motion.div
+                  variants={itemVariants}
+                  className="p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
+                >
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex gap-2">
+                        <Button
+                          variant={selectedLanguage === 'cypher' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setSelectedLanguage('cypher')}
+                          className="text-sm"
+                        >
+                          Cypher
+                        </Button>
+                        <Button
+                          variant={selectedLanguage === 'gremlin' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setSelectedLanguage('gremlin')}
+                          className="text-sm"
+                        >
+                          Gremlin
+                        </Button>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{comparisonExamples[selectedLanguage].lines} lines of code</span>
+                    </div>
+                    <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
+                      <code className="text-sm">
+                        {comparisonExamples[selectedLanguage].code}
+                      </code>
+                    </pre>
+                  </div>
+                </motion.div>
+              </motion.div>
+
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+              >
+                <motion.div
+                  variants={itemVariants}
+                  className="p-6 rounded-xl border border-white/5 bg-muted/10 backdrop-blur-sm"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      type: "spring",
+                    }}
+                    className="w-14 h-14 rounded-lg flex items-center justify-center mb-4 relative"
+                    style={{
+                      background: `linear-gradient(135deg, 
+                        rgba(99, 102, 241, 0.1) 0%,
+                        rgba(139, 92, 246, 0.1) 100%)`
+                    }}
+                  >
+                    <Zap className="w-7 h-7 text-primary" />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">70% Less Code</h3>
+                  <p className="text-muted-foreground">Write cleaner, more maintainable queries with our intuitive syntax</p>
+                </motion.div>
+
+                <motion.div
+                  variants={itemVariants}
+                  className="p-6 rounded-xl border border-white/5 bg-muted/10 backdrop-blur-sm"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      type: "spring",
+                    }}
+                    className="w-14 h-14 rounded-lg flex items-center justify-center mb-4 relative"
+                    style={{
+                      background: `linear-gradient(135deg, 
+                        rgba(99, 102, 241, 0.1) 0%,
+                        rgba(139, 92, 246, 0.1) 100%)`
+                    }}
+                  >
+                    <Shield className="w-7 h-7 text-primary" />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">Type Safety</h3>
+                  <p className="text-muted-foreground">Catch errors at compile time with full type checking and IDE support</p>
+                </motion.div>
+
+                <motion.div
+                  variants={itemVariants}
+                  className="p-6 rounded-xl border border-white/5 bg-muted/10 backdrop-blur-sm"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      type: "spring",
+                    }}
+                    className="w-14 h-14 rounded-lg flex items-center justify-center mb-4 relative"
+                    style={{
+                      background: `linear-gradient(135deg, 
+                        rgba(99, 102, 241, 0.1) 0%,
+                        rgba(139, 92, 246, 0.1) 100%)`
+                    }}
+                  >
+                    <Brain className="w-7 h-7 text-primary" />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">Native Vector Support</h3>
+                  <p className="text-muted-foreground">Seamlessly combine graph traversals with vector operations</p>
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Setup Comparison Section */}
+          <motion.div
+            variants={fadeInUp}
+            className="py-20 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background/50" />
+            <div className="container relative mx-auto px-4">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={titleVariants}
+                className="text-center mb-16 max-w-3xl mx-auto"
+              >
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
+                  Simple Setup
+                </h2>
+                <p className="text-xl text-muted-foreground">
+                  Replace complex architectures with a single powerful database
+                </p>
+              </motion.div>
+
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16"
+              >
+                {/* Traditional Setup */}
+                <motion.div
+                  variants={itemVariants}
+                  className="p-8 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl"
+                >
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-semibold mb-2">Traditional Setup</h3>
+                    <p className="text-muted-foreground">Multiple databases, complex integrations</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-lg bg-background/50 border border-white/5">
+                      <p className="font-medium mb-1">Graph Database</p>
+                      <p className="text-sm text-muted-foreground">Neo4j setup & configuration</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-background/50 border border-white/5">
+                      <p className="font-medium mb-1">Vector Database</p>
+                      <p className="text-sm text-muted-foreground">Pinecone/Qdrant deployment</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-background/50 border border-white/5">
+                      <p className="font-medium mb-1">Integration Layer</p>
+                      <p className="text-sm text-muted-foreground">Custom sync logic & maintenance</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Helix Setup */}
+                <motion.div
+                  variants={itemVariants}
+                  className="p-8 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl"
+                >
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-semibold mb-2">Helix Setup</h3>
+                    <p className="text-muted-foreground">One command, zero complexity</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-lg bg-background/50 border border-white/5">
+                      <p className="font-medium mb-2">Install & Start</p>
+                      <pre className="text-sm bg-muted/30 p-2 rounded-md">
+                        <code>cargo install helix-db</code>
+                      </pre>
+                    </div>
+                    <div className="p-4 rounded-lg bg-background/50 border border-white/5">
+                      <p className="font-medium mb-2">Define Schema</p>
+                      <pre className="text-sm bg-muted/30 p-2 rounded-md">
+                        <code>{`V::User {
+  Name: String,
+  Embedding: Vector<384>
+}`}</code>
+                      </pre>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                className="grid grid-cols-3 gap-4 max-w-3xl mx-auto text-center"
+              >
+                <motion.div
+                  variants={itemVariants}
+                  className="p-4 rounded-lg bg-muted/30 backdrop-blur-sm"
+                >
+                  <h3 className="text-3xl font-bold mb-1">90%</h3>
+                  <p className="text-sm text-muted-foreground">Less Setup Time</p>
+                </motion.div>
+                <motion.div
+                  variants={itemVariants}
+                  className="p-4 rounded-lg bg-muted/30 backdrop-blur-sm"
+                >
+                  <h3 className="text-3xl font-bold mb-1">1 API</h3>
+                  <p className="text-sm text-muted-foreground">Single Interface</p>
+                </motion.div>
+                <motion.div
+                  variants={itemVariants}
+                  className="p-4 rounded-lg bg-muted/30 backdrop-blur-sm"
+                >
+                  <h3 className="text-3xl font-bold mb-1">Zero</h3>
+                  <p className="text-sm text-muted-foreground">Integration Code</p>
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
+
           {/* GitHub Activity Section */}
           <motion.div
             variants={fadeInUp}
@@ -244,49 +588,11 @@ export default function Home() {
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
                   Join Our Growing Community
                 </h2>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                <p className="text-xl text-muted max-w-2xl mx-auto">
                   Be part of the next generation of graph database technology.
                   Connect with developers and innovators building the future.
                 </p>
               </motion.div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                {githubStats && (
-                  <>
-                    <motion.div
-                      whileHover={{ y: -5 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    >
-                      <Card className="p-6 text-center bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-colors hover:shadow-lg hover:shadow-primary/5">
-                        <Star className="w-8 h-8 mx-auto mb-4 text-primary" />
-                        <h3 className="text-2xl font-bold mb-2">{githubStats.stars.toLocaleString()}</h3>
-                        <p className="text-muted-foreground">GitHub Stars</p>
-                      </Card>
-                    </motion.div>
-                    <motion.div
-                      whileHover={{ y: -5 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    >
-                      <Card className="p-6 text-center bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-colors hover:shadow-lg hover:shadow-primary/5">
-                        <GitFork className="w-8 h-8 mx-auto mb-4 text-primary" />
-                        <h3 className="text-2xl font-bold mb-2">{githubStats.forks.toLocaleString()}</h3>
-                        <p className="text-muted-foreground">Project Forks</p>
-                      </Card>
-                    </motion.div>
-                    <motion.div
-                      whileHover={{ y: -5 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    >
-                      <Card className="p-6 text-center bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-colors hover:shadow-lg hover:shadow-primary/5">
-                        <Download className="w-8 h-8 mx-auto mb-4 text-primary" />
-                        <h3 className="text-2xl font-bold mb-2">200+</h3>
-                        <p className="text-muted-foreground">Downloads</p>
-                      </Card>
-                    </motion.div>
-                  </>
-                )}
-              </div>
-
               <div className="mt-12 text-center space-y-8">
                 <div className="flex justify-center">
                   <SocialLinks iconSize={24} className="gap-8" />
@@ -299,9 +605,6 @@ export default function Home() {
                   transition={{ delay: 0.2, duration: 0.5 }}
                   className="flex flex-col items-center gap-4"
                 >
-                  <p className="text-muted-foreground">
-                    Join our community and support the project
-                  </p>
                   <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
                     <Button
                       size="lg"
@@ -331,11 +634,6 @@ export default function Home() {
                       >
                         <Github className="w-5 h-5" />
                         <span className="font-medium">Star on GitHub</span>
-                        {githubStats && (
-                          <span className="px-2 py-0.5 text-sm bg-white/10 rounded-full">
-                            {githubStats.stars.toLocaleString()}
-                          </span>
-                        )}
                       </a>
                     </Button>
                   </div>
@@ -362,7 +660,7 @@ export default function Home() {
                   <h2 className="text-3xl md:text-4xl font-bold mb-4">
                     Try HelixQL
                   </h2>
-                  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                  <p className="text-xl text-muted max-w-2xl mx-auto">
                     Experience the power and simplicity of HelixQL with our
                     interactive sandbox.
                   </p>
@@ -434,7 +732,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2, duration: 0.5 }}
-                    className="text-xl text-muted-foreground max-w-2xl mx-auto mb-16"
+                    className="text-xl text-muted max-w-2xl mx-auto mb-16"
                   >
                     Book a call with us to see how Helix can fit into your stack.
                   </motion.p>

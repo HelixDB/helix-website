@@ -17,7 +17,7 @@ export function AuthModal({
     onClose: () => void
 }) {
     const router = useRouter()
-    const [authMode, setAuthMode] = useState<AuthMode>("signin")
+    const [authMode, setAuthMode] = useState<AuthMode>("signup")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmCode, setConfirmCode] = useState("")

@@ -13,13 +13,13 @@ export function Logo() {
     }, []);
 
     if (!mounted) {
-        return <div className="relative h-12 w-12" />;
+        return <div className="relative h-10 w-10" />;
     }
 
     const currentTheme = theme === "system" ? systemTheme : theme;
 
     return (
-        <div className="relative h-12 w-12">
+        <div className="relative h-10 w-10">
             <Image
                 src={currentTheme === "dark" ? "/dark-helix.png" : "/light-helix.png"}
                 alt="HelixDB Logo"

@@ -613,7 +613,7 @@ export function FeaturesSection() {
                             <h3 className="text-xl font-semibold mb-2 text-foreground">
                                 {feature.title}
                             </h3>
-                            <p className="text-muted-foreground">{feature.description}</p>
+                            <p className="text-muted">{feature.description}</p>
                         </motion.div>
                     ))}
                 </motion.div>
@@ -662,7 +662,7 @@ export function FeaturesSection() {
                             <h3 className="text-xl font-semibold mb-2 text-foreground">
                                 {useCase.title}
                             </h3>
-                            <p className="text-muted-foreground">{useCase.description}</p>
+                            <p className="text-muted">{useCase.description}</p>
                         </motion.div>
                     ))}
                 </motion.div>

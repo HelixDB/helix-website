@@ -51,9 +51,7 @@ export function SocialLinks({ className, iconSize = 20 }: SocialLinksProps) {
                             "transition-colors duration-200",
                             "text-muted-foreground",
                             social.color,
-                            "hover:scale-110"
                         )}
-                        whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                         title={social.name}
                     >
