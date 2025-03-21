@@ -162,7 +162,6 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                             />
 
                         </div>
-                        <SocialLinks className="mt-2" />
                     </div>
 
                     <motion.div
@@ -185,6 +184,7 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
                     >
                         We combine the power of graph and vector types natively to build RAG and AI applications easily.
                     </motion.p>
+                    <SocialLinks className="mt-4" />
                 </div>
 
                 <motion.div
