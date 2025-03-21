@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Github } from "lucide-react";
+import { Download, Github } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -221,7 +221,7 @@ export default function Home() {
         >
           {/* Main Content */}
           <motion.div variants={fadeInUp}>
-            <HeroSection />
+            <HeroSection githubStats={githubStats} />
           </motion.div>
 
           <motion.div variants={fadeInUp}>
@@ -278,9 +278,9 @@ export default function Home() {
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     >
                       <Card className="p-6 text-center bg-background/50 backdrop-blur-sm border-primary/10 hover:border-primary/20 transition-colors hover:shadow-lg hover:shadow-primary/5">
-                        <Users className="w-8 h-8 mx-auto mb-4 text-primary" />
-                        <h3 className="text-2xl font-bold mb-2">1,000+</h3>
-                        <p className="text-muted-foreground">Community Members</p>
+                        <Download className="w-8 h-8 mx-auto mb-4 text-primary" />
+                        <h3 className="text-2xl font-bold mb-2">200+</h3>
+                        <p className="text-muted-foreground">Downloads</p>
                       </Card>
                     </motion.div>
                   </>

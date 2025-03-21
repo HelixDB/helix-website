@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
-import { TypingAnimation } from "@/components/ui/typing-animation";
 import { Github, MoveRight, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@/amplify-functions";
@@ -103,7 +102,15 @@ const dotVariants = {
     })
 };
 
-export function HeroSection() {
+interface HeroSectionProps {
+    githubStats?: {
+        stars: number;
+        forks: number;
+        lastCommit: string;
+    } | null;
+}
+
+export function HeroSection({ githubStats }: HeroSectionProps) {
     const { theme, systemTheme } = useTheme();
     const currentTheme = theme === "system" ? systemTheme : theme;
     const router = useRouter();
@@ -165,7 +172,7 @@ export function HeroSection() {
                         viewport={{ once: true, amount: 0.8 }}
                         className="relative"
                     >
-                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 mx-auto bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
                             The <span className="italic">Ultimate</span> Graph-Vector <br /> Database
                         </h1>
                     </motion.div>
@@ -217,20 +224,20 @@ export function HeroSection() {
                         >
                             <Button
                                 size="lg"
-                                className="text-base w-full sm:w-auto px-6 py-4 gap-2 min-w-[200px] bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+                                className="text-lg px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 w-full sm:w-1/2"
                                 asChild
                             >
                                 <a
                                     href="https://github.com/HelixDB/helix-db"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center justify-center"
+                                    className="flex items-center justify-center gap-3"
                                 >
-                                    <Github className="h-5 w-5 mr-2" />
-                                    Star on GitHub
-                                    {typeof starCount === 'number' && (
-                                        <span className="ml-2 px-2 py-0.5 text-sm bg-white/10 rounded-full">
-                                            {starCount.toLocaleString()}
+                                    <Github className="w-5 h-5" />
+                                    <span className="font-medium">Star on GitHub</span>
+                                    {githubStats && (
+                                        <span className="px-2 py-0.5 text-sm bg-white/10 rounded-full">
+                                            {githubStats.stars.toLocaleString()}
                                         </span>
                                     )}
                                 </a>
