@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Github, User, LogOut, CreditCard } from "lucide-react"
+import { User, LogOut, CreditCard, Star } from "lucide-react"
 import { Button } from "./ui/button"
-import { ThemeToggle } from "./ui/theme-toggle"
 import { Logo } from "./ui/logo"
 import { AuthModal } from "./ui/auth-modal"
 import { getCurrentUser } from "@/amplify-functions"
@@ -52,33 +51,27 @@ export function Header() {
     }
 
     return (
-        <header className="relative h-16 top-0 z-50 w-full backdrop-blur-xl mx-auto ">
-            <div className="max-w-7xl mx-auto px-4 sm:px-8">
-                <div className="flex items-center w-full justify-between py-6">
+        <header className="fixed top-0 z-50 w-full mx-auto border-b border-white/10 bg-black/70 backdrop-blur-md">
+            <div className="max-w-8xl mx-auto px-4 sm:px-8">
+                <div className="flex items-center w-full justify-between py-2 relative">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
                         <Logo />
                         <span className="hidden text-xl font-bold sm:inline-block">
                             HelixDB
                         </span>
                     </Link>
-                    <SocialLinks />
+
+                    {/* Absolutely centered social links */}
+                    <div className="absolute left-0 right-0 mx-auto w-fit">
+                        <SocialLinks />
+                    </div>
 
                     <div className="flex items-center gap-4">
-                        <Button variant="outline" className="">
-                            <a
-                                href="https://helix.mintlify.app/introduction"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Docs
-                            </a>
-                        </Button>
                         {isAuthenticated ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         variant="outline"
-                                        className=""
                                         size="icon"
                                     >
                                         <User className="h-4 w-4" />
@@ -109,12 +102,29 @@ export function Header() {
                             </DropdownMenu>
                         ) : (
                             <Button
-                                variant="default"
+                                variant="outline"
                                 onClick={() => setShowAuthModal(true)}
                             >
                                 Sign Up
                             </Button>
                         )}
+
+                        <Button
+                            variant="default"
+                            size="sm"
+                            className="sm:flex items-center gap-2"
+                            asChild
+                        >
+                            <a
+                                href="https://github.com/HelixDB/helix-db"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2"
+                            >
+                                <Star className="h-4 w-4" />
+                                <span className="hidden sm:inline">Star on GitHub</span>
+                            </a>
+                        </Button>
                     </div>
                 </div>
             </div>
