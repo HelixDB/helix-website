@@ -1,14 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, ExternalLink } from "lucide-react";
+import { Copy, ExternalLink, Check } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { CodeEditor } from "./ui/code-editor";
 
 export function Install() {
     const [activeOS, setActiveOS] = useState("linux");
     const [copied, setCopied] = useState(false);
+    const [height, setHeight] = useState("auto");
+    const preRef = useRef<HTMLPreElement>(null);
+    const { theme } = useTheme();
+
+    useEffect(() => {
+        if (!preRef.current) return;
+
+        const updateHeight = () => {
+            if (preRef.current) {
+                setHeight(`${preRef.current.scrollHeight}px`);
+            }
+        };
+
+        // Create a ResizeObserver to watch for content size changes
+        const resizeObserver = new ResizeObserver(updateHeight);
+        resizeObserver.observe(preRef.current);
+
+        // Initial height measurement
+        updateHeight();
+
+        return () => {
+            if (preRef.current) {
+                resizeObserver.unobserve(preRef.current);
+            }
+        };
+    }, [activeOS]); // Re-run when OS changes to ensure proper observation
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -17,23 +44,34 @@ export function Install() {
     };
 
     const installCommands = {
-        linux: "curl -Lo helix.zip https://github.com/HelixDB/helix-db/releases/latest/download/helix-linux-x64.zip && \nunzip helix.zip && ./helix version",
-        macos: "curl -Lo helix.zip https://github.com/HelixDB/helix-db/releases/latest/download/helix-mac-x64.zip && \nunzip helix.zip && ./helix version",
-        windows: "curl.exe -Lo helix.zip https://github.com/HelixDB/helix-db/releases/latest/download/helix-win-x64.zip\nExpand-Archive -Path helix.zip -DestinationPath .\nhelix.exe version"
+        linux: `curl -Lo helix.zip https://github.com/HelixDB/helix-db/releases/latest/download/helix-linux-x64.zip && unzip helix.zip &&
+./helix version`,
+        macos: `curl -Lo helix.zip https://github.com/HelixDB/helix-db/releases/latest/download/helix-mac-x64.zip &&
+unzip helix.zip &&
+./helix version`,
+        windows: `curl.exe -Lo helix.zip https://github.com/HelixDB/helix-db/releases/latest/download/helix-win-x64.zip
+Expand-Archive -Path helix.zip -DestinationPath .
+helix.exe version`
+    };
+
+    const fileNames = {
+        linux: "Linux",
+        macos: "Mac OS",
+        windows: "Windows"
     };
 
     return (
-        <div className="min-h-screen flex items-center relative">
-            {/* Absolute positioned background behind everything */}
+        <div className="min-h-screen flex items-center relative py-24">
+            {/* Background */}
             <div className="absolute inset-0 w-full h-full overflow-hidden -z-10">
                 <div className="absolute inset-0 bg-background dark:bg-black"></div>
                 <div className="absolute inset-0 bg-grid-small-white/5 [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
             </div>
 
             <div className="container mx-auto px-4 sm:px-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <div className="flex flex-col max-w-2xl relative">
-                        {/* Radial gradient underlay for better contrast */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center max-w-8xl mx-auto">
+                    {/* Left column - text content */}
+                    <div className="flex flex-col max-w-2xl relative ">
                         <div className="absolute -inset-10 bg-gradient-radial from-background/95 dark:from-black/95 via-background/70 dark:via-black/70 to-transparent rounded-3xl -z-10 blur-sm"></div>
 
                         <h2 className="text-4xl sm:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-6">
@@ -44,6 +82,7 @@ export function Install() {
                             HelixDB is production-ready on Linux and seamlessly integrated with major programming languages.
                         </p>
 
+
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Button
                                 size="lg"
@@ -51,84 +90,88 @@ export function Install() {
                                 className="px-8 py-6 text-lg border-white/10 hover:bg-white/5 mb-4 sm:mb-0"
                                 asChild
                             >
-                                <Link href="/docs/getting-started">
-                                    Get Started
-                                </Link>
+                                <Link href="">Get Started</Link>
                             </Button>
 
-                            <div className="flex flex-col">
-                                <Button
-                                    size="lg"
-                                    className="px-8 py-6 text-lg flex items-center gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
-                                    asChild
+                            <Button
+                                size="lg"
+                                className="px-8 py-6 text-lg flex items-center gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
+                                asChild
+                            >
+                                <a
+                                    href="https://github.com/HelixDB/helix-db"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
-                                    <a
-                                        href="https://github.com/HelixDB/helix-db"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <ExternalLink className="w-5 h-5" />
-                                        <span>GitHub Repo</span>
-                                    </a>
-                                </Button>
-                            </div>
+                                    <ExternalLink className="w-5 h-5" />
+                                    <span>GitHub Repo</span>
+                                </a>
+                            </Button>
                         </div>
                     </div>
 
+                    {/* Right column - code display */}
                     <div className="relative">
-                        {/* Subtle glow behind the code block */}
-                        <div className="absolute -inset-10 bg-gradient-radial from-primary/5 via-transparent to-transparent -z-10 blur-xl opacity-70"></div>
+                        <div className="rounded-lg overflow-hidden shadow-lg flex flex-col">
+                            <div className="bg-muted/50 flex-none flex items-center ">
+                                {Object.entries(fileNames).map(([os, fileName]) => (
+                                    <button
+                                        key={os}
+                                        onClick={() => setActiveOS(os)}
+                                        className={`px-3 py-2 text-sm font-medium border-r border-border/20 relative 
+                                            ${activeOS === os
+                                                ? "text-foreground bg-background mb-[2px]"
+                                                : "text-muted-foreground hover:text-foreground"
+                                            }`}
+                                    >
+                                        {fileName}
+                                    </button>
+                                ))}
 
-                        <Tabs defaultValue="linux" value={activeOS} onValueChange={setActiveOS} className="w-full">
-                            <TabsList className="border-b border-border/30 w-full justify-start bg-transparent p-0 h-auto mb-2">
-                                <TabsTrigger
-                                    value="linux"
-                                    className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary bg-transparent h-12 px-8 rounded-none hover:text-primary transition-colors"
-                                >
-                                    Linux
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="macos"
-                                    className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary bg-transparent h-12 px-8 rounded-none text-muted-foreground hover:text-primary transition-colors"
-                                >
-                                    macOS
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="windows"
-                                    className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary bg-transparent h-12 px-8 rounded-none text-muted-foreground hover:text-primary transition-colors"
-                                >
-                                    Windows
-                                </TabsTrigger>
-                            </TabsList>
+                                {/* Copy button */}
+                                <div className="ml-auto">
+                                    <button
+                                        className="text-foreground/50 hover:text-foreground hover:bg-white/5 transition-colors flex flex-row items-center justify-center rounded-md mr-2"
+                                        onClick={() => copyToClipboard(installCommands[activeOS as keyof typeof installCommands])}
+                                    >
+                                        {copied ? (
+                                            <>
+                                                <Check className="h-4 w-4 mr-2 ml-2 py-0.5 text-green-500" />
+                                                <span className="mr-2">Copied!</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Copy className="h-4 w-4 mr-2 ml-2 py-0.5" />
+                                                <span className="mr-2">Copy</span>
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                className="grid transition-[height] duration-300 ease-in-out overflow-hidden"
+                                style={{
+                                    background: theme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)",
+                                }}
+                            >
+                                <div className="[grid-area:1/1]">
+                                    <pre
+                                        ref={preRef}
+                                        className="w-full px-4 py-3 m-0 font-mono text-sm leading-relaxed overflow-x-auto text-foreground/90 whitespace-pre-wrap break-words"
+                                    >
+                                        {installCommands[activeOS as keyof typeof installCommands]}
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
 
-                            {["linux", "macos", "windows"].map((os) => (
-                                <TabsContent key={os} value={os} className="w-full mt-0">
-                                    <div className="relative rounded-lg bg-black/70 border border-white/10 overflow-hidden shadow-xl backdrop-blur-sm">
-                                        <pre className="p-6 overflow-x-auto text-foreground/90">
-                                            <code className="text-base font-mono leading-relaxed">
-                                                {installCommands[os as keyof typeof installCommands]}
-                                            </code>
-                                        </pre>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="absolute top-3 right-3 text-foreground/50 hover:text-foreground hover:bg-white/5 transition-colors"
-                                            onClick={() => copyToClipboard(installCommands[os as keyof typeof installCommands])}
-                                        >
-                                            <Copy className={`h-5 w-5 ${copied ? 'text-green-500' : ''}`} />
-                                            <span className="sr-only">Copy to clipboard</span>
-                                        </Button>
-                                    </div>
-
-                                    <div className="flex justify-between w-full mt-4 text-sm text-muted-foreground">
-                                        <div>
-                                            Release: <a href="https://github.com/HelixDB/helix-db/releases" className="text-primary hover:underline transition-colors">v0.16.32</a> | Mar 17, 2025
-                                        </div>
-                                        <div>Apache 2.0 Open Source</div>
-                                    </div>
-                                </TabsContent>
-                            ))}
-                        </Tabs>
+                        {/* Footer info */}
+                        <div className="flex flex-col sm:flex-row sm:justify-between w-full mt-4 text-sm text-muted-foreground">
+                            {/* <div className="mb-2 sm:mb-0">
+                                Release: <a href="https://github.com/HelixDB/helix-db/releases" className="text-primary hover:underline transition-colors">v0.16.32</a> | Mar 17, 2025
+                            </div>
+                            <div>Apache 2.0 Open Source</div> */}
+                        </div>
                     </div>
                 </div>
             </div>

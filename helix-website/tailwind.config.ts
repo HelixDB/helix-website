@@ -99,10 +99,22 @@ module.exports = {
     					height: '0'
     				}
     			},
-                'aurora': {
-                    from: { 'background-position': '0% 50%' },
-                    to: { 'background-position': '100% 50%' }
-                }
+    			aurora: {
+    				from: {
+    					'background-position': '0% 50%'
+    				},
+    				to: {
+    					'background-position': '100% 50%'
+    				}
+    			},
+    			orbit: {
+    				'0%': {
+    					transform: 'rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg))'
+    				},
+    				'100%': {
+    					transform: 'rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg))'
+    				}
+    			}
     		},
     		animation: {
     			scroll: 'scroll var(--animation-duration) linear infinite',
@@ -110,7 +122,8 @@ module.exports = {
     			'spin-around': 'spin-around calc(var(--speed) * 2) infinite linear',
     			'accordion-down': 'accordion-down 0.2s ease-out',
     			'accordion-up': 'accordion-up 0.2s ease-out',
-                'aurora-text': 'aurora 3s linear infinite'
+    			'aurora-text': 'aurora 3s linear infinite',
+    			orbit: 'orbit calc(var(--duration)*1s) linear infinite'
     		},
     		fontFamily: {
     			sans: [
