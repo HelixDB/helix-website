@@ -1,5 +1,6 @@
 import React from "react";
 import OrbitingCircles from "@/components/magicui/orbiting-circles";
+import { BetterInfographic } from "./magicui/better-animation";
 
 export function Better() {
     return (
@@ -16,7 +17,7 @@ export function Better() {
                     <div className="flex flex-col max-w-2xl relative">
                         <div className="absolute -inset-10 bg-gradient-radial from-background/95 dark:from-black/95 via-background/70 dark:via-black/70 to-transparent rounded-3xl -z-10 blur-sm"></div>
 
-                        <h2 className="text-4xl sm:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-6">
+                        <h2 className="text-4xl sm:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-6 leading-tight py-1">
                             Better by Design
                         </h2>
 
@@ -67,8 +68,8 @@ export function Better() {
                     </div>
 
                     {/* Right column - animated infographic */}
-                    <div className="relative flex h-[600px] w-full flex-col items-center justify-center">
-                        <OrbitingCircles />
+                    <div className="relative flex w-full flex-col items-center justify-center">
+                        <BetterInfographic />
                     </div>
                 </div>
             </div>
