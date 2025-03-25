@@ -73,7 +73,7 @@ export function DemoSection() {
                             className="px-6 md:px-8 py-4 md:py-6 text-base md:text-lg"
                         >
                             <a
-                                href="https://cal.com/helix-db"
+                                href="https://calendly.com/helix-db/new-meeting"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

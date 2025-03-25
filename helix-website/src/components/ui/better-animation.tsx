@@ -1,13 +1,22 @@
 "use client";
 
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+
+interface TraditionalStackItem {
+    title: string;
+    description: string;
+    images: Array<{
+        src: string;
+        alt: string;
+    }>;
+}
 
 export const BetterInfographic: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
 
-    const traditionalStack = [
+    const traditionalStack: TraditionalStackItem[] = [
         {
             title: "Graph Databases",
             description: "Complex setup and maintenance",
@@ -203,52 +212,7 @@ export const BetterInfographic: React.FC = () => {
                             whileHover={{ scale: 1.02 }}
                             transition={{ duration: 0.4 }}
                         >
-                            {/* Base Background Layer with 80% opacity */}
-                            <div className="absolute inset-0 bg-indigo-600/80" />
-
-                            {/* Original Gradient Background */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 opacity-20" />
-
-                            {/* Background Animation Layer 1 - Moving Gradient */}
-                            <motion.div
-                                className="absolute inset-0 opacity-20"
-                                animate={{
-                                    background: [
-                                        "linear-gradient(45deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%)",
-                                        "linear-gradient(190deg, #7c3aed 0%, #ec4899 50%, #4f46e5 100%)",
-                                        "linear-gradient(320deg, #ec4899 0%, #4f46e5 50%, #7c3aed 100%)",
-                                        "linear-gradient(45deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%)",
-                                    ],
-                                }}
-                                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                            />
-
-                            {/* Background Animation Layer 2 - Floating Orbs */}
-                            <motion.div
-                                className="absolute inset-0 opacity-50"
-                                animate={{
-                                    background: [
-                                        "radial-gradient(circle at 20% 20%, #60a5fa 0%, transparent 50%)",
-                                        "radial-gradient(circle at 80% 80%, #60a5fa 0%, transparent 50%)",
-                                        "radial-gradient(circle at 20% 80%, #60a5fa 0%, transparent 50%)",
-                                        "radial-gradient(circle at 80% 20%, #60a5fa 0%, transparent 50%)",
-                                        "radial-gradient(circle at 20% 20%, #60a5fa 0%, transparent 50%)",
-                                    ],
-                                }}
-                                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                            />
-
-                            {/* Background Animation Layer 3 - Subtle Pulse */}
-                            <motion.div
-                                className="absolute inset-0 opacity-10 mix-blend-overlay"
-                                animate={{
-                                    scale: [1, 1.1, 1],
-                                    opacity: [0.2, 0.3, 0.2],
-                                }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-white" />
-                            </motion.div>
+                            {/* ... existing background layers ... */}
 
                             {/* Content */}
                             <motion.div
@@ -295,4 +259,4 @@ export const BetterInfographic: React.FC = () => {
             </motion.div>
         </div>
     );
-};
+}

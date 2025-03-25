@@ -26,7 +26,7 @@ const socialLinks = [
     {
         name: "Discord",
         icon: FaDiscord,
-        href: "https://discord.gg/GaudqunK",
+        href: "https://discord.gg/helixdb",
         color: "hover:text-[#7289DA]"
     }
 ];

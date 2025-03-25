@@ -1,6 +1,5 @@
 import React from "react";
-import OrbitingCircles from "@/components/magicui/orbiting-circles";
-import { BetterInfographic } from "./magicui/better-animation";
+import { BetterInfographic } from "./ui/better-animation";
 import { Clock, GitPullRequestDraft, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 

@@ -124,7 +124,7 @@ const pricingTiers = [
       "SLA guarantee"
     ],
     callToAction: "Contact Sales",
-    callToActionLink: "https://cal.com/helix-db"
+    callToActionLink: "https://calendly.com/helix-db/new-meeting"
   },
   {
     name: "Large",
@@ -139,10 +139,10 @@ const pricingTiers = [
       "Custom SLA"
     ],
     callToAction: "Contact Sales",
-    callToActionLink: "https://cal.com/helix-db"
+    callToActionLink: "https://calendly.com/helix-db/new-meeting"
   },
   {
-    name: "Enterprise",
+    name: "Large",
     description: "Custom solutions for large organizations",
     onDemandPrice: 1,
     reservedPrice: 500,
@@ -154,7 +154,7 @@ const pricingTiers = [
       "Custom SLA"
     ],
     callToAction: "Contact Sales",
-    callToActionLink: "https://cal.com/helix-db"
+    callToActionLink: "https://calendly.com/helix-db/new-meeting"
   }
 ];
 // Add comparison query examples
@@ -240,7 +240,7 @@ export default function Home() {
                   asChild
                 >
                   <a
-                    href="https://discord.gg/GaudqunK"
+                    href="https://discord.gg/helixdb"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-3"
