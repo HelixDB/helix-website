@@ -18,8 +18,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "HelixDB: The First Native Graph-Vector Database",
-  description: "A modern interface for HelixDB queries",
+  title: "HelixDB | Native Graph-Vector Database",
+  description: "Build 10x faster with the first fully native Graph-Vector Database combining the power of graph and vector types natively in Rust to build RAG and AI applications easily",
 };
 
 export default function RootLayout({

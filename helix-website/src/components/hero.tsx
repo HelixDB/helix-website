@@ -128,7 +128,7 @@ export function Hero() {
                             className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-6"
                             variants={headingVariants}
                         >
-                            Build 10x Faster with the first fully native Graph-Vector Database
+                            Build 10x Faster with the First Native Graph-Vector Database
                         </motion.h1>
 
                         <motion.p
