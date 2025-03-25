@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "HelixDB Explorer",
+  title: "HelixDB: The First Native Graph-Vector Database",
   description: "A modern interface for HelixDB queries",
 };
 
