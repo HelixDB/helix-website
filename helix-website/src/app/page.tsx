@@ -142,7 +142,7 @@ const pricingTiers = [
     callToActionLink: "https://cal.com/helix-db"
   },
   {
-    name: "Large",
+    name: "X-Large",
     description: "Custom solutions for large organizations",
     onDemandPrice: 1,
     reservedPrice: 500,

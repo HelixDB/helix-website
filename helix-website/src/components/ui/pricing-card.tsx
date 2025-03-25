@@ -49,7 +49,7 @@ export function PricingCard({ tier, paymentFrequency, onSignUpClick }: PricingCa
 
         <div className="mb-5 space-y-2">
           <h3 className="text-2xl font-semibold">{tier.name}</h3>
-          <p className="text-sm text-muted-foreground">{tier.description}</p>
+          <p className="text-sm text-muted-foreground h-10 line-clamp-2">{tier.description}</p>
         </div>
 
         <div className="mb-5 flex items-baseline text-foreground">

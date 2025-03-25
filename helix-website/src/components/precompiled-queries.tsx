@@ -8,8 +8,8 @@ const containerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.2,
-            duration: 0.5,
+            staggerChildren: 0.05,
+            duration: 0.2,
             when: "beforeChildren"
         }
     }
@@ -22,8 +22,8 @@ const itemVariants = {
         y: 0,
         transition: {
             type: "spring",
-            stiffness: 100,
-            damping: 15
+            stiffness: 150,
+            damping: 12
         }
     }
 };
@@ -36,8 +36,8 @@ const codeBlockVariants = {
         scale: 1,
         transition: {
             type: "spring",
-            stiffness: 100,
-            damping: 15
+            stiffness: 150,
+            damping: 12
         }
     }
 };
@@ -49,9 +49,9 @@ const arrowVariants = {
         scale: 1,
         transition: {
             type: "spring",
-            stiffness: 100,
+            stiffness: 150,
             damping: 10,
-            delay: 0.4
+            delay: 0.1
         }
     }
 };
@@ -148,9 +148,8 @@ export function PrecompiledQueries() {
                                             animate={{ opacity: 1 }}
                                             transition={{ delay: 0.8, duration: 0.5 }}
                                         >
-                                            <pre className="w-full px-4 py-3 m-0 font-mono text-sm leading-relaxed overflow-x-auto text-foreground/90 whitespace-pre-wrap break-words typing-animation">{`// ✨ Generated API endpoint with type safety
-GET api.helix-db.com/project-name/addUsers
-→ Returns Promise<Array<Post>>`}</pre>
+                                            <pre className="w-full px-4 py-3 m-0 font-mono text-sm leading-relaxed overflow-x-auto text-foreground/90 whitespace-pre-wrap break-words typing-animation">{`POST https://api.helix-db.com/project-name/addUsers
+→ Returns {\n\tuser1: User,\n\tuser2: User\n  }`}</pre>
                                         </motion.div>
                                     </motion.div>
                                 </motion.div>

@@ -8,8 +8,8 @@ const containerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.1,
-            duration: 0.5,
+            staggerChildren: 0.05,
+            duration: 0.3,
             when: "beforeChildren"
         }
     }
@@ -38,7 +38,7 @@ const cardVariants = {
             type: "spring",
             stiffness: 100,
             damping: 15,
-            delay: index * 0.1
+            delay: index * 0.05
         }
     })
 };

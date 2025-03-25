@@ -212,7 +212,7 @@ export const BetterInfographic: React.FC = () => {
                             whileHover={{ scale: 1.02 }}
                             transition={{ duration: 0.4 }}
                         >
-                            {/* ... existing background layers ... */}
+
 
                             {/* Content */}
                             <motion.div
@@ -227,10 +227,16 @@ export const BetterInfographic: React.FC = () => {
                                 onMouseLeave={() => setIsHovered(false)}
                             >
                                 <Image
-                                    src="/helix-white.svg"
+                                    src="/dark-helix.png"
                                     alt="Helix"
                                     fill
-                                    className="object-contain"
+                                    className="object-contain hidden dark:block"
+                                />
+                                <Image
+                                    src="/light-helix.png"
+                                    alt="Helix"
+                                    fill
+                                    className="object-contain block dark:hidden"
                                 />
                             </motion.div>
 
@@ -238,14 +244,14 @@ export const BetterInfographic: React.FC = () => {
                                 className="text-center px-4 max-w-sm relative z-10"
                                 variants={itemVariants}
                             >
-                                <h4 className="text-lg font-bold text-white mb-4 mt-6">
+                                <h4 className="text-lg font-bold text-foreground mb-4 mt-6">
                                     One Simple Solution
                                 </h4>
-                                <p className="text-sm font-medium text-white/90 mb-6">
+                                <p className="text-sm font-medium text-foreground/90 mb-6">
                                     Replace your complex stack with a single platform
                                 </p>
                                 <motion.ul
-                                    className="text-xs text-white/80 space-y-2"
+                                    className="text-xs text-foreground/80 space-y-2"
                                     variants={containerVariants}
                                 >
                                     <motion.li variants={itemVariants}>• No complex infrastructure to manage</motion.li>
