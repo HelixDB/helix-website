@@ -124,7 +124,7 @@ const pricingTiers = [
       "SLA guarantee"
     ],
     callToAction: "Contact Sales",
-    callToActionLink: "https://calendly.com/helix-db/new-meeting"
+    callToActionLink: "https://cal.com/helix-db"
   },
   {
     name: "Large",
@@ -139,7 +139,7 @@ const pricingTiers = [
       "Custom SLA"
     ],
     callToAction: "Contact Sales",
-    callToActionLink: "https://calendly.com/helix-db/new-meeting"
+    callToActionLink: "https://cal.com/helix-db"
   },
   {
     name: "Large",
@@ -154,7 +154,7 @@ const pricingTiers = [
       "Custom SLA"
     ],
     callToAction: "Contact Sales",
-    callToActionLink: "https://calendly.com/helix-db/new-meeting"
+    callToActionLink: "https://cal.com/helix-db"
   }
 ];
 // Add comparison query examples

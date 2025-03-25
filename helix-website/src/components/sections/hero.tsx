@@ -126,7 +126,7 @@ export function HeroSection({ githubStats }: HeroSectionProps) {
     };
 
     const handleGetStarted = () => {
-        window.open('https://calendly.com/helix-db/new-meeting', '_blank');
+        window.open('https://cal.com/helix-db', '_blank');
     };
 
     return (

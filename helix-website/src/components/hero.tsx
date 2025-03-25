@@ -147,7 +147,7 @@ export function Hero() {
                                     size="lg"
                                     variant="secondary"
                                     className="px-8 py-6 text-lg border-white/10 hover:bg-white/5 mb-4 sm:mb-0 w-full"
-                                    onClick={() => window.open('https://calendly.com/helix-db/new-meeting', '_blank')}
+                                    onClick={() => window.open('https://cal.com/helix-db', '_blank')}
                                 >
                                     Book Demo
                                 </Button>
