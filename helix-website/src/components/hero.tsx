@@ -99,7 +99,7 @@ export function Hero() {
                             variants={pillVariants}
                         >
                             {/* Y Combinator Badge */}
-                            <motion.div
+                            {/* <motion.div
                                 className="flex items-center gap-2 mb-6 bg-[#FF5733]/10 dark:bg-[#FF5733]/5 w-fit px-3 py-1.5 rounded-full border border-[#FF5733]/20"
 
                                 initial={{ opacity: 0, y: -20 }}
@@ -114,7 +114,7 @@ export function Hero() {
                                 <span className="text-sm font-medium text-[#FF5733] dark:text-[#FF5733]/90">
                                     Backed by Y Combinator
                                 </span>
-                            </motion.div>
+                            </motion.div> */}
                             {/* <HeroPill
                                 className="w-min mb-6"
                                 href="https://github.com/HelixDB/helix-db"
