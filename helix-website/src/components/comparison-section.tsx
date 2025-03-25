@@ -44,20 +44,43 @@ const comparisonExamples = {
     cypher: {
         name: "Cypher",
         code: `MATCH (user:User)
-WHERE user.age > 25
-WITH user
-MATCH (user)-[:Follows]->(friend)
-RETURN friend
-LIMIT 10`,
+WHERE id(user) = $userID
+MATCH (user)-[:Posts]->(posts)
+WITH user, collect(posts)[..20] as posts
+RETURN user.name as name,
+       user.age as age,
+       id(user) as id,
+       [(follower)-[:Follows]->(user) | follower] as following,
+       [p IN posts | {
+           postID: id(p),
+           creatorID: id(user),
+           title: p.title,
+           createdAt: p.createdAt,
+           content: p.content
+       }] as posts`,
         lines: 6
     },
     gremlin: {
         name: "Gremlin",
-        code: `g.V().hasLabel('User')
-  .has('age', gt(25))
-  .out('Follows')
-  .dedup()
-  .limit(10)`,
+        code: `g.V(userID)
+  .as('user')
+  .out('posts')
+  .limit(20)
+  .as('posts')
+  .select('user')
+  .project('name', 'age', 'id', 'following', 'posts')
+  .by('name')
+  .by('age')
+  .by('id')
+  .by(__.in('Follows'))
+  .by(__.out('Posts').limit(20)
+    .project('postID', 'creatorID', 'title', 'createdAt', 'content')
+    .by('id')
+    .by(__.select('user').id())
+    .by('title')
+    .by('createdAt')
+    .by('content')
+)`,
         lines: 5
     }
 };
@@ -107,13 +130,22 @@ export function ComparisonSection() {
                     >
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
-                            <span className="text-sm text-muted-foreground">3 lines of code</span>
+                            {/* <span className="text-sm text-muted-foreground">3 lines of code</span> */}
                         </div>
                         <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                             <code className="text-sm">
-                                {`QUERY findFriends() =>
-  users <- V<User>::WHERE(_::{age}::GT(25))
-  RETURN users::Out<Follows>::RANGE(10)`}
+                                {`QUERY findFriends(userID: String) =>
+  user <- V<User>(userID)
+  posts <- user::Out<Posts>::RANGE(20)
+  RETURN user::|usr|{
+            ID, name, age, 
+            following: usr::In<Follows>,
+            posts: posts::{
+                postID: ID,
+                creatorID: usr::ID,
+                ..
+            },
+        }`}
                             </code>
                         </pre>
                     </motion.div>
@@ -143,7 +175,7 @@ export function ComparisonSection() {
                                         Gremlin
                                     </Button>
                                 </div>
-                                <span className="text-sm text-muted-foreground">{comparisonExamples[selectedLanguage].lines} lines of code</span>
+                                {/* <span className="text-sm text-muted-foreground">{comparisonExamples[selectedLanguage].lines} lines of code</span> */}
                             </div>
                             <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                                 <code className="text-sm">
