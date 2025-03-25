@@ -81,8 +81,8 @@ const useCases = [
         icon: "🔍",
     },
     {
-        title: "Code Review",
-        description: "Enhance code review processes with intelligent suggestions and automated quality checks.",
+        title: "Code Based Indexing",
+        description: "Store the context of your code alongside distinct relationships (such asfile structure & dependencies).",
         icon: "👀",
     },
     {
