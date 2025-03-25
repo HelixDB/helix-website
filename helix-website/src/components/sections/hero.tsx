@@ -25,7 +25,7 @@ V::User {
 QUERY addUser() =>
   alice <- AddV<User>({Name: "Alice", Age: 25})
   bob <- AddV<User>({Name: "Bob", Age: 30})
-  AddE<Follows>()::From(bob)::To(alice)::Props({Since: 1.5})
+::From(bob)::To(alice)::Props({Since: 1.5})
   RETURN alice`,
 
     `// Find users over 25 and their followers

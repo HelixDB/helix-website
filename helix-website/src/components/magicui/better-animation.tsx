@@ -39,83 +39,134 @@ export const BetterInfographic: React.FC = () => {
 
     const containerVariants = {
         hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.3,
+                duration: 0.5,
+                when: "beforeChildren"
+            }
+        }
     };
 
     const itemVariants = {
         hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 15
+            }
+        }
+    };
+
+    const stackItemVariants = {
+        hidden: { opacity: 0, x: -30 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 15
+            }
+        }
+    };
+
+    const helixVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay: 0.6
+            }
+        }
     };
 
     return (
         <div className="w-full py-6 relative">
-            <div className="max-w-5xl mx-auto">
-                {/* Comparison Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center mb-6"
-                >
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                        Complex vs Simple
-                    </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Why choose complexity when simplicity works better?
-                    </p>
-                </motion.div>
-
+            <motion.div
+                className="max-w-5xl mx-auto"
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+            >
                 <div className="grid grid-cols-2 gap-6">
                     {/* Traditional Setup Side */}
                     <motion.div
                         variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
                         className="space-y-4"
                     >
-                        <div className="flex items-center space-x-4 mb-4">
+                        <motion.div
+                            variants={itemVariants}
+                            className="flex items-center space-x-4 mb-4"
+                        >
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                                 Traditional Setup
                             </h3>
                             <div className="h-px flex-grow bg-gradient-to-r from-gray-200 to-transparent dark:from-gray-700"></div>
-                        </div>
-                        <div className="space-y-12  max-w-[250px]">
+                        </motion.div>
+                        <div className="space-y-12 max-w-[250px]">
                             {traditionalStack.map((category, categoryIndex) => (
                                 <motion.div
                                     key={category.title}
-                                    variants={itemVariants}
+                                    variants={stackItemVariants}
                                     className="relative"
                                 >
-                                    {/* Vertical connecting line */}
                                     {categoryIndex < traditionalStack.length - 1 && (
-                                        <div className="absolute left-[5px] top-[20px] w-[2px] h-[calc(100%+2.5rem)] bg-gradient-to-b from-indigo-500/50 to-purple-500/50 dark:from-indigo-400/30 dark:to-purple-400/30" />
+                                        <motion.div
+                                            className="absolute left-[5px] top-[20px] w-[2px] h-[calc(100%+2.5rem)]"
+                                            initial={{ background: "linear-gradient(to bottom, transparent, transparent)" }}
+                                            animate={{
+                                                background: "linear-gradient(to bottom, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5))",
+                                            }}
+                                            transition={{ delay: 0.5 + categoryIndex * 0.2, duration: 0.5 }}
+                                        />
                                     )}
 
                                     <div className="flex items-start gap-3 mb-3">
-                                        {/* Bullet point circle */}
-                                        <div className="relative mt-1.5">
+                                        <motion.div
+                                            className="relative mt-1.5"
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ delay: 0.3 + categoryIndex * 0.2, type: "spring" }}
+                                        >
                                             <div className="w-3 h-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400" />
                                             <div className="absolute inset-0 w-3 h-3 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400 animate-ping opacity-20" />
-                                        </div>
+                                        </motion.div>
 
                                         <div className="flex-1 ml-3">
-                                            <div className="mb-3">
+                                            <motion.div
+                                                className="mb-3"
+                                                variants={itemVariants}
+                                            >
                                                 <h4 className="text-base font-semibold text-gray-800 dark:text-gray-200">
                                                     {category.title}
                                                 </h4>
                                                 <p className="text-xs text-gray-500 dark:text-gray-400">
                                                     {category.description}
                                                 </p>
-                                            </div>
+                                            </motion.div>
                                             <motion.div
                                                 className="grid grid-cols-3 gap-3 relative"
-                                                whileHover={{ scale: 1.02 }}
-                                                transition={{ duration: 0.2 }}
+                                                variants={itemVariants}
                                             >
                                                 {category.images.map((img, index) => (
                                                     <motion.div
                                                         key={img.alt}
                                                         whileHover={{ scale: 1.1, zIndex: 10 }}
                                                         className="relative aspect-square bg-black/10 dark:bg-white/30 rounded-lg p-3 shadow-sm transition-shadow hover:shadow-md backdrop-blur-sm"
+                                                        initial={{ opacity: 0, scale: 0.8 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        transition={{ delay: 0.6 + index * 0.1 + categoryIndex * 0.2 }}
                                                     >
                                                         <Image
                                                             src={img.src}
@@ -135,17 +186,18 @@ export const BetterInfographic: React.FC = () => {
 
                     {/* Helix Side */}
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.5 }}
+                        variants={helixVariants}
                         className="relative"
                     >
-                        <div className="flex items-center space-x-4 mb-4">
+                        <motion.div
+                            variants={itemVariants}
+                            className="flex items-center space-x-4 mb-4"
+                        >
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                                 Helix Setup
                             </h3>
                             <div className="h-px flex-grow bg-gradient-to-r from-gray-200 to-transparent dark:from-gray-700"></div>
-                        </div>
+                        </motion.div>
                         <motion.div
                             className="relative rounded-xl shadow-lg overflow-hidden flex flex-col items-center justify-between py-12"
                             whileHover={{ scale: 1.02 }}
@@ -218,23 +270,29 @@ export const BetterInfographic: React.FC = () => {
                                 />
                             </motion.div>
 
-                            <div className="text-center px-4 max-w-sm relative z-10">
+                            <motion.div
+                                className="text-center px-4 max-w-sm relative z-10"
+                                variants={itemVariants}
+                            >
                                 <h4 className="text-lg font-bold text-white mb-4 mt-6">
                                     One Simple Solution
                                 </h4>
                                 <p className="text-sm font-medium text-white/90 mb-6">
                                     Replace your complex stack with a single platform
                                 </p>
-                                <ul className="text-xs text-white/80 space-y-2">
-                                    <li>• No complex infrastructure to manage</li>
-                                    <li>• No multiple services to maintain</li>
-                                    <li>• No operational overhead</li>
-                                </ul>
-                            </div>
+                                <motion.ul
+                                    className="text-xs text-white/80 space-y-2"
+                                    variants={containerVariants}
+                                >
+                                    <motion.li variants={itemVariants}>• No complex infrastructure to manage</motion.li>
+                                    <motion.li variants={itemVariants}>• No multiple services to maintain</motion.li>
+                                    <motion.li variants={itemVariants}>• No operational overhead</motion.li>
+                                </motion.ul>
+                            </motion.div>
                         </motion.div>
                     </motion.div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };

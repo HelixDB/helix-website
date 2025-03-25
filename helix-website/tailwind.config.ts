@@ -64,6 +64,22 @@ module.exports = {
     					transform: 'translateX(calc(-50% - 1rem))'
     				}
     			},
+    			marquee: {
+    				'0%': {
+    					transform: 'translateX(0%)'
+    				},
+    				'100%': {
+    					transform: 'translateX(-100%)'
+    				}
+    			},
+    			'marquee-vertical': {
+    				'0%': {
+    					transform: 'translateY(0%)'
+    				},
+    				'100%': {
+    					transform: 'translateY(-100%)'
+    				}
+    			},
     			'spin-around': {
     				'0%': {
     					transform: 'translateZ(0) rotate(0)'
@@ -114,16 +130,27 @@ module.exports = {
     				'100%': {
     					transform: 'rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg))'
     				}
+    			},
+    			'gradient-shift': {
+    				'0%, 100%': {
+    					'background-position': '0% 50%'
+    				},
+    				'50%': {
+    					'background-position': '100% 50%'
+    				}
     			}
     		},
     		animation: {
     			scroll: 'scroll var(--animation-duration) linear infinite',
     			'shimmer-slide': 'shimmer-slide var(--speed) ease-in-out infinite alternate',
+    			marquee: 'marquee 25s linear infinite',
+    			'marquee-vertical': 'marquee-vertical 25s linear infinite',
     			'spin-around': 'spin-around calc(var(--speed) * 2) infinite linear',
     			'accordion-down': 'accordion-down 0.2s ease-out',
     			'accordion-up': 'accordion-up 0.2s ease-out',
     			'aurora-text': 'aurora 3s linear infinite',
-    			orbit: 'orbit calc(var(--duration)*1s) linear infinite'
+    			orbit: 'orbit calc(var(--duration)*1s) linear infinite',
+    			'gradient-slow': 'gradient-shift 8s ease infinite'
     		},
     		fontFamily: {
     			sans: [
@@ -134,6 +161,12 @@ module.exports = {
     		backgroundImage: {
     			'grid-pattern': 'linear-gradient(to right, rgb(50, 50, 50) 1px, transparent 1px), linear-gradient(to bottom, rgb(50, 50, 50) 1px, transparent 1px)',
     			'grid-pattern-light': 'linear-gradient(to right, rgb(200, 200, 200) 1px, transparent 1px), linear-gradient(to bottom, rgb(200, 200, 200) 1px, transparent 1px)'
+    		},
+    		maskImage: {
+    			'radial-gradient': 'radial-gradient(var(--tw-gradient-stops))'
+    		},
+    		backgroundSize: {
+    			'gradient-size': '400% 400%'
     		}
     	}
     },

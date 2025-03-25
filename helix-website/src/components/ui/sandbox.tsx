@@ -39,7 +39,7 @@ E::Follows {
         "users.hx": `QUERY addUsers() =>
   user1 <- AddV<User>({Name: "Alice", Age: 30})
   user2 <- AddV<User>({Name: "Bob", Age: 25})
-  AddE<Follows>()::From(user1)::To(user2)
+  AddE<Follows>(::From(user1)::To(user2)
   RETURN user1, user2`,
         "followers.hx": `QUERY getFollowers() =>
   followers <- V<User>()::In<Follows>
