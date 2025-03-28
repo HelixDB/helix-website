@@ -52,7 +52,7 @@ export default function DashboardPage() {
         setResources(instancesArray);
 
         const hasInitializingInstances = instancesArray.some(
-          (instance) => instance.instance_status.toLowerCase() !== "active"
+          (instance) => instance.instance_status?.toLowerCase() !== "active"
         );
 
         if (!hasInitializingInstances && intervalId) {
@@ -110,15 +110,15 @@ export default function DashboardPage() {
                       {instance.instance_name}
                     </div>
                     <span
-                      className={`text-sm px-3 py-1 rounded-full ${instance.instance_status.toLowerCase() === "active"
+                      className={`text-sm px-3 py-1 rounded-full ${instance.instance_status?.toLowerCase() === "active"
                         ? "bg-green-100 text-green-700"
-                        : instance.instance_status.toLowerCase() === "stopped"
+                        : instance.instance_status?.toLowerCase() === "stopped"
                           ? "bg-red-100 text-red-700"
                           : "bg-yellow-100 text-yellow-700"
                         }`}
                     >
-                      {instance.instance_status.charAt(0).toUpperCase() +
-                        instance.instance_status.slice(1)}
+                      {instance.instance_status?.charAt(0).toUpperCase() +
+                        instance.instance_status?.slice(1)}
                     </span>
                   </CardTitle>
                   <CardDescription className="pt-2 flex items-center gap-2 text-sm">

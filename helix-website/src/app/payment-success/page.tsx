@@ -19,9 +19,9 @@ function PaymentVerification() {
     useEffect(() => {
         const verifyPayment = async () => {
             try {
-                const sessionId = searchParams.get('session_id')
-                if (!sessionId) {
-                    throw new Error('No session ID found')
+                const paymentId = searchParams.get('payment_id')
+                if (!paymentId) {
+                    throw new Error('No payment ID found')
                 }
 
                 const user = await getCurrentUser()
@@ -30,25 +30,7 @@ function PaymentVerification() {
                     return
                 }
 
-                // Verify the session and create the instance
-                const response = await fetch('/api/verify-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        sessionId,
-                        userId: user.userId,
-                    }),
-                })
-
-                const data = await response.json()
-
-                if (!response.ok) {
-                    router.push("/dashboard")
-                    throw new Error(data.error || 'Failed to verify payment')
-                }
-
+                // Payment is already verified by Autumn, just start the countdown
                 setStatus('success')
 
                 // Start countdown to redirect
@@ -112,14 +94,13 @@ function PaymentVerification() {
     )
 }
 
-// Loading component for Suspense fallback
 function LoadingCard() {
     return (
         <Card className="w-full max-w-md">
             <CardContent className="pt-6 text-center">
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <p className="text-lg font-medium">Loading payment details...</p>
+                    <p className="text-lg font-medium">Loading...</p>
                 </div>
             </CardContent>
         </Card>

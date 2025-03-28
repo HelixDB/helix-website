@@ -62,7 +62,7 @@ export function Header() {
                     </Link>
 
                     {/* Absolutely centered social links */}
-                    <div className="absolute left-0 right-0 mx-auto w-fit">
+                    <div className="hidden md:block absolute left-0 right-0 mx-auto w-fit">
                         <SocialLinks />
                     </div>
 

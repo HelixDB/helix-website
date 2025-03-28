@@ -233,6 +233,25 @@ class API {
         throw error;
     }
 }
+
+  public async createInstance(config: {
+    userId: string;
+    region: string;
+    instanceName: string;
+    vcpus: number;
+    memory: number;
+    storage: number;
+  }): Promise<void> {
+    const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/create-instance`, {
+      method: 'POST',
+      headers: API_CONFIG.DEFAULT_HEADERS,
+      body: JSON.stringify(config)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create instance');
+    }
+  }
 }
 
 // Export singleton instance

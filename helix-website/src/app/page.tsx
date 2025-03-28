@@ -98,11 +98,12 @@ const pricingTiers = [
   }, */
   {
     name: "Small",
-    description: "For independent developers and small teams",
+    description: "For independent developers and working on side projects",
     onDemandPrice: 0.10,
     reservedPrice: 50,
     features: [
       "730 hours of free compute",
+      "2v CPU, 4GB RAM",
       "Decicated cloud instance",
       "Unlimited writes and requests",
       "Priority support"
@@ -113,48 +114,46 @@ const pricingTiers = [
   },
   {
     name: "Medium",
-    description: "For larger teams and organizations",
+    description: "For independent developers and small teams",
     onDemandPrice: 0.20,
     reservedPrice: 100,
     features: [
-      "Up to 500,000 documents",
-      "Enterprise features",
-      "Custom integrations",
-      "Dedicated support",
-      "SLA guarantee"
+      "2v CPU, 8GB RAM",
+      "Decicated cloud instance",
+      "Unlimited writes and requests",
+      "Priority support",
+
     ],
-    callToAction: "Contact Sales",
-    callToActionLink: "https://cal.com/helix-db"
+    callToAction: "Get Started",
+    callToActionLink: "/signup"
   },
   {
     name: "Large",
-    description: "Custom solutions for large organizations",
+    description: "For medium to large teams and organizations",
     onDemandPrice: 0.50,
     reservedPrice: 250,
     features: [
-      "Unlimited documents",
-      "Custom deployment",
-      "24/7 support",
-      "Security audit",
-      "Custom SLA"
+      "4v CPU, 16GB RAM",
+      "Decicated cloud instance",
+      "Unlimited writes and requests",
+      "Priority support",
     ],
-    callToAction: "Contact Sales",
-    callToActionLink: "https://cal.com/helix-db"
+    callToAction: "Get Started",
+    callToActionLink: "/signup"
   },
   {
     name: "X-Large",
-    description: "Custom solutions for large organizations",
+    description: "For large teams and organizations",
     onDemandPrice: 1,
     reservedPrice: 500,
     features: [
-      "Unlimited documents",
-      "Custom deployment",
-      "24/7 support",
-      "Security audit",
-      "Custom SLA"
+      "8v CPU, 32GB RAM",
+      "Decicated cloud instance",
+      "Unlimited writes and requests",
+      "Priority support",
     ],
-    callToAction: "Contact Sales",
-    callToActionLink: "https://cal.com/helix-db"
+    callToAction: "Get Started",
+    callToActionLink: "/signup"
   }
 ];
 // Add comparison query examples
@@ -196,7 +195,7 @@ export default function Home() {
       <UseCases />
       <PricingSection
         title="Simple, transparent pricing"
-        subtitle="Helix prices are entirely usage based. No hidden fees, no surprises."
+        subtitle="Helix prices can be used on demand or reserved. No hidden fees, no surprises."
         tiers={pricingTiers}
         frequencies={["on demand", "reserved"]}
       />

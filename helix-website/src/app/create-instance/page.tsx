@@ -12,7 +12,6 @@ import { Slider } from "@/components/ui/slider"
 import { Loader2, AlertCircle, CheckCircle2, Rocket } from "lucide-react"
 import { Footer } from "@/components/footer"
 import api, { InstanceConfig } from "@/app/api"
-import { loadStripe } from '@stripe/stripe-js';
 
 const INSTANCE_TYPES = [
     {
@@ -23,7 +22,9 @@ const INSTANCE_TYPES = [
         minimumStorage: 8,
         maximumStorage: 16,
         price: 50,
-        priceId: "price_1Qujmw1ynK4PUoX0eF02NN9z"
+        usagePrice: 0.10,
+        reservedPriceId: "small-reserved",
+        usagePriceId: "small-usage"
     },
     {
         value: "md",
@@ -33,7 +34,9 @@ const INSTANCE_TYPES = [
         minimumStorage: 16,
         maximumStorage: 32,
         price: 100,
-        priceId: "price_1QujnT1ynK4PUoX0Nf8hkAsL"
+        usagePrice: 0.20,
+        reservedPriceId: "medium-reserved",
+        usagePriceId: "medium-usage"
     },
     {
         value: "lg",
@@ -43,7 +46,9 @@ const INSTANCE_TYPES = [
         minimumStorage: 16,
         maximumStorage: 32,
         price: 200,
-        priceId: "price_1Qujnx1ynK4PUoX0wTFYeYeI"
+        usagePrice: 0.50,
+        reservedPriceId: "large-reserved",
+        usagePriceId: "large-usage"
     },
     {
         value: "xl",
@@ -53,7 +58,9 @@ const INSTANCE_TYPES = [
         minimumStorage: 32,
         maximumStorage: 64,
         price: 300,
-        priceId: "price_1QujoH1ynK4PUoX03n7KgjZp"
+        usagePrice: 1.00,
+        reservedPriceId: "xlarge-reserved",
+        usagePriceId: "xlarge-usage"
     },
 ]
 
@@ -76,9 +83,6 @@ function getDefaultRegion(): string {
     return matchedRegion?.value || "us-east-1"
 }
 
-// Initialize Stripe
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
 export default function CreateInstancePage() {
     const router = useRouter()
     const [loading, setLoading] = useState(true)
@@ -89,7 +93,8 @@ export default function CreateInstancePage() {
         name: "",
         instanceType: "sm",
         region: getDefaultRegion(),
-        storage: INSTANCE_TYPES[0].minimumStorage
+        storage: INSTANCE_TYPES[0].minimumStorage,
+        pricingType: "reserved"
     })
 
     const selectedType = INSTANCE_TYPES.find(type => type.value === formData.instanceType)
@@ -162,7 +167,7 @@ export default function CreateInstancePage() {
                 throw new Error('Invalid instance type selected')
             }
 
-            const instanceConfig: InstanceConfig = {
+            const instanceConfig = {
                 region: formData.region,
                 instanceName: formData.name,
                 vcpus: selectedType.vcpus,
@@ -170,37 +175,31 @@ export default function CreateInstancePage() {
                 storage: Math.round(formData.storage / 2) * 2
             }
 
-            // Create Stripe Checkout Session
+            const priceId = formData.pricingType === 'reserved'
+                ? selectedType.reservedPriceId
+                : selectedType.usagePriceId;
+
+            // Create Autumn Checkout Session
             const response = await fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    priceId: selectedType.priceId,
+                    priceId,
                     userId: user.userId,
                     instanceConfig,
                 }),
             });
-            const { sessionId, error } = await response.json();
+
+            const { checkoutUrl, error } = await response.json();
 
             if (error) {
                 throw new Error(error);
             }
 
-            // Redirect to Stripe Checkout
-            const stripe = await stripePromise;
-            if (!stripe) {
-                throw new Error('Failed to load Stripe');
-            }
-
-            const { error: stripeError } = await stripe.redirectToCheckout({
-                sessionId,
-            });
-
-            if (stripeError) {
-                throw new Error(stripeError.message);
-            }
+            // Redirect to Autumn Checkout
+            window.location.href = checkoutUrl;
         } catch (error: any) {
             console.error('Error creating instance:', error)
             setError(error.message || 'Failed to create instance. Please try again.')
@@ -305,6 +304,22 @@ export default function CreateInstancePage() {
                                 </Select>
                             </div>
 
+                            <div className="space-y-2">
+                                <Label className="text-base">Pricing Type</Label>
+                                <Select
+                                    value={formData.pricingType}
+                                    onValueChange={(value) => setFormData(prev => ({ ...prev, pricingType: value }))}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="reserved">Reserved - Monthly Billing</SelectItem>
+                                        <SelectItem value="usage">Usage-Based - Pay per Hour</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
                             {selectedType && (
                                 <>
                                     <div className="rounded-xl bg-background border p-4">
@@ -319,8 +334,11 @@ export default function CreateInstancePage() {
                                                 <p>{selectedType.memory} GB</p>
                                             </div>
                                             <div>
-                                                <p className="text-muted-foreground">Monthly Price</p>
-                                                <p className="font-medium text-primary">${selectedType.price}</p>
+                                                <p className="text-muted-foreground">Price</p>
+                                                <p className="font-medium text-primary">
+                                                    ${formData.pricingType === 'reserved' ? selectedType.price : selectedType.usagePrice}
+                                                    {formData.pricingType === 'reserved' ? '/month' : '/hour'}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -361,7 +379,7 @@ export default function CreateInstancePage() {
                                         Redirecting to payment...
                                     </>
                                 ) : (
-                                    `Subscribe - $${selectedType?.price}/month`
+                                    `Subscribe - $${selectedType ? (formData.pricingType === 'reserved' ? selectedType.price + '/month' : selectedType.usagePrice + '/hour') : ''}`
                                 )}
                             </Button>
 
