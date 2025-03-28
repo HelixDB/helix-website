@@ -65,7 +65,7 @@ const INSTANCE_TYPES = [
 ]
 
 const REGIONS = [
-    { value: "us-east-1", label: "US East Coast", timezones: ["America/New_York", "America/Detroit", "America/Toronto", "America/Montreal"] },
+    { value: "us-west-1", label: "US West Coast", timezones: ["America/Los_Angeles", "America/Vancouver", "America/Tijuana"] },
     { value: "eu-west-2", label: "West Europe", timezones: ["Europe/London", "Europe/Paris", "Europe/Berlin", "Europe/Madrid"] },
 ]
 

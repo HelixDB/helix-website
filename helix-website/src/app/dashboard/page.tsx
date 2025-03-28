@@ -20,15 +20,18 @@ import {
   CircuitBoard,
   Copy,
   Check,
+  Trash2,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import api, { InstanceDetails } from "@/app/api";
+import { DeleteInstanceDialog } from "@/components/ui/delete-instance-dialog";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [resources, setResources] = useState<InstanceDetails[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [copiedEndpoint, setCopiedEndpoint] = useState<string | null>(null);
+  const [instanceToDelete, setInstanceToDelete] = useState<InstanceDetails | null>(null);
 
   const handleCopyEndpoint = async (endpoint: string) => {
     await navigator.clipboard.writeText(endpoint);
@@ -81,6 +84,25 @@ export default function DashboardPage() {
       }
     };
   }, [router]);
+
+  const handleDeleteInstance = async () => {
+    if (!instanceToDelete) return;
+
+    const user = await getCurrentUser();
+    if (!user) {
+      router.push("/");
+      return;
+    }
+
+    await api.deleteInstance(user.userId, instanceToDelete.cluster_id);
+
+    // Update the resources list after successful deletion
+    if (resources) {
+      setResources(resources.filter(
+        instance => instance.cluster_id !== instanceToDelete.cluster_id
+      ));
+    }
+  };
 
   if (loading) {
     return (
@@ -189,13 +211,22 @@ export default function DashboardPage() {
                       <div className="text-sm text-muted-foreground mt-auto">
                         <span className="font-medium">Created:</span> {new Date(instance.created_at).toLocaleDateString()}
                       </div>
-
-                      <Button
-                        onClick={() => router.push(`/instances/${instance.instance_id}/queries`)}
-                        className="flex items-center gap-2 rounded-xl"
-                      >
-                        View Queries
-                      </Button>
+                      <div className="space-x-4 flex flex-row">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setInstanceToDelete(instance)}
+                          className="h-10 w-10"
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                        <Button
+                          onClick={() => router.push(`/instances/${instance.instance_id}/queries`)}
+                          className="flex items-center gap-2 rounded-xl"
+                        >
+                          View Queries
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -222,6 +253,13 @@ export default function DashboardPage() {
           </Card>
         )}
       </div>
+
+      <DeleteInstanceDialog
+        isOpen={instanceToDelete !== null}
+        onClose={() => setInstanceToDelete(null)}
+        onConfirm={handleDeleteInstance}
+        instanceName={instanceToDelete?.instance_name || ""}
+      />
     </div>
   );
 }

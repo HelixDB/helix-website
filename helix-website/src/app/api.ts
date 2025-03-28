@@ -252,6 +252,18 @@ class API {
       throw new Error('Failed to create instance');
     }
   }
+
+  public async deleteInstance(clusterId: string): Promise<void> {
+    const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/delete-instance`, {
+      method: 'POST',
+      headers: API_CONFIG.DEFAULT_HEADERS,
+      body: JSON.stringify({ cluster_id: clusterId })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete instance');
+    }
+  }
 }
 
 // Export singleton instance
