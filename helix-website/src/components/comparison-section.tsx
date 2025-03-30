@@ -123,14 +123,75 @@ export function ComparisonSection() {
                     viewport={{ once: true, margin: "-100px" }}
                     className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-7xl mx-auto"
                 >
-                    {/* HelixQL Example */}
+                    {/* Combined card for mobile, split on desktop */}
                     <motion.div
                         variants={itemVariants}
-                        className="p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
+                        className="md:hidden p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
+                    >
+                        <div className="flex flex-col gap-6">
+                            {/* HelixQL section */}
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
+                                </div>
+                                <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
+                                    <code className="text-sm">
+                                        {`QUERY findFriends(userID: String) =>
+  user <- V<User>(userID)
+  posts <- user::Out<Posts>::RANGE(20)
+  RETURN user::|usr|{
+            ID, name, age, 
+            following: usr::In<Follows>,
+            posts: posts::{
+                postID: ID,
+                creatorID: usr::ID,
+                ..
+            },
+        }`}
+                                    </code>
+                                </pre>
+                            </div>
+
+                            {/* Comparison section */}
+                            <div>
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant={selectedLanguage === 'cypher' ? 'default' : 'outline'}
+                                                size="sm"
+                                                onClick={() => setSelectedLanguage('cypher')}
+                                                className="text-sm"
+                                            >
+                                                Cypher
+                                            </Button>
+                                            <Button
+                                                variant={selectedLanguage === 'gremlin' ? 'default' : 'outline'}
+                                                size="sm"
+                                                onClick={() => setSelectedLanguage('gremlin')}
+                                                className="text-sm"
+                                            >
+                                                Gremlin
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
+                                        <code className="text-sm">
+                                            {comparisonExamples[selectedLanguage].code}
+                                        </code>
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Desktop layout */}
+                    <motion.div
+                        variants={itemVariants}
+                        className="hidden md:block p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
                     >
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
-                            {/* <span className="text-sm text-muted-foreground">3 lines of code</span> */}
                         </div>
                         <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                             <code className="text-sm">
@@ -150,10 +211,9 @@ export function ComparisonSection() {
                         </pre>
                     </motion.div>
 
-                    {/* Comparison Example */}
                     <motion.div
                         variants={itemVariants}
-                        className="p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
+                        className="hidden md:block p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
                     >
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center justify-between">
@@ -175,7 +235,6 @@ export function ComparisonSection() {
                                         Gremlin
                                     </Button>
                                 </div>
-                                {/* <span className="text-sm text-muted-foreground">{comparisonExamples[selectedLanguage].lines} lines of code</span> */}
                             </div>
                             <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                                 <code className="text-sm">

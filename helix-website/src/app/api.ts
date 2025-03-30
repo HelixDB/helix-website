@@ -37,7 +37,8 @@ export type InstanceDetails = {
   cluster_id: string;
   user_id: string;
   instance_type: string;
-  vcpus: number;
+  vCPUs: number;
+  region: string;
   memory: number;
   instance_status: string;
   instance_size: string;
@@ -253,11 +254,11 @@ class API {
     }
   }
 
-  public async deleteInstance(clusterId: string): Promise<void> {
+  public async deleteInstance(userId: string, clusterId: string, region: string, instanceId: string): Promise<void> {
     const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/delete-instance`, {
       method: 'POST',
       headers: API_CONFIG.DEFAULT_HEADERS,
-      body: JSON.stringify({ cluster_id: clusterId })
+      body: JSON.stringify({ user_id: userId, cluster_id: clusterId, region: region, instance_id: instanceId })
     });
 
     if (!response.ok) {

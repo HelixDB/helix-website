@@ -208,7 +208,7 @@ export const BetterInfographic: React.FC = () => {
                             <div className="h-px flex-grow bg-gradient-to-r from-gray-200 to-transparent dark:from-gray-700"></div>
                         </motion.div>
                         <motion.div
-                            className="relative rounded-xl shadow-lg overflow-hidden flex flex-col items-center justify-between py-12"
+                            className="relative rounded-xl  overflow-hidden flex flex-col items-center justify-between py-6"
                             whileHover={{ scale: 1.02 }}
                             transition={{ duration: 0.4 }}
                         >

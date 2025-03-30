@@ -76,7 +76,7 @@ const buttonVariants = {
 export function Hero() {
     return (
         <motion.div
-            className="min-h-[100vh] flex items-center relative"
+            className="min-h-[100vh] flex items-center relative overflow-hidden"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -89,7 +89,7 @@ export function Hero() {
             <div className="container mx-auto px-4 sm:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <motion.div
-                        className="flex flex-col max-w-2xl relative"
+                        className="flex flex-col max-w-2xl relative w-full"
                         variants={containerVariants}
                     >
                         {/* Radial gradient underlay for better contrast with the graph */}

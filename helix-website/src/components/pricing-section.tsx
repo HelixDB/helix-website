@@ -56,7 +56,7 @@ export function PricingSection({
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
             >
-                <div className="space-y-4">
+                <div className="space-y-4 px-2">
                     <motion.h1
                         variants={itemVariants}
                         className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 md:text-5xl pb-1"

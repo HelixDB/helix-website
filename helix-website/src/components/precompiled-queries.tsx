@@ -78,7 +78,7 @@ export function PrecompiledQueries() {
                     >
                         {/* Left column - code example */}
                         <motion.div
-                            className="relative flex w-full flex-col items-center justify-center"
+                            className="relative flex w-full flex-col items-center justify-center order-last lg:order-first"
                             variants={containerVariants}
                         >
                             <div className="flex flex-col items-center gap-4 w-full">
@@ -158,7 +158,7 @@ export function PrecompiledQueries() {
 
                         {/* Right column - text content */}
                         <motion.div
-                            className="flex flex-col max-w-2xl relative"
+                            className="flex flex-col max-w-2xl relative order-first lg:order-last"
                             variants={containerVariants}
                         >
                             <motion.h2

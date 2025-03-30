@@ -424,7 +424,8 @@ export function Graph() {
                     minHeight: "600px",
                     position: "absolute",
                     inset: 0,
-                    pointerEvents: "none" // This ensures mouse events pass through to elements below
+                    pointerEvents: "none", // This ensures mouse events pass through to elements below
+                    overflow: "hidden" // Add overflow hidden
                 }}
             >
                 {/* Loading or error message */}

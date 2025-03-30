@@ -186,7 +186,7 @@ export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<'cypher' | 'gremlin'>('cypher');
 
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="relative w-full min-h-screen overflow-x-hidden">
       <Hero />
       <Install />
       <Better />

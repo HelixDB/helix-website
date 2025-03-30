@@ -123,7 +123,7 @@ const UseCaseCard = ({
 }) => {
     return (
         <motion.figure
-            className="hover:scale-105 transition-all duration-300 h-[180px] shadow-lg overflow-hidden rounded-2xl bg- p-4 cursor-default bg-muted"
+            className="h-full shadow-lg rounded-2xl bg-muted p-4 cursor-default transition-all duration-300"
             whileHover={{
                 scale: 1.05,
                 transition: { type: "spring", stiffness: 300, damping: 20 }
@@ -135,14 +135,12 @@ const UseCaseCard = ({
                 variants={cardContentVariants}
             >
                 <div className="flex items-center gap-3">
-                    <span
-                        className="text-2xl"
-                    >
+                    <span className="text-2xl">
                         {icon}
                     </span>
                     <h3 className="text-sm font-medium dark:text-white">{title}</h3>
                 </div>
-                <p className="text flex-grow">{description}</p>
+                <p className="text-sm text-muted-foreground">{description}</p>
             </motion.div>
         </motion.figure>
     );
@@ -180,7 +178,7 @@ const UseCases = () => {
                 viewport={{ once: true, margin: "-100px" }}
             >
                 <motion.div
-                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8 w-full max-w-7xl px-4"
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl px-4"
                     variants={containerVariants}
                 >
                     {useCases.map((useCase, index) => (
@@ -188,6 +186,7 @@ const UseCases = () => {
                             key={useCase.title}
                             variants={cardVariants}
                             custom={index}
+                            className="h-full"
                         >
                             <UseCaseCard {...useCase} />
                         </motion.div>
