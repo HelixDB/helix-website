@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash } from "lucide-react";
 import { Query } from "@/app/api";
-import { KeyboardEvent, ChangeEvent } from "react";
+import { KeyboardEvent, ChangeEvent, useState, useEffect } from "react";
 
 interface QueryEditorProps {
     selectedQuery: Query | null;
@@ -11,7 +11,7 @@ interface QueryEditorProps {
     hasUnsavedChanges: boolean;
     onNameChange: (name: string) => void;
     onContentChange: (content: string) => void;
-    onSave: () => void;
+    onSave: () => Promise<{ query: Query; wasAutoRenamed: boolean } | null>;
     onDelete: (id: string) => void;
     onStartEditingName: (name: string) => void;
 }
@@ -41,6 +41,23 @@ export const QueryEditor = ({
     onDelete,
     onStartEditingName
 }: QueryEditorProps) => {
+    const [nameWarning, setNameWarning] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Clear warning when query changes
+        setNameWarning(null);
+    }, [selectedQuery?.id]);
+
+    const handleSave = async () => {
+        const originalName = editingName;
+        const result = await onSave();
+        if (result?.wasAutoRenamed) {
+            setNameWarning(`Query name was changed to "${result.query.name}" to avoid duplicates`);
+        } else {
+            setNameWarning(null);
+        }
+    };
+
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         const textarea = e.currentTarget;
         const { selectionStart, selectionEnd, value } = textarea;
@@ -211,28 +228,42 @@ export const QueryEditor = ({
                 {selectedQuery && (
                     <>
                         {editingName !== null ? (
-                            <input
-                                type="text"
-                                value={editingName}
-                                onChange={e => onNameChange(e.target.value)}
-                                onKeyDown={e => {
-                                    if (e.key === 'Enter') onSave();
-                                    if (e.key === 'Escape') onNameChange(selectedQuery.name);
-                                }}
-                                onBlur={() => {
-                                    if (editingName.trim() === '') {
-                                        onNameChange(selectedQuery.name);
-                                    }
-                                }}
-                                autoFocus
-                                className="text-lg font-medium bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
-                            />
+                            <div>
+                                <input
+                                    type="text"
+                                    value={editingName}
+                                    onChange={e => onNameChange(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') handleSave();
+                                        if (e.key === 'Escape') onNameChange(selectedQuery.name);
+                                    }}
+                                    onBlur={() => {
+                                        if (editingName.trim() === '') {
+                                            onNameChange(selectedQuery.name);
+                                        }
+                                    }}
+                                    autoFocus
+                                    className="text-lg font-medium bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
+                                />
+                                {nameWarning && (
+                                    <div className="text-sm text-yellow-500 mt-1">
+                                        {nameWarning}
+                                    </div>
+                                )}
+                            </div>
                         ) : (
-                            <div
-                                className="text-lg font-medium cursor-pointer hover:text-primary"
-                                onClick={() => onStartEditingName(selectedQuery.name)}
-                            >
-                                {selectedQuery.name}
+                            <div>
+                                <div
+                                    className="text-lg font-medium cursor-pointer hover:text-primary"
+                                    onClick={() => onStartEditingName(selectedQuery.name)}
+                                >
+                                    {selectedQuery.name}
+                                </div>
+                                {nameWarning && (
+                                    <div className="text-sm text-yellow-500 mt-1">
+                                        {nameWarning}
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -245,7 +276,7 @@ export const QueryEditor = ({
                                 <Trash className="w-4 h-4" />
                             </Button>
                             <Button
-                                onClick={onSave}
+                                onClick={handleSave}
                                 disabled={!hasUnsavedChanges}
                             >
                                 Save

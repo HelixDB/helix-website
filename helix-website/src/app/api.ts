@@ -16,6 +16,15 @@ export interface Query {
   content: string;
 }
 
+// Validation function for query names
+const validateQueryName = (name: string): string => {
+  const validatedName = name.toLowerCase().replace(/\s+/g, '-');
+  if (validatedName !== name) {
+    console.warn(`Query name "${name}" was automatically converted to "${validatedName}" to match required format`);
+  }
+  return validatedName;
+};
+
 interface GetQueriesResponse {
   instance_id: string;
   queries: Query[]
@@ -150,6 +159,12 @@ class API {
    */
   public async pushQueries(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, queries: Query[]): Promise<void> {
     try {
+      // Validate and transform query names before sending
+      const validatedQueries = queries.map(query => ({
+        ...query,
+        name: validateQueryName(query.name)
+      }));
+
       const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
         method: 'POST',
         headers: {
@@ -159,7 +174,7 @@ class API {
           user_id: userID,
           instance_id: instanceId,
           instance_name: instanceName,
-          queries: queries.map(query => ({
+          queries: validatedQueries.map(query => ({
             id: query.id,
             name: query.name,
             content: query.content

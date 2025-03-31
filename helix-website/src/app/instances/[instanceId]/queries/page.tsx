@@ -31,7 +31,8 @@ export default function QueriesPage({ params }: PageProps) {
         hasUnpushedChanges,
         deletedQueries,
         originalQueries,
-        actions
+        actions,
+        instanceName
     } = useQueryManager(resolvedParams.instanceId);
 
     // Load selected query from URL on initial load
@@ -118,14 +119,21 @@ export default function QueriesPage({ params }: PageProps) {
         <div className="min-h-screen bg-background p-8">
             {/* Header */}
             <div className="flex justify-between items-center mt-8 max-w-7xl mx-auto">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => router.replace("/dashboard")}
-                    className="flex items-center"
-                >
-                    <ChevronLeft className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center gap-4">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => router.replace("/dashboard")}
+                        className="flex items-center"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    {selectedQuery && (
+                        <div className="text-sm text-muted-foreground font-mono">
+                            https://api.helix-db.com/{instanceName?.toLowerCase()}/{selectedQuery.name}
+                        </div>
+                    )}
+                </div>
                 <StatusLegend />
             </div>
 

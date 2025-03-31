@@ -72,12 +72,33 @@ export function useQueryManager(instanceId: string) {
 
     // Query management functions
     const saveQuery = async () => {
-        if (!selectedQuery) return;
+        if (!selectedQuery) return null;
+
+        let newName = editingName ?? selectedQuery.name;
+        let wasAutoRenamed = false;
+        
+        // Check for duplicate names
+        if (queries !== null) {
+            const existingNames = new Set(queries
+                .filter(q => q.id !== selectedQuery.id && !deletedQueries.has(q.id))
+                .map(q => q.name));
+
+            if (existingNames.has(newName)) {
+                // Find a unique name by appending a number
+                let counter = 1;
+                let baseName = newName;
+                while (existingNames.has(newName)) {
+                    newName = `${baseName}-${counter}`;
+                    counter++;
+                }
+                wasAutoRenamed = true;
+            }
+        }
 
         const updatedQuery = {
             ...selectedQuery,
             content: editingContent,
-            name: editingName ?? selectedQuery.name
+            name: newName
         };
         
         setQueries(queries.map(q => q.id === updatedQuery.id ? updatedQuery : q));
@@ -85,7 +106,7 @@ export function useQueryManager(instanceId: string) {
         setEditingName(null);
         console.log("instac ", clusterId);
 
-        return updatedQuery;
+        return { query: updatedQuery, wasAutoRenamed };
     };
 
     const doPush = async () => {
@@ -125,9 +146,28 @@ export function useQueryManager(instanceId: string) {
     };
 
     const createQuery = () => {
+        let name = "untitled-query";
+        
+        // Check for duplicate names
+        if (queries !== null) {
+            const existingNames = new Set(queries
+                .filter(q => !deletedQueries.has(q.id))
+                .map(q => q.name));
+
+            if (existingNames.has(name)) {
+                // Find a unique name by appending a number
+                let counter = 1;
+                let baseName = name;
+                while (existingNames.has(name)) {
+                    name = `${baseName}-${counter}`;
+                    counter++;
+                }
+            }
+        }
+
         const newQuery: Query = {
             id: uuidv4(),
-            name: `Untitled Query`,
+            name,
             content: ""
         };
         if (queries === null) setQueries([newQuery]);
@@ -180,6 +220,7 @@ export function useQueryManager(instanceId: string) {
         deletedQueries,
         originalQueries,
         clusterId,
+        instanceName,
         actions: {
             setEditingContent,
             setEditingName,
