@@ -153,7 +153,7 @@ export default function DashboardPage() {
                       {instance.api_endpoint && (
                         <>
                           <span className="text-muted-foreground font-medium">Endpoint:</span>
-                          <code className="px-2 py-0.5 rounded bg-muted font-mono text-xs">
+                          <code className="px-2 py-0.5 rounded text-muted-foreground bg-muted font-mono text-xs">
                             {instance.api_endpoint}
                           </code>
                           <button

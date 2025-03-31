@@ -148,7 +148,7 @@ class API {
   /**
    * Push queries to an instance
    */
-  public async pushQueries(userID: string, instanceId: string, instanceName: string, queries: Query[]): Promise<void> {
+  public async pushQueries(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, queries: Query[]): Promise<void> {
     try {
       const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
         method: 'POST',
@@ -163,7 +163,9 @@ class API {
             id: query.id,
             name: query.name,
             content: query.content
-          }))
+          })),
+          cluster_id: clusterId,
+          region: region
         })
       });
 
@@ -191,7 +193,7 @@ class API {
         },
         body: JSON.stringify({
           user_id: userID,
-          instance_id: instanceId
+          instance_id: instanceId,
         })
       });
       
@@ -207,7 +209,7 @@ class API {
     }
   }
 
-  public async deleteQueries(userID: string, instanceId: string, queries: Query[]): Promise<void> {
+  public async deleteQueries(userID: string, instanceId: string, clusterId: string, region: string, queries: Query[]): Promise<void> {
     try {
         const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/delete-queries`, {
             method: 'POST',
@@ -219,7 +221,9 @@ class API {
                 instance_id: instanceId,
                 queries: queries.map(query => (
                     query.id
-                ))
+                )),
+                cluster_id: clusterId,
+                region: region
             })
         });
 

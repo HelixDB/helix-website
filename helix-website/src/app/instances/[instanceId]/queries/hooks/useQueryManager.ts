@@ -9,7 +9,9 @@ export function useQueryManager(instanceId: string) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [userID, setUserID] = useState<string | null>(null);
+    const [clusterId, setClusterId] = useState<string | null>(null);
     const [queries, setQueries] = useState<Query[]>([]);
+    const [region, setRegion] = useState<string | null>(null);
     const [originalQueries, setOriginalQueries] = useState<Query[]>([]);
     const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
     const [deletedQueries, setDeletedQueries] = useState<Set<string>>(new Set());
@@ -39,6 +41,7 @@ export function useQueryManager(instanceId: string) {
             if (!user) return;
 
             setUserID(user.userId);
+            console.log("Fetching data for instanceId:", instanceId);
             const [apiQueries, resources] = await Promise.all([
                 API.getQueries(user.userId, instanceId),
                 API.getUserResources(user.userId, "")
@@ -46,7 +49,23 @@ export function useQueryManager(instanceId: string) {
 
             setQueries(apiQueries.queries);
             setOriginalQueries(JSON.parse(JSON.stringify(apiQueries.queries)));
-            setInstanceName(resources[0].instance_name);
+            
+            console.log("Resources:", resources);
+            // Find the instance with matching instanceId and set its cluster_id
+            const instance = resources.find(resource => {
+                console.log("Comparing", resource.instance_id, "with", instanceId);
+                return resource.instance_id === instanceId;
+            });
+            
+            if (instance) {
+                console.log("Found instance:", instance);
+                setClusterId(instance.cluster_id);
+                setInstanceName(instance.instance_name);
+                setRegion(instance.region);
+                console.log("Setting region to:", instance.region);
+            } else {
+                console.error("No instance found with ID:", instanceId);
+            }
         };
         fetchData();
     }, [instanceId]);
@@ -64,14 +83,19 @@ export function useQueryManager(instanceId: string) {
         setQueries(queries.map(q => q.id === updatedQuery.id ? updatedQuery : q));
         setSelectedQuery(updatedQuery);
         setEditingName(null);
+        console.log("instac ", clusterId);
+
         return updatedQuery;
     };
 
     const doPush = async () => {
-        if (!userID) return;
+        if (!userID || !clusterId || !instanceName || !region) {
+            console.error("Missing required data:", { userID, clusterId, instanceName, region });
+            return;
+        }
         setIsPushing(true)
         try {
-            if (queries === null || instanceName === null) return;
+            if (queries === null) return;
             const changedQueries = queries.filter(query => {
                 const isDeleted = deletedQueries.has(query.id);
                 const originalQuery = originalQueries !== null ? originalQueries.find(q => q.id === query.id) : null;
@@ -79,13 +103,15 @@ export function useQueryManager(instanceId: string) {
             });
 
             if (changedQueries.length > 0) {
-                await API.pushQueries(userID, instanceId, instanceName, changedQueries);
+                console.log("Pushing queries:", { clusterId, region });
+                await API.pushQueries(userID, instanceId, instanceName, clusterId, region, changedQueries);
             }
 
             if (deletedQueries.size > 0) {
                 const queriesToDelete = queries.filter(q => deletedQueries.has(q.id));
                 if (queriesToDelete.length > 0) {
-                    await API.deleteQueries(userID, instanceId, queriesToDelete);
+                    console.log("Deleting queries:", { clusterId, region });
+                    await API.deleteQueries(userID, instanceId, clusterId, region, queriesToDelete);
                 }
                 setQueries(queries.filter(q => !deletedQueries.has(q.id)));
                 setDeletedQueries(new Set());
@@ -153,6 +179,7 @@ export function useQueryManager(instanceId: string) {
         hasUnpushedChanges,
         deletedQueries,
         originalQueries,
+        clusterId,
         actions: {
             setEditingContent,
             setEditingName,
