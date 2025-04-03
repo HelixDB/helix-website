@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Brain, Shield, Zap } from "lucide-react";
+import { Highlight, themes } from 'prism-react-renderer';
 
 const titleVariants = {
     hidden: { opacity: 0, y: -20 },
@@ -135,8 +136,9 @@ export function ComparisonSection() {
                                     <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
                                 </div>
                                 <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                                    <code className="text-sm">
-                                        {`QUERY findFriends(userID: String) =>
+                                    <Highlight
+                                        theme={themes.nightOwl}
+                                        code={`QUERY findFriends(userID: String) =>
   user <- V<User>(userID)
   posts <- user::Out<Posts>::RANGE(20)
   RETURN user::|usr|{
@@ -148,7 +150,20 @@ export function ComparisonSection() {
                 ..
             },
         }`}
-                                    </code>
+                                        language="typescript"
+                                    >
+                                        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                                            <code className={`${className} text-sm`}>
+                                                {tokens.map((line, i) => (
+                                                    <div key={i} {...getLineProps({ line })}>
+                                                        {line.map((token, key) => (
+                                                            <span key={key} {...getTokenProps({ token })} />
+                                                        ))}
+                                                    </div>
+                                                ))}
+                                            </code>
+                                        )}
+                                    </Highlight>
                                 </pre>
                             </div>
 
@@ -176,9 +191,23 @@ export function ComparisonSection() {
                                         </div>
                                     </div>
                                     <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                                        <code className="text-sm">
-                                            {comparisonExamples[selectedLanguage].code}
-                                        </code>
+                                        <Highlight
+                                            theme={themes.nightOwl}
+                                            code={comparisonExamples[selectedLanguage].code}
+                                            language={"javascript"}
+                                        >
+                                            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                                                <code className={`${className} text-sm`}>
+                                                    {tokens.map((line, i) => (
+                                                        <div key={i} {...getLineProps({ line })}>
+                                                            {line.map((token, key) => (
+                                                                <span key={key} {...getTokenProps({ token })} />
+                                                            ))}
+                                                        </div>
+                                                    ))}
+                                                </code>
+                                            )}
+                                        </Highlight>
                                     </pre>
                                 </div>
                             </div>
@@ -194,8 +223,9 @@ export function ComparisonSection() {
                             <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
                         </div>
                         <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                            <code className="text-sm">
-                                {`QUERY findFriends(userID: String) =>
+                            <Highlight
+                                theme={themes.nightOwl}
+                                code={`QUERY findFriends(userID: String) =>
   user <- V<User>(userID)
   posts <- user::Out<Posts>::RANGE(20)
   RETURN user::|usr|{
@@ -207,7 +237,20 @@ export function ComparisonSection() {
                 ..
             },
         }`}
-                            </code>
+                                language="javascript"
+                            >
+                                {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                                    <code className={`${className} text-sm`}>
+                                        {tokens.map((line, i) => (
+                                            <div key={i} {...getLineProps({ line })}>
+                                                {line.map((token, key) => (
+                                                    <span key={key} {...getTokenProps({ token })} />
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </code>
+                                )}
+                            </Highlight>
                         </pre>
                     </motion.div>
 
@@ -237,9 +280,23 @@ export function ComparisonSection() {
                                 </div>
                             </div>
                             <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                                <code className="text-sm">
-                                    {comparisonExamples[selectedLanguage].code}
-                                </code>
+                                <Highlight
+                                    theme={themes.nightOwl}
+                                    code={comparisonExamples[selectedLanguage].code}
+                                    language={"javascript"}
+                                >
+                                    {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                                        <code className={`${className} text-sm`}>
+                                            {tokens.map((line, i) => (
+                                                <div key={i} {...getLineProps({ line })}>
+                                                    {line.map((token, key) => (
+                                                        <span key={key} {...getTokenProps({ token })} />
+                                                    ))}
+                                                </div>
+                                            ))}
+                                        </code>
+                                    )}
+                                </Highlight>
                             </pre>
                         </div>
                     </motion.div>
