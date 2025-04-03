@@ -14,7 +14,7 @@ const socialLinks = [
     {
         name: "X (Twitter)",
         icon: FaXTwitter,
-        href: "https://twitter.com/HelixDB",
+        href: "https://twitter.com/hlx_db",
         color: "hover:text-[#1DA1F2]"
     },
     {
