@@ -47,6 +47,14 @@ export default function QueriesPage({ params }: PageProps) {
     }, [queries, searchParams]);
 
     const handlePushChanges = async () => {
+        // Check for duplicate names before showing popup
+        if (editingName && queries?.some(q =>
+            q.id !== selectedQuery?.id &&
+            q.name === editingName
+        )) {
+            return; // Don't allow push if name is duplicate
+        }
+
         if (hasUnsavedChanges) {
             actions.setPopup({
                 type: 'save',
@@ -67,6 +75,10 @@ export default function QueriesPage({ params }: PageProps) {
     };
 
     const handleCreateQuery = () => {
+        if (editingName && queries?.some(q => q.name === editingName)) {
+            return; // Don't allow creating with duplicate name
+        }
+
         if (hasUnsavedChanges) {
             actions.setPopup({
                 type: 'save',
@@ -87,6 +99,14 @@ export default function QueriesPage({ params }: PageProps) {
     };
 
     const handleSelectQuery = (query: Query) => {
+        // Check for duplicate names before showing popup
+        if (editingName && queries?.some(q =>
+            q.id !== selectedQuery?.id &&
+            q.name === editingName
+        )) {
+            return; // Don't allow switching if name is duplicate
+        }
+
         if (hasUnsavedChanges) {
             actions.setPopup({
                 type: 'save',
@@ -144,7 +164,10 @@ export default function QueriesPage({ params }: PageProps) {
                     <Button
                         className="w-full rounded-xl shadow-md mb-4"
                         onClick={handlePushChanges}
-                        disabled={!hasUnpushedChanges || isPushing}
+                        disabled={!hasUnpushedChanges || isPushing || !!(editingName && queries?.some(q =>
+                            q.id !== selectedQuery?.id &&
+                            q.name === editingName
+                        ))}
                     >
                         {isPushing ? (
                             <>
@@ -199,7 +222,9 @@ export default function QueriesPage({ params }: PageProps) {
                                     deletedQueries={deletedQueries}
                                     originalQueries={originalQueries}
                                 />
-                                <span className="font-medium truncate">{query.name}</span>
+                                <span className="font-medium truncate">
+                                    {selectedQuery?.id === query.id && editingName ? editingName : query.name}
+                                </span>
                             </button>
                         ))}
                     </div>
@@ -215,6 +240,7 @@ export default function QueriesPage({ params }: PageProps) {
                     onSave={actions.saveQuery}
                     onDelete={actions.deleteQuery}
                     onStartEditingName={actions.setEditingName}
+                    queries={queries || []}
                 />
             </div>
 

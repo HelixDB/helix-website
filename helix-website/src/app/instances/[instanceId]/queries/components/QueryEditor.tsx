@@ -11,9 +11,10 @@ interface QueryEditorProps {
     hasUnsavedChanges: boolean;
     onNameChange: (name: string) => void;
     onContentChange: (content: string) => void;
-    onSave: () => Promise<{ query: Query; wasAutoRenamed: boolean } | null>;
+    onSave: () => Promise<{ query: Query; wasAutoRenamed: boolean; } | null>;
     onDelete: (id: string) => void;
     onStartEditingName: (name: string) => void;
+    queries: Query[];
 }
 
 const TAB_SIZE = 4; // Number of spaces for a tab
@@ -39,7 +40,8 @@ export const QueryEditor = ({
     onContentChange,
     onSave,
     onDelete,
-    onStartEditingName
+    onStartEditingName,
+    queries
 }: QueryEditorProps) => {
     const [nameWarning, setNameWarning] = useState<string | null>(null);
 
@@ -48,14 +50,16 @@ export const QueryEditor = ({
         setNameWarning(null);
     }, [selectedQuery?.id]);
 
+    const isDuplicateName = queries?.some(q =>
+        q.id !== selectedQuery?.id && // Don't compare with self
+        q.name === editingName // Compare with editing name
+    );
+
     const handleSave = async () => {
-        const originalName = editingName;
-        const result = await onSave();
-        if (result?.wasAutoRenamed) {
-            setNameWarning(`Query name was changed to "${result.query.name}" to avoid duplicates`);
-        } else {
-            setNameWarning(null);
+        if (isDuplicateName) {
+            return; // Don't allow save if name is duplicate
         }
+        await onSave();
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -227,57 +231,24 @@ export const QueryEditor = ({
             <div className="flex justify-between items-center mb-4">
                 {selectedQuery && (
                     <>
-                        {editingName !== null ? (
-                            <div>
-                                <input
-                                    type="text"
-                                    value={editingName}
-                                    onChange={e => onNameChange(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
-                                    onKeyDown={e => {
-                                        if (e.key === 'Enter') handleSave();
-                                        if (e.key === 'Escape') onNameChange(selectedQuery.name);
-                                    }}
-                                    onBlur={() => {
-                                        if (editingName.trim() === '') {
-                                            onNameChange(selectedQuery.name);
-                                        }
-                                    }}
-                                    autoFocus
-                                    className="text-lg font-medium bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
-                                />
-                                {nameWarning && (
-                                    <div className="text-sm text-yellow-500 mt-1">
-                                        {nameWarning}
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div>
-                                <div
-                                    className="text-lg font-medium cursor-pointer hover:text-primary"
-                                    onClick={() => onStartEditingName(selectedQuery.name)}
-                                >
-                                    {selectedQuery.name}
-                                </div>
-                                {nameWarning && (
-                                    <div className="text-sm text-yellow-500 mt-1">
-                                        {nameWarning}
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                        <div>
+                            <span className="text-lg font-medium px-1">
+                                {editingName || selectedQuery.name}
+                            </span>
+                        </div>
 
                         <div className="flex gap-2">
                             <Button
                                 variant="outline"
                                 size="icon"
                                 onClick={() => onDelete(selectedQuery.id)}
+                                disabled={isDuplicateName}
                             >
                                 <Trash className="w-4 h-4" />
                             </Button>
                             <Button
                                 onClick={handleSave}
-                                disabled={!hasUnsavedChanges}
+                                disabled={!hasUnsavedChanges || isDuplicateName}
                             >
                                 Save
                             </Button>
@@ -287,14 +258,33 @@ export const QueryEditor = ({
             </div>
 
             {selectedQuery ? (
-                <Textarea
-                    value={editingContent}
-                    onChange={e => onContentChange(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Enter your query here..."
-                    className="flex-1 font-mono resize-none bg-muted/50 tab-size-4"
-                    spellCheck={false}
-                />
+                <div className="flex-1 flex flex-col">
+                    <Textarea
+                        value={editingContent}
+                        onChange={e => {
+                            onContentChange(e.target.value);
+
+                            // Look for QUERY keyword and update name
+                            const content = e.target.value.toUpperCase();
+                            const queryMatch = content.match(/QUERY\s+(\w+)/);
+                            if (queryMatch && queryMatch[1]) {
+                                const newName = queryMatch[1].toLowerCase();
+                                if (newName !== selectedQuery?.name) {
+                                    onNameChange(newName);
+                                }
+                            }
+                        }}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Enter your query here..."
+                        className="flex-1 font-mono resize-none bg-muted/50 tab-size-4"
+                        spellCheck={false}
+                    />
+                    {isDuplicateName && (
+                        <div className="text-sm text-destructive mt-2">
+                            A query with this name already exists
+                        </div>
+                    )}
+                </div>
             ) : (
                 <div className="flex-1 flex items-center justify-center text-muted-foreground">
                     Select a query from the sidebar or click "New Query" to get started

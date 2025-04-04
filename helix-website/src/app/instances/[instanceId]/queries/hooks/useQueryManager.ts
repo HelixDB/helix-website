@@ -61,8 +61,8 @@ export function useQueryManager(instanceId: string) {
                 console.log("Found instance:", instance);
                 setClusterId(instance.cluster_id);
                 setInstanceName(instance.instance_name);
-                setRegion(instance.region);
-                console.log("Setting region to:", instance.region);
+                setRegion(instance.instance_region);
+                console.log("Setting region to:", instance.instance_region);
             } else {
                 console.error("No instance found with ID:", instanceId);
             }
@@ -78,7 +78,7 @@ export function useQueryManager(instanceId: string) {
         let wasAutoRenamed = false;
         
         // Check for duplicate names
-        if (queries !== null) {
+        /* if (queries !== null) {
             const existingNames = new Set(queries
                 .filter(q => q.id !== selectedQuery.id && !deletedQueries.has(q.id))
                 .map(q => q.name));
@@ -93,7 +93,7 @@ export function useQueryManager(instanceId: string) {
                 }
                 wasAutoRenamed = true;
             }
-        }
+        } */
 
         const updatedQuery = {
             ...selectedQuery,
