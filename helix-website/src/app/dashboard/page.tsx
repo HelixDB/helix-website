@@ -93,7 +93,7 @@ export default function DashboardPage() {
 
     try {
       if (!user) return;
-      await api.deleteInstance(user.userId, instanceToDelete.cluster_id, instanceToDelete.region, instanceToDelete.instance_id);
+      await api.deleteInstance(user.userId, instanceToDelete.cluster_id, instanceToDelete.instance_region, instanceToDelete.instance_id);
 
       // Update the resources list after successful deletion
       if (resources) {

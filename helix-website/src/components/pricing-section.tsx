@@ -5,6 +5,8 @@ import { PricingCard, type PricingTier } from "@/components/ui/pricing-card"
 import { Tab } from "@/components/ui/pricing-tab"
 import { AuthModal } from "@/components/ui/auth-modal"
 import { motion } from "framer-motion"
+import { useRouter } from "next/navigation"
+import { getCurrentUser } from "@/amplify-functions"
 
 interface PricingSectionProps {
     title: string
@@ -46,6 +48,24 @@ export function PricingSection({
 }: PricingSectionProps) {
     const [selectedFrequency, setSelectedFrequency] = React.useState(frequencies[0])
     const [showAuthModal, setShowAuthModal] = React.useState(false)
+    const router = useRouter()
+
+    const handleSignUpClick = async () => {
+        try {
+            const user = await getCurrentUser()
+            if (user) {
+                // User is logged in, redirect to create instance page
+                router.push('/create-instance')
+            } else {
+                // User is not logged in, show auth modal
+                setShowAuthModal(true)
+            }
+        } catch (error) {
+            console.error('Error checking auth status:', error)
+            // If there's an error, default to showing auth modal
+            setShowAuthModal(true)
+        }
+    }
 
     return (
         <section className="min-h-screen flex flex-col items-center gap-10 py-24 relative bg-gradient-to-b from-white dark:from-transparent to-transparent">
@@ -90,7 +110,7 @@ export function PricingSection({
                             key={tier.name}
                             tier={tier}
                             paymentFrequency={selectedFrequency}
-                            onSignUpClick={() => setShowAuthModal(true)}
+                            onSignUpClick={handleSignUpClick}
                         />
                     ))}
                 </div>
