@@ -179,27 +179,41 @@ export default function CreateInstancePage() {
                 ? selectedType.reservedPriceId
                 : selectedType.usagePriceId;
 
-            // Create Autumn Checkout Session
-            const response = await fetch('/api/create-checkout-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    priceId,
-                    userId: user.userId,
-                    instanceConfig,
-                }),
-            });
+            // Check if instance name is available
+            const nameCheckResponse = await api.checkInstanceName(formData.name);
+            console.log("f ", nameCheckResponse);
 
-            const { checkoutUrl, error } = await response.json();
-
-            if (error) {
-                throw new Error(error);
+            if (nameCheckResponse.code === 'NAME_EXISTS') {
+                throw new Error('An instance with this name already exists. Please choose a different name.');
             }
 
-            // Redirect to Autumn Checkout
-            window.location.href = checkoutUrl;
+            if (nameCheckResponse.code === 'INVALID_NAME_FORMAT') {
+                throw new Error('Instance name can only contain letters, numbers, and hyphens.');
+            }
+
+            if (nameCheckResponse.code === 'NAME_AVAILABLE') {
+                // Create Autumn Checkout Session
+                const response = await fetch('/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId,
+                        userId: user.userId,
+                        instanceConfig,
+                    }),
+                });
+
+                const { checkoutUrl, error } = await response.json();
+
+                if (error) {
+                    throw new Error(error);
+                }
+
+                // Redirect to Autumn Checkout
+                window.location.href = checkoutUrl;
+            }
         } catch (error: any) {
             console.error('Error creating instance:', error)
             setError(error.message || 'Failed to create instance. Please try again.')

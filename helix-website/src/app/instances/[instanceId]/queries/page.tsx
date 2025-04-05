@@ -2,7 +2,7 @@
 
 import { use, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, ChevronLeft, Loader2, CheckCircle2 } from "lucide-react";
+import { Plus, ChevronLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Query } from "@/app/api";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -32,7 +32,8 @@ export default function QueriesPage({ params }: PageProps) {
         deletedQueries,
         originalQueries,
         actions,
-        instanceName
+        instanceName,
+        pushError,
     } = useQueryManager(resolvedParams.instanceId);
 
     // Load selected query from URL on initial load
@@ -161,30 +162,44 @@ export default function QueriesPage({ params }: PageProps) {
             <div className="mx-auto mt-4 max-w-7xl h-[65vh] flex flex-row rounded-lg bg-background space-x-4">
                 {/* Sidebar */}
                 <div className="w-64 flex flex-col h-full">
-                    <Button
-                        className="w-full rounded-xl shadow-md mb-4"
-                        onClick={handlePushChanges}
-                        disabled={!hasUnpushedChanges || isPushing || !!(editingName && queries?.some(q =>
-                            q.id !== selectedQuery?.id &&
-                            q.name === editingName
-                        ))}
-                    >
-                        {isPushing ? (
-                            <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Pushing...
-                            </>
-                        ) : hasUnpushedChanges ? (
-                            'Push Changes'
-                        ) : (
-                            <>
-                                <CheckCircle2 className="w-4 h-4 mr-2" />
-                                All Changes Synced
-                            </>
-                        )}
-                    </Button>
+                    <div className="space-y-2">
+                        <Button
+                            className="w-full rounded-xl shadow-md"
+                            onClick={handlePushChanges}
+                            disabled={!!pushError || !hasUnpushedChanges || isPushing || !!(editingName && queries?.some(q =>
+                                q.id !== selectedQuery?.id &&
+                                q.name === editingName
+                            ))}
+                            variant={pushError ? "destructive" : "default"}
+                        >
+                            {isPushing ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Pushing...
+                                </>
+                            ) : pushError ? (
+                                <>
+                                    <XCircle className="w-4 h-4 mr-2" />
+                                    Error Pushing
+                                </>
+                            ) : hasUnpushedChanges ? (
+                                'Push Changes'
+                            ) : (
+                                <>
+                                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                                    All Changes Synced
+                                </>
+                            )}
+                        </Button>
 
-                    <div className="flex-1 overflow-y-auto px-2 pt-2 pb-16 rounded-2xl bg-muted/50">
+                        {pushError && (
+                            <div className="px-3 min-h-6 py-2 bg-red-50 text-sm text-destructive bg-destructive/10 rounded-xl border-2 border-destructive">
+                                {pushError}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto px-2 pt-2 pb-16 rounded-2xl bg-muted/50 mt-4">
                         <button
                             onClick={handleCreateQuery}
                             className="w-full text-left mb-2 rounded-xl px-4 py-3 flex items-center gap-2 hover:bg-foreground/10 bg-foreground/5"

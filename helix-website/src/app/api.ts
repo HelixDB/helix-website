@@ -47,7 +47,7 @@ export type InstanceDetails = {
   user_id: string;
   instance_type: string;
   vCPUs: number;
-  region: string;
+  instance_region: string;
   memory: number;
   instance_status: string;
   instance_size: string;
@@ -80,6 +80,12 @@ interface GraphData {
 interface Return {
   result: Record<string, any>;
   newGraphData: GraphData;
+}
+
+export interface InstanceNameCheckResponse {
+    message?: string;
+    error?: string;
+    code: 'NAME_AVAILABLE' | 'NAME_EXISTS' | 'INVALID_NAME_FORMAT' | 'MISSING_NAME' | 'SERVER_ERROR';
 }
 
 /**
@@ -152,55 +158,54 @@ class API {
     });
 
     const result = await response.json() as { resources: InstanceDetails[] };
+    console.log('Fetched resources:', result.resources);
     return result.resources;
   }
   /**
    * Push queries to an instance
    */
-  public async pushQueries(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, queries: Query[]): Promise<void> {
+  public async pushQueries(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, queries: Query[]): Promise<{ error?: string }> {
     try {
-      // Validate and transform query names before sending
-      const validatedQueries = queries.map(query => ({
-        ...query,
-        name: validateQueryName(query.name)
-      }));
+        // Validate and transform query names before sending
+        const validatedQueries = queries.map(query => ({
+            ...query,
+            name: validateQueryName(query.name)
+        }));
 
-      const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: userID,
-          instance_id: instanceId,
-          instance_name: instanceName,
-          queries: validatedQueries.map(query => ({
-            id: query.id,
-            name: query.name,
-            content: query.content
-          })),
-          cluster_id: clusterId,
-          region: region
-        })
-      });
+        const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: userID,
+                instance_id: instanceId,
+                instance_name: instanceName,
+                queries: validatedQueries.map(query => ({
+                    id: query.id,
+                    name: query.name,
+                    content: query.content
+                })),
+                cluster_id: clusterId,
+                region: region
+            })
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to upload queries');
-      }
-
-      const result = await response.json();
-      console.log('Queries uploaded successfully:', result);
+        const result = await response.json();
+        console.log('Queries uploaded successfully:', result);
+        return result;
     } catch (error) {
-      console.error('Error uploading queries:', error);
-      throw error;
+        console.error('Error uploading queries:', error);
+        throw error;
     }
-  }
+}
 
   /**
    * Get queries from an instance
    */
   public async getQueries(userID: string, instanceId: string): Promise<GetQueriesResponse> {
     try {
+      console.log('starting get-queries:', instanceId);
       const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/get-queries`, {
         method: 'POST',
         headers: {
@@ -211,6 +216,7 @@ class API {
           instance_id: instanceId,
         })
       });
+      console.log('Response from get-queries:', response);
       
       if (!response.ok) {
         throw new Error('Failed to get queries');
@@ -283,6 +289,14 @@ class API {
     if (!response.ok) {
       throw new Error('Failed to delete instance');
     }
+  }
+  public async checkInstanceName(instanceName: string): Promise<InstanceNameCheckResponse> {
+    const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/check-name`, {
+      method: 'POST',
+      headers: API_CONFIG.DEFAULT_HEADERS,
+      body: JSON.stringify({ instance_name: instanceName })
+    });
+    return response.json();
   }
 }
 

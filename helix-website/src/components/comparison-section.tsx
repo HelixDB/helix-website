@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Brain, Shield, Zap } from "lucide-react";
 import { Highlight, themes } from 'prism-react-renderer';
+import { useTheme } from "next-themes";
 
 const titleVariants = {
     hidden: { opacity: 0, y: -20 },
@@ -88,6 +89,10 @@ RETURN user.name as name,
 
 export function ComparisonSection() {
     const [selectedLanguage, setSelectedLanguage] = useState<'cypher' | 'gremlin'>('cypher');
+    const { theme } = useTheme();
+
+    // Choose theme based on system/user preference
+    const codeTheme = theme === 'light' ? themes.github : themes.nightOwl;
 
     return (
         <motion.div
@@ -137,7 +142,7 @@ export function ComparisonSection() {
                                 </div>
                                 <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                                     <Highlight
-                                        theme={themes.nightOwl}
+                                        theme={codeTheme}
                                         code={`QUERY findFriends(userID: String) =>
   user <- V<User>(userID)
   posts <- user::Out<Posts>::RANGE(20)
@@ -192,9 +197,9 @@ export function ComparisonSection() {
                                     </div>
                                     <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                                         <Highlight
-                                            theme={themes.nightOwl}
+                                            theme={codeTheme}
                                             code={comparisonExamples[selectedLanguage].code}
-                                            language={"javascript"}
+                                            language="javascript"
                                         >
                                             {({ className, style, tokens, getLineProps, getTokenProps }) => (
                                                 <code className={`${className} text-sm`}>
@@ -224,7 +229,7 @@ export function ComparisonSection() {
                         </div>
                         <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                             <Highlight
-                                theme={themes.nightOwl}
+                                theme={codeTheme}
                                 code={`QUERY findFriends(userID: String) =>
   user <- V<User>(userID)
   posts <- user::Out<Posts>::RANGE(20)
@@ -281,9 +286,9 @@ export function ComparisonSection() {
                             </div>
                             <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
                                 <Highlight
-                                    theme={themes.nightOwl}
+                                    theme={codeTheme}
                                     code={comparisonExamples[selectedLanguage].code}
-                                    language={"javascript"}
+                                    language="javascript"
                                 >
                                     {({ className, style, tokens, getLineProps, getTokenProps }) => (
                                         <code className={`${className} text-sm`}>

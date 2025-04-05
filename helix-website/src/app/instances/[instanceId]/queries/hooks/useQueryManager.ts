@@ -10,16 +10,17 @@ export function useQueryManager(instanceId: string) {
     const searchParams = useSearchParams();
     const [userID, setUserID] = useState<string | null>(null);
     const [clusterId, setClusterId] = useState<string | null>(null);
-    const [queries, setQueries] = useState<Query[]>([]);
+    const [queries, _setQueries] = useState<Query[]>([]);
     const [region, setRegion] = useState<string | null>(null);
     const [originalQueries, setOriginalQueries] = useState<Query[]>([]);
     const [selectedQuery, setSelectedQuery] = useState<Query | null>(null);
     const [deletedQueries, setDeletedQueries] = useState<Set<string>>(new Set());
-    const [editingContent, setEditingContent] = useState("");
+    const [editingContent, _setEditingContent] = useState("");
     const [editingName, setEditingName] = useState<string | null>(null);
     const [isPushing, setIsPushing] = useState(false);
     const [popup, setPopup] = useState<PopupState | null>(null);
     const [instanceName, setInstanceName] = useState<string | null>(null);
+    const [pushError, setPushError] = useState<string | null>(null);
     // Computed states
     const hasUnsavedChanges = Boolean(selectedQuery && (
         editingContent !== selectedQuery.content ||
@@ -47,7 +48,7 @@ export function useQueryManager(instanceId: string) {
                 API.getUserResources(user.userId, "")
             ]);
 
-            setQueries(apiQueries.queries);
+            _setQueries(apiQueries.queries);
             setOriginalQueries(JSON.parse(JSON.stringify(apiQueries.queries)));
             
             console.log("Resources:", resources);
@@ -75,71 +76,69 @@ export function useQueryManager(instanceId: string) {
         if (!selectedQuery) return null;
 
         let newName = editingName ?? selectedQuery.name;
-        let wasAutoRenamed = false;
         
-        // Check for duplicate names
-        /* if (queries !== null) {
-            const existingNames = new Set(queries
-                .filter(q => q.id !== selectedQuery.id && !deletedQueries.has(q.id))
-                .map(q => q.name));
-
-            if (existingNames.has(newName)) {
-                // Find a unique name by appending a number
-                let counter = 1;
-                let baseName = newName;
-                while (existingNames.has(newName)) {
-                    newName = `${baseName}-${counter}`;
-                    counter++;
-                }
-                wasAutoRenamed = true;
-            }
-        } */
-
         const updatedQuery = {
             ...selectedQuery,
             content: editingContent,
             name: newName
         };
         
-        setQueries(queries.map(q => q.id === updatedQuery.id ? updatedQuery : q));
+        _setQueries(queries.map(q => q.id === updatedQuery.id ? updatedQuery : q));
         setSelectedQuery(updatedQuery);
         setEditingName(null);
-        console.log("instac ", clusterId);
-
-        return { query: updatedQuery, wasAutoRenamed };
+        setPushError(null);
+        
+        return { query: updatedQuery, wasAutoRenamed: false };
     };
 
     const doPush = async () => {
+        setPushError(null);
         if (!userID || !clusterId || !instanceName || !region) {
-            console.error("Missing required data:", { userID, clusterId, instanceName, region });
+            setPushError("Missing required data for push operation");
             return;
         }
-        setIsPushing(true)
+        setIsPushing(true);
         try {
             if (queries === null) return;
             const changedQueries = queries.filter(query => {
                 const isDeleted = deletedQueries.has(query.id);
                 const originalQuery = originalQueries !== null ? originalQueries.find(q => q.id === query.id) : null;
-                return !isDeleted && (!originalQuery || JSON.stringify(query) !== JSON.stringify(originalQuery));
+                // Only include non-empty queries that have changes
+                return !isDeleted && 
+                       query.content.trim() !== "" && 
+                       (!originalQuery || JSON.stringify(query) !== JSON.stringify(originalQuery));
             });
 
             if (changedQueries.length > 0) {
                 console.log("Pushing queries:", { clusterId, region });
-                await API.pushQueries(userID, instanceId, instanceName, clusterId, region, changedQueries);
+                const response = await API.pushQueries(userID, instanceId, instanceName, clusterId, region, changedQueries);
+                if (response.error) {
+                    throw new Error(response.error);
+                }
             }
 
+            // Add empty queries to deletedQueries
+            const emptyQueries = queries.filter(q => q.content.trim() === "");
+            if (emptyQueries.length > 0) {
+                emptyQueries.forEach(q => deletedQueries.add(q.id));
+            }
+
+            // Handle deletions
             if (deletedQueries.size > 0) {
                 const queriesToDelete = queries.filter(q => deletedQueries.has(q.id));
                 if (queriesToDelete.length > 0) {
                     console.log("Deleting queries:", { clusterId, region });
                     await API.deleteQueries(userID, instanceId, clusterId, region, queriesToDelete);
                 }
-                setQueries(queries.filter(q => !deletedQueries.has(q.id)));
+                _setQueries(queries.filter(q => !deletedQueries.has(q.id)));
                 setDeletedQueries(new Set());
             }
 
             const currentQueries = queries.filter(q => !deletedQueries.has(q.id));
             setOriginalQueries(JSON.parse(JSON.stringify(currentQueries)));
+        } catch (error) {
+            setPushError(error instanceof Error ? error.message : "Failed to push changes");
+            return;
         } finally {
             setIsPushing(false);
         }
@@ -170,16 +169,16 @@ export function useQueryManager(instanceId: string) {
             name,
             content: ""
         };
-        if (queries === null) setQueries([newQuery]);
-        else setQueries([...queries, newQuery]);
+        if (queries === null) _setQueries([newQuery]);
+        else _setQueries([...queries, newQuery]);
         setSelectedQuery(newQuery);
-        setEditingContent("");
+        _setEditingContent("");
         setEditingName(null);
     };
 
     const selectQuery = (query: Query) => {
         setSelectedQuery(query);
-        setEditingContent(query.content);
+        _setEditingContent(query.content);
         setEditingName(null);
     };
 
@@ -193,7 +192,7 @@ export function useQueryManager(instanceId: string) {
         setDeletedQueries(new Set([...deletedQueries, queryId]));
         if (selectedQuery?.id === queryId) {
             setSelectedQuery(null);
-            setEditingContent("");
+            _setEditingContent("");
             setEditingName(null);
             clearQueryFromUrl();
         }
@@ -206,6 +205,14 @@ export function useQueryManager(instanceId: string) {
             return next;
         });
         setPopup(null);
+    };
+
+    const setEditingContent = (content: string) => {
+        _setEditingContent(content);
+    };
+
+    const setQueries = (newQueries: Query[]) => {
+        _setQueries(newQueries);
     };
 
     return {
@@ -221,6 +228,7 @@ export function useQueryManager(instanceId: string) {
         originalQueries,
         clusterId,
         instanceName,
+        pushError,
         actions: {
             setEditingContent,
             setEditingName,

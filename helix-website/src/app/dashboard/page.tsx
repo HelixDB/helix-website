@@ -86,7 +86,7 @@ export default function DashboardPage() {
         clearInterval(intervalId);
       }
     };
-  }, [router]);
+  }, [router, instanceToDelete]);
 
   const handleDeleteInstance = async () => {
     if (!instanceToDelete) return;
@@ -137,17 +137,24 @@ export default function DashboardPage() {
                         <Database className="mr-2 h-5 w-5" />
                         {instance.instance_name}
                       </div>
-                      <span
-                        className={`text-sm px-3 py-1 rounded-full ${instance.instance_status?.toLowerCase() === "active"
-                          ? "bg-green-100 text-green-700"
-                          : instance.instance_status?.toLowerCase() === "stopped"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-yellow-100 text-yellow-700"
-                          }`}
-                      >
-                        {instance.instance_status?.charAt(0).toUpperCase() +
-                          instance.instance_status?.slice(1)}
-                      </span>
+                      <div className="flex items-center flex-row">
+                        {instance.instance_status?.toLowerCase() === "initializing" && (
+                          <span className="text-sm font-medium text-muted-foreground px-3 py-1">
+                            Normally this takes 4-5 minutes
+                          </span>
+                        )}
+                        <span
+                          className={`text-sm px-3 py-1 rounded-full ${instance.instance_status?.toLowerCase() === "active"
+                            ? "bg-green-100 text-green-700"
+                            : instance.instance_status?.toLowerCase() === "stopped"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
+                            }`}
+                        >
+                          {instance.instance_status?.charAt(0).toUpperCase() +
+                            instance.instance_status?.slice(1)}
+                        </span>
+                      </div>
                     </CardTitle>
                     <CardDescription className="pt-2 flex items-center gap-2 text-sm">
                       {instance.api_endpoint && (
@@ -218,20 +225,24 @@ export default function DashboardPage() {
                           <span className="font-medium">Created:</span> {new Date(instance.created_at).toLocaleDateString()}
                         </div>
                         <div className="space-x-4 flex flex-row">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => setInstanceToDelete(instance)}
-                            className="h-10 w-10"
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                          <Button
-                            onClick={() => router.push(`/instances/${instance.instance_id}/queries`)}
-                            className="flex items-center gap-2 rounded-xl"
-                          >
-                            View Queries
-                          </Button>
+                          {instance.instance_status?.toLowerCase() === "active" && (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setInstanceToDelete(instance)}
+                                className="h-10 w-10"
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                              <Button
+                                onClick={() => router.push(`/instances/${instance.instance_id}/queries`)}
+                                className="flex items-center gap-2 rounded-xl"
+                              >
+                                View Queries
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
