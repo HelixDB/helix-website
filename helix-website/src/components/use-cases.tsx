@@ -82,7 +82,7 @@ const useCases = [
     },
     {
         title: "Code Based Indexing",
-        description: "Store the context of your code alongside distinct relationships (such asfile structure & dependencies).",
+        description: "Store the context of your code alongside distinct relationships (such as file structure & dependencies).",
         icon: "👀",
     },
     {

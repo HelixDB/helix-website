@@ -104,7 +104,7 @@ const pricingTiers = [
     features: [
       "730 hours of free compute",
       "2v CPU, 4GB RAM",
-      "Decicated cloud instance",
+      "Dedicated cloud instance",
       "Unlimited writes and requests",
       "Priority support"
     ],
@@ -119,7 +119,7 @@ const pricingTiers = [
     reservedPrice: 100,
     features: [
       "2v CPU, 8GB RAM",
-      "Decicated cloud instance",
+      "Dedicated cloud instance",
       "Unlimited writes and requests",
       "Priority support",
 
@@ -134,7 +134,7 @@ const pricingTiers = [
     reservedPrice: 250,
     features: [
       "4v CPU, 16GB RAM",
-      "Decicated cloud instance",
+      "Dedicated cloud instance",
       "Unlimited writes and requests",
       "Priority support",
     ],
@@ -148,7 +148,7 @@ const pricingTiers = [
     reservedPrice: 500,
     features: [
       "8v CPU, 32GB RAM",
-      "Decicated cloud instance",
+      "Dedicated cloud instance",
       "Unlimited writes and requests",
       "Priority support",
     ],
