@@ -93,7 +93,11 @@ export function Hero() {
                         variants={containerVariants}
                     >
                         {/* Radial gradient underlay for better contrast with the graph */}
-                        <div className="absolute -inset-10 bg-gradient-radial from-background/95 via-background/70 to-transparent rounded-3xl -z-10 blur-sm"></div>
+                        <motion.div className="absolute top-0 left-0 right-0 bottom-0 rounded-full -z-10 blur-2xl bg-background/70 opacity-60"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, ease: "easeOut", delay: 1 }}
+                        />
                         <motion.div
                             className="flex flex-row space-x-4"
                             variants={pillVariants}
@@ -175,6 +179,7 @@ export function Hero() {
                                 <span className="text-muted-foreground mt-1 text-center italic mt-2">only takes 3 seconds 🙏🏻</span>
                             </motion.div>
                         </div>
+
                     </motion.div>
 
                     {/* Empty column that the graph will appear behind */}
