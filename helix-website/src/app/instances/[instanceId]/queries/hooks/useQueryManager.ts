@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export function useQueryManager(instanceId: string) {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const [queryEndpoint, setQueryEndpoint] = useState<string | null>(null);
     const [userID, setUserID] = useState<string | null>(null);
     const [clusterId, setClusterId] = useState<string | null>(null);
     const [queries, _setQueries] = useState<Query[]>([]);
@@ -64,6 +65,7 @@ export function useQueryManager(instanceId: string) {
                 setInstanceName(instance.instance_name);
                 setRegion(instance.instance_region);
                 console.log("Setting region to:", instance.instance_region);
+                setQueryEndpoint(instance.api_endpoint);
             } else {
                 console.error("No instance found with ID:", instanceId);
             }
@@ -229,6 +231,7 @@ export function useQueryManager(instanceId: string) {
         clusterId,
         instanceName,
         pushError,
+        queryEndpoint,
         actions: {
             setEditingContent,
             setEditingName,
