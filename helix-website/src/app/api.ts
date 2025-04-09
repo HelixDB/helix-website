@@ -187,7 +187,7 @@ class API {
                     content: query.content
                 })),
                 cluster_id: clusterId,
-                region: region
+                region: region,
             })
         });
 

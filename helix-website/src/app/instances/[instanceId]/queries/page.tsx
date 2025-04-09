@@ -34,6 +34,7 @@ export default function QueriesPage({ params }: PageProps) {
         actions,
         instanceName,
         pushError,
+        queryEndpoint
     } = useQueryManager(resolvedParams.instanceId);
 
     // Load selected query from URL on initial load
@@ -151,7 +152,7 @@ export default function QueriesPage({ params }: PageProps) {
                     </Button>
                     {selectedQuery && (
                         <div className="text-sm text-muted-foreground font-mono">
-                            https://api.helix-db.com/{instanceName?.toLowerCase()}/{selectedQuery.name}
+                            {queryEndpoint}/{selectedQuery.name}
                         </div>
                     )}
                 </div>
