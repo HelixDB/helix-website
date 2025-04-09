@@ -1,7 +1,7 @@
 import { CheckCircle2, Save } from "lucide-react";
 
 export const StatusLegend = () => (
-    <div className="ml-auto flex items-center gap-6 text-sm text-muted-foreground">
+    <div className="ml-auto flex items-center gap-6 text-xs sm:text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-green-500" />
             <span>Up to date</span>

@@ -1,8 +1,8 @@
 "use client";
 
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, ChevronLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, ChevronLeft, Loader2, CheckCircle2, XCircle, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Query } from "@/app/api";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,6 +11,7 @@ import { StatusLegend } from "./components/StatusLegend";
 import { ConfirmationPopup } from "./components/ConfirmationPopup";
 import { QueryEditor } from "./components/QueryEditor";
 import { useQueryManager } from "./hooks/useQueryManager";
+import { AiQuerySidebar } from "./components/AiQuerySidebar";
 
 interface PageProps {
     params: Promise<{ instanceId: string }>;
@@ -36,6 +37,7 @@ export default function QueriesPage({ params }: PageProps) {
         pushError,
         queryEndpoint
     } = useQueryManager(resolvedParams.instanceId);
+    const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(false);
 
     // Load selected query from URL on initial load
     useEffect(() => {
@@ -140,18 +142,18 @@ export default function QueriesPage({ params }: PageProps) {
     return (
         <div className="min-h-screen bg-background p-8">
             {/* Header */}
-            <div className="flex justify-between items-center mt-8 max-w-7xl mx-auto">
+            <div className="flex justify-between items-center mt-8 max-w-8xl mx-auto">
                 <div className="flex items-center gap-4">
                     <Button
                         variant="outline"
                         size="icon"
                         onClick={() => router.replace("/dashboard")}
-                        className="flex items-center"
+                        className="flex items-center aspect-square"
                     >
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
                     {selectedQuery && (
-                        <div className="text-sm text-muted-foreground font-mono">
+                        <div className="text-xs sm:text-sm text-muted-foreground font-mono">
                             {queryEndpoint}/{selectedQuery.name}
                         </div>
                     )}
@@ -160,7 +162,7 @@ export default function QueriesPage({ params }: PageProps) {
             </div>
 
             {/* Main Content */}
-            <div className="mx-auto mt-4 max-w-7xl h-[65vh] flex flex-row rounded-lg bg-background space-x-4">
+            <div className="mx-auto mt-4 max-w-8xl h-[65vh] flex flex-row rounded-lg bg-background space-x-4">
                 {/* Sidebar */}
                 <div className="w-64 flex flex-col h-full">
                     <div className="space-y-2">
@@ -257,6 +259,18 @@ export default function QueriesPage({ params }: PageProps) {
                     onDelete={actions.deleteQuery}
                     onStartEditingName={actions.setEditingName}
                     queries={queries || []}
+                    onAiClick={() => setIsAiSidebarOpen(!isAiSidebarOpen)}
+                />
+
+                <AiQuerySidebar
+                    isOpen={isAiSidebarOpen}
+                    onClose={() => setIsAiSidebarOpen(false)}
+                    currentQuery={editingContent}
+                    onGenerateQuery={(query) => {
+                        if (selectedQuery) {
+                            actions.setEditingContent(query);
+                        }
+                    }}
                 />
             </div>
 

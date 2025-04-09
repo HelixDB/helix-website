@@ -255,8 +255,8 @@ export default function CreateInstancePage() {
 
     return (
         <div className="">
-            <div className="mx-auto max-w-2xl px-4 py-8 container min-h-screen">
-                <div className="flex justify-between items-center mb-8">
+            <div className="mx-auto max-w-2xl px-4 py-16 container min-h-screen">
+                <div className="flex justify-between items-center my-8">
                     <h1 className="text-4xl font-bold">Create Instance</h1>
                 </div>
 

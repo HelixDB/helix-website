@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "@aws-amplify/ui-react": "^6.9.1",
     "@number-flow/react": "^0.5.8",
     "@radix-ui/react-accordion": "^1.2.3",

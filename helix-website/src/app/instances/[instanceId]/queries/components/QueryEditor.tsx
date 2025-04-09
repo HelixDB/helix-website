@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash } from "lucide-react";
+import { Trash, Sparkles } from "lucide-react";
 import { Query } from "@/app/api";
 import { KeyboardEvent, ChangeEvent, useState, useEffect } from "react";
 
@@ -15,6 +15,7 @@ interface QueryEditorProps {
     onDelete: (id: string) => void;
     onStartEditingName: (name: string) => void;
     queries: Query[];
+    onAiClick: () => void;
 }
 
 const TAB_SIZE = 4; // Number of spaces for a tab
@@ -41,7 +42,8 @@ export const QueryEditor = ({
     onSave,
     onDelete,
     onStartEditingName,
-    queries
+    queries,
+    onAiClick
 }: QueryEditorProps) => {
     const [nameWarning, setNameWarning] = useState<string | null>(null);
 
@@ -227,7 +229,7 @@ export const QueryEditor = ({
     };
 
     return (
-        <div className="flex-1 flex flex-col h-full">
+        <div className="flex-1 flex flex-col h-full transition-[width] duration-200 ease-in-out">
             <div className="flex justify-between items-center mb-4">
                 {selectedQuery && (
                     <>
@@ -247,6 +249,13 @@ export const QueryEditor = ({
                                 <Trash className="w-4 h-4" />
                             </Button>
                             <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={onAiClick}
+                            >
+                                <Sparkles className="w-4 h-4" />
+                            </Button>
+                            <Button
                                 onClick={handleSave}
                                 disabled={!hasUnsavedChanges || isDuplicateName}
                             >
@@ -258,32 +267,35 @@ export const QueryEditor = ({
             </div>
 
             {selectedQuery ? (
-                <div className="flex-1 flex flex-col">
-                    <Textarea
-                        value={editingContent}
-                        onChange={e => {
-                            onContentChange(e.target.value);
+                <div className="flex-1 flex flex-row">
+                    <div className="flex-1 flex flex-col">
+                        <Textarea
+                            value={editingContent}
+                            onChange={e => {
+                                onContentChange(e.target.value);
 
-                            // Look for QUERY keyword and update name
-                            const content = e.target.value.toUpperCase();
-                            const queryMatch = content.match(/QUERY\s+(\w+)/);
-                            if (queryMatch && queryMatch[1]) {
-                                const newName = queryMatch[1].toLowerCase();
-                                if (newName !== selectedQuery?.name) {
-                                    onNameChange(newName);
+                                // Look for QUERY keyword and update name
+                                const content = e.target.value.toUpperCase();
+                                const queryMatch = content.match(/QUERY\s+(\w+)/);
+                                if (queryMatch && queryMatch[1]) {
+                                    const newName = queryMatch[1].toLowerCase();
+                                    if (newName !== selectedQuery?.name) {
+                                        onNameChange(newName);
+                                    }
                                 }
-                            }
-                        }}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Enter your query here..."
-                        className="flex-1 font-mono resize-none bg-muted/50 tab-size-4"
-                        spellCheck={false}
-                    />
-                    {isDuplicateName && (
-                        <div className="text-sm text-destructive mt-2">
-                            A query with this name already exists
-                        </div>
-                    )}
+                            }}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Enter your query here..."
+                            className="flex-1 font-mono resize-none bg-muted/50 tab-size-4"
+                            spellCheck={false}
+                        />
+                        {isDuplicateName && (
+                            <div className="text-sm text-destructive mt-2">
+                                A query with this name already exists
+                            </div>
+                        )}
+                    </div>
+
                 </div>
             ) : (
                 <div className="flex-1 flex items-center justify-center text-muted-foreground">
