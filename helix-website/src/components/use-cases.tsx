@@ -8,7 +8,6 @@ const containerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.05,
             duration: 0.3,
             when: "beforeChildren"
         }
@@ -179,7 +178,6 @@ const UseCases = () => {
             >
                 <motion.div
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl px-4"
-                    variants={containerVariants}
                 >
                     {useCases.map((useCase, index) => (
                         <motion.div

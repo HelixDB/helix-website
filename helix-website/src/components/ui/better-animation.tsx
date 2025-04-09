@@ -51,9 +51,8 @@ export const BetterInfographic: React.FC = () => {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.3,
-                duration: 0.5,
+                delayChildren: 0.2,
+                duration: 0.2,
                 when: "beforeChildren"
             }
         }
@@ -93,8 +92,6 @@ export const BetterInfographic: React.FC = () => {
             transition: {
                 type: "spring",
                 stiffness: 100,
-                damping: 15,
-                delay: 0.6
             }
         }
     };
