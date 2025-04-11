@@ -37,7 +37,7 @@ export default function QueriesPage({ params }: PageProps) {
         pushError,
         queryEndpoint
     } = useQueryManager(resolvedParams.instanceId);
-    const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(false);
+    const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(true);
 
     // Load selected query from URL on initial load
     useEffect(() => {
