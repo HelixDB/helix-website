@@ -3,6 +3,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Trash, Sparkles } from "lucide-react";
 import { Query } from "@/app/api";
 import { KeyboardEvent, ChangeEvent, useState, useEffect } from "react";
+import { toSnakeCase } from "@/lib/utils";
 
 interface QueryEditorProps {
     selectedQuery: Query | null;
@@ -41,7 +42,6 @@ export const QueryEditor = ({
     onContentChange,
     onSave,
     onDelete,
-    onStartEditingName,
     queries,
     onAiClick
 }: QueryEditorProps) => {
@@ -229,7 +229,7 @@ export const QueryEditor = ({
     };
 
     return (
-        <div className="flex-1 flex flex-col h-full transition-[width] duration-200 ease-in-out">
+        <div className="flex flex-1 flex-col h-full transition-[width] duration-200 ease-in-out">
             <div className="flex justify-between items-center mb-4">
                 {selectedQuery && (
                     <>
@@ -275,10 +275,10 @@ export const QueryEditor = ({
                                 onContentChange(e.target.value);
 
                                 // Look for QUERY keyword and update name
-                                const content = e.target.value.toUpperCase();
-                                const queryMatch = content.match(/QUERY\s+(\w+)/);
+                                const content = e.target.value;
+                                const queryMatch = content.toUpperCase().match(/QUERY\s+(\w+)/);
                                 if (queryMatch && queryMatch[1]) {
-                                    const newName = queryMatch[1].toLowerCase();
+                                    const newName = toSnakeCase(content.match(/QUERY\s+(\w+)/)?.[1] || '');
                                     if (newName !== selectedQuery?.name) {
                                         onNameChange(newName);
                                     }

@@ -46,13 +46,21 @@ export function AiQuerySidebar({ isOpen, onClose, onGenerateQuery, currentQuery 
                 throw new Error(data.error);
             }
 
-            setChatHistory(prev => [...prev, { role: 'assistant', content: data.query }]);
-            onGenerateQuery(data.query);
+            // Only update the query if one was provided
+            if (data.query) {
+                onGenerateQuery(data.query);
+            }
+
+            // Add the explanation to the chat
+            setChatHistory(prev => [...prev, {
+                role: 'assistant',
+                content: data.explanation || 'I processed your request but no explanation was provided.'
+            }]);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to generate query');
             setChatHistory(prev => [...prev, {
                 role: 'assistant',
-                content: 'Sorry, I encountered an error while generating the query.'
+                content: 'Sorry, I encountered an error while processing your request.'
             }]);
         } finally {
             setIsLoading(false);
@@ -63,7 +71,7 @@ export function AiQuerySidebar({ isOpen, onClose, onGenerateQuery, currentQuery 
     if (!isOpen) return null;
 
     return (
-        <div className="w-96 flex flex-col h-full bg-muted/50 rounded-2xl p-4">
+        <div className="w-96 overflow-hidden flex flex-col h-full bg-muted/50 rounded-2xl p-4">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">AI Query Assistant</h3>
                 <Button variant="ghost" size="icon" onClick={onClose}>
@@ -71,16 +79,16 @@ export function AiQuerySidebar({ isOpen, onClose, onGenerateQuery, currentQuery 
                 </Button>
             </div>
 
-            <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-4 mb-4">
                 {chatHistory.map((msg, i) => (
                     <div
                         key={i}
-                        className={`p-3 rounded-lg ${msg.role === 'user'
+                        className={`p-3 rounded-lg break-words ${msg.role === 'user'
                             ? 'bg-primary text-primary-foreground ml-8'
                             : 'bg-muted mr-8'
                             }`}
                     >
-                        <pre className="whitespace-pre-wrap font-mono text-sm">
+                        <pre className="whitespace-pre-wrap font-mono text-sm break-words max-w-[300px]">
                             {msg.content}
                         </pre>
                     </div>
@@ -101,7 +109,7 @@ export function AiQuerySidebar({ isOpen, onClose, onGenerateQuery, currentQuery 
                 <Textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Describe the query you want to generate..."
+                    placeholder="Describe the query you want to generate... Or ask a question "
                     className="resize-none"
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
@@ -111,6 +119,7 @@ export function AiQuerySidebar({ isOpen, onClose, onGenerateQuery, currentQuery 
                     }}
                 />
                 <Button
+                    className="h-full"
                     onClick={handleSubmit}
                     disabled={isLoading || !message.trim()}
                 >

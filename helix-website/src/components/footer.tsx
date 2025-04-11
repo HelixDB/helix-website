@@ -16,7 +16,7 @@ const navigation = {
         },
         {
             name: "Docs",
-            href: "https://helix.mintlify.app",
+            href: "https://docs.helix-db.com",
             icon: File,
         },
     ],

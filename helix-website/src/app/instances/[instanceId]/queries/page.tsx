@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, ChevronLeft, Loader2, CheckCircle2, XCircle, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, toSnakeCase } from "@/lib/utils";
 import { Query } from "@/app/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { QueryIcon } from "./components/QueryIcon";
@@ -169,7 +169,7 @@ export default function QueriesPage({ params }: PageProps) {
                         <Button
                             className="w-full rounded-xl shadow-md"
                             onClick={handlePushChanges}
-                            disabled={!!pushError || !hasUnpushedChanges || isPushing || !!(editingName && queries?.some(q =>
+                            disabled={(pushError && pushError !== "Load failed") || !hasUnpushedChanges || isPushing || !!(editingName && queries?.some(q =>
                                 q.id !== selectedQuery?.id &&
                                 q.name === editingName
                             ))}
@@ -183,7 +183,7 @@ export default function QueriesPage({ params }: PageProps) {
                             ) : pushError ? (
                                 <>
                                     <XCircle className="w-4 h-4 mr-2" />
-                                    Error Pushing
+                                    {pushError === "Load failed" ? "Retry" : "Error Pushing"}
                                 </>
                             ) : hasUnpushedChanges ? (
                                 'Push Changes'
@@ -269,6 +269,14 @@ export default function QueriesPage({ params }: PageProps) {
                     onGenerateQuery={(query) => {
                         if (selectedQuery) {
                             actions.setEditingContent(query);
+                            // Update name based on QUERY keyword
+                            const queryMatch = query.toUpperCase().match(/QUERY\s+(\w+)/);
+                            if (queryMatch && queryMatch[1]) {
+                                const newName = toSnakeCase(query.match(/QUERY\s+(\w+)/)?.[1] || '');
+                                if (newName !== selectedQuery.name) {
+                                    actions.setEditingName(newName);
+                                }
+                            }
                         }
                     }}
                 />
