@@ -89,6 +89,11 @@ AddN<Type>	Add a node of the specified type
 AddN<Type>({properties})	Add a node with properties
 AddE<Type>::From(v1)::To(v2)	Add an edge of specified type from v1 to v2
 AddE<Type>({properties})::From(v1)::To(v2)	Add an edge with properties
+//v1 and v2 can be ids of nodes or nodes themselves
+
+QUERY CreateRelationshipsWithIds(user1ID: String, user2ID: String) =>
+    // Create a simple follows relationship
+    follows <- AddE<Follows>::From(user1ID)::To(user2ID)
 
 QUERY CreateRelationships(user1ID: String, user2ID: String) =>
     // Get the users by their IDs
@@ -182,8 +187,8 @@ Check if user has any followers
 Respond with ONLY the HelixQL query code, no explanations.`;
 
         const userPrompt = currentQuery 
-            ? `Current query:\n${currentQuery}\n\nUser request: ${prompt}\n\nIf this is a question about the query, provide an explanation. If this is a request to modify or create a query, provide both a new query and a brief explanation of what changed or what the query does. Format your response as follows:\n\nQUERY:\n<the query code here>\n\nEXPLANATION:\n<1-2 sentences explaining the changes or answering the question>`
-            : `Generate a query that does the following: ${prompt}\n\nFormat your response as follows:\n\nQUERY:\n<the query code here>\n\nEXPLANATION:\n<1-2 sentences explaining what the query does>`;
+            ? `Current query:\n${currentQuery}\n\nUser request: ${prompt}\n\nIf this is a question about the query, provide an explanation. If this is a request to modify or create a query, provide both a new query and a brief explanation of what changed or what the query does. Format your response as follows:\n\n<the query code here starting "QUERY <name> (<params>) =>>\n\nEXPLANATION:\n<1-2 sentences explaining the changes or answering the question>`
+            : `Generate a query that does the following: ${prompt}\n\nFormat your response as follows:\n\n<the query code here starting "QUERY <name> (<params>) =>>\n\nEXPLANATION:\n<1-2 sentences explaining what the query does>`;
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
@@ -200,9 +205,9 @@ Respond with ONLY the HelixQL query code, no explanations.`;
         if (!response) {
             throw new Error('No response generated');
         }
-
+        console.log("FOO",response);
         // Parse the response to separate query and explanation
-        const queryMatch = response.match(/QUERY:\n([\s\S]*?)(?=\n\nEXPLANATION:)/);
+        const queryMatch = response.match(/^(QUERY[\s\S]*?)(?=\n\nEXPLANATION:)/);
         const explanationMatch = response.match(/EXPLANATION:\n([\s\S]*?)$/);
 
         const query = queryMatch ? queryMatch[1].trim() : '';
