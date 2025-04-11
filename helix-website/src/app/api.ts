@@ -164,7 +164,7 @@ class API {
   /**
    * Push queries to an instance
    */
-  public async pushQueries(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, queries: Query[]): Promise<{ error?: string }> {
+  public async pushQueries(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, queries: Query[], queriesToDelete: string[]): Promise<{ error?: string }> {
     try {
         // Validate and transform query names before sending
         const validatedQueries = queries.map(query => ({
@@ -188,6 +188,7 @@ class API {
                 })),
                 cluster_id: clusterId,
                 region: region,
+                queries_to_delete: queriesToDelete
             })
         });
 
@@ -229,36 +230,6 @@ class API {
       throw error;
     }
   }
-
-  public async deleteQueries(userID: string, instanceId: string, clusterId: string, region: string, queries: Query[]): Promise<void> {
-    try {
-        const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/delete-queries`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_id: userID,
-                instance_id: instanceId,
-                queries: queries.map(query => (
-                    query.id
-                )),
-                cluster_id: clusterId,
-                region: region
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to delete queries');
-        }
-
-        const result = await response.json();
-        console.log('Queries deleted successfully:', result);
-    } catch (error) {
-        console.error('Error deleting queries:', error);
-        throw error;
-    }
-}
 
   public async createInstance(config: {
     userId: string;

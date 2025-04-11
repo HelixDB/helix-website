@@ -113,7 +113,18 @@ export function useQueryManager(instanceId: string) {
 
             if (changedQueries.length > 0) {
                 console.log("Pushing queries:", { clusterId, region });
-                const response = await API.pushQueries(userID, instanceId, instanceName, clusterId, region, changedQueries);
+                let queryIDsToDelete: string[] = [];
+                if (deletedQueries.size > 0) {
+                    const queriesToDelete = queries.filter(q => deletedQueries.has(q.id));
+                    if (queriesToDelete.length > 0) {
+                        console.log("Deleting queries:", { clusterId, region });
+                        queryIDsToDelete = queriesToDelete.map(q => q.id);
+                    }
+                    _setQueries(queries.filter(q => !deletedQueries.has(q.id)));
+                    setDeletedQueries(new Set());
+                }
+
+                const response = await API.pushQueries(userID, instanceId, instanceName, clusterId, region, changedQueries, queryIDsToDelete);
                 if (response.error) {
                     throw new Error(response.error);
                 }
@@ -125,16 +136,7 @@ export function useQueryManager(instanceId: string) {
                 emptyQueries.forEach(q => deletedQueries.add(q.id));
             }
 
-            // Handle deletions
-            if (deletedQueries.size > 0) {
-                const queriesToDelete = queries.filter(q => deletedQueries.has(q.id));
-                if (queriesToDelete.length > 0) {
-                    console.log("Deleting queries:", { clusterId, region });
-                    await API.deleteQueries(userID, instanceId, clusterId, region, queriesToDelete);
-                }
-                _setQueries(queries.filter(q => !deletedQueries.has(q.id)));
-                setDeletedQueries(new Set());
-            }
+
 
             const currentQueries = queries.filter(q => !deletedQueries.has(q.id));
             setOriginalQueries(JSON.parse(JSON.stringify(currentQueries)));
