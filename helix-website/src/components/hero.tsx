@@ -119,13 +119,13 @@ export function Hero() {
                                     Backed by Y Combinator
                                 </span>
                             </motion.div> */}
-                            {/* <HeroPill
+                            <HeroPill
                                 className="w-min mb-6"
                                 href="https://github.com/HelixDB/helix-db"
                                 label="Vector types available!"
                                 announcement="🎉 New"
                                 isExternal
-                            /> */}
+                            />
                         </motion.div>
 
                         <motion.h1
