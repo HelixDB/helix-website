@@ -152,7 +152,7 @@ Get all properties except for the id and the name
             posts: posts::{
                 postID: ID,
                 creatorID: usr::ID,
-                .. // this is the spread operator to include everything else as is
+                .. // this is the spread operator (ONLY TWO DOTS) to include everything else as is
             },
         }
 
