@@ -140,9 +140,9 @@ export default function QueriesPage({ params }: PageProps) {
     };
 
     return (
-        <div className="min-h-screen bg-background p-8">
+        <div className="min-h-screen bg-background p-8 mt-6">
             {/* Header */}
-            <div className="flex justify-between items-center mt-8 max-w-8xl mx-auto">
+            <div className="flex justify-between items-center my-8 max-w-8xl mx-auto">
                 <div className="flex items-center gap-4">
                     <Button
                         variant="outline"
@@ -162,7 +162,7 @@ export default function QueriesPage({ params }: PageProps) {
             </div>
 
             {/* Main Content */}
-            <div className="mx-auto mt-4 max-w-8xl h-[65vh] flex flex-row rounded-lg bg-background space-x-4">
+            <div className="mx-auto mt-4 max-w-8xl flex flex-row rounded-lg bg-background space-x-4 h-[65vh]">
                 {/* Sidebar */}
                 <div className="w-64 flex flex-col h-full">
                     <div className="space-y-2">
