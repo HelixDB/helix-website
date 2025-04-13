@@ -1,5 +1,5 @@
 import React from "react";
-import { BetterInfographic } from "./ui/better-animation";
+import { BetterInfographic } from "./better-animation";
 import { Clock, GitPullRequestDraft, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 

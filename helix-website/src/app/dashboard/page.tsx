@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getCurrentUser } from "@/amplify-functions";
+import { getCurrentUser } from "@/lib/amplify-functions";
 import {
   Card,
   CardContent,

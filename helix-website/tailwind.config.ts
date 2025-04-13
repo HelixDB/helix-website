@@ -115,14 +115,6 @@ module.exports = {
     					height: '0'
     				}
     			},
-    			aurora: {
-    				from: {
-    					'background-position': '0% 50%'
-    				},
-    				to: {
-    					'background-position': '100% 50%'
-    				}
-    			},
     			orbit: {
     				'0%': {
     					transform: 'rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg))'

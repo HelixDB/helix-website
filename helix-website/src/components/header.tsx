@@ -7,7 +7,7 @@ import { User, LogOut, CreditCard, Star } from "lucide-react"
 import { Button } from "./ui/button"
 import { Logo } from "./ui/logo"
 import { AuthModal } from "./ui/auth-modal"
-import { getCurrentUser } from "@/amplify-functions"
+import { getCurrentUser } from "@/lib/amplify-functions"
 import {
     DropdownMenu,
     DropdownMenuContent,

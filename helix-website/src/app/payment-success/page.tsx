@@ -7,7 +7,7 @@ import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react"
-import { getCurrentUser } from "@/amplify-functions"
+import { getCurrentUser } from "@/lib/amplify-functions"
 
 function PaymentVerification() {
     const router = useRouter()

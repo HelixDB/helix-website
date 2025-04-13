@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Check } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { CodeEditor } from "./ui/code-editor";
+import { CodeEditor } from "../ui/code-editor";
 import { motion } from "framer-motion";
 
 const containerVariants = {

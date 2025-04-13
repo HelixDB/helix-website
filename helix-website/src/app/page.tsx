@@ -1,21 +1,17 @@
 "use client";
 /// <reference types="three" />
 import React, { useState } from "react";
-import { Hero } from "@/components/hero";
-import { Install } from "@/components/install";
-import { Better } from "@/components/better";
-import { PrecompiledQueries } from "@/components/precompiled-queries";
-import UseCases from "@/components/use-cases";
+import { Hero } from "@/components/sections/hero";
+import { Install } from "@/components/sections/install";
+import { Better } from "@/components/sections/better";
+import { PrecompiledQueries } from "@/components/sections/precompiled-queries";
+import UseCases from "@/components/sections/use-cases";
 import { Button } from "@/components/ui/button";
-import { RAGFeatures } from "@/components/rag-features";
-import { PricingSection } from "@/components/pricing-section";
-import { Pattern } from "@/components/ui/patterns";
-import { Steps } from "@/components/steps";
-import { DemoSection } from "@/components/demo-section";
-import { motion, useScroll } from "framer-motion";
-import { Brain, Github, Shield, Zap } from "lucide-react";
-import { useTheme } from "next-themes";
-import { ComparisonSection } from "@/components/comparison-section";
+import { PricingSection } from "@/components/sections/pricing-section";
+import { DemoSection } from "@/components/sections/demo-section";
+import { motion } from "framer-motion";
+import { Github } from "lucide-react";
+import { ComparisonSection } from "@/components/sections/comparison-section";
 import { FaDiscord } from "react-icons/fa";
 import { SocialLinks } from "@/components/ui/social-links";
 

@@ -5,7 +5,7 @@ import { Button } from "./button"
 import { Input } from "./input"
 import { Label } from "./label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs"
-import { signIn, signUp, confirmSignUp } from "@/amplify-functions"
+import { signIn, signUp, confirmSignUp } from "@/lib/amplify-functions"
 
 type AuthMode = "signin" | "signup" | "confirm"
 

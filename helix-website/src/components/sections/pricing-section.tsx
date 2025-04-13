@@ -6,7 +6,7 @@ import { Tab } from "@/components/ui/pricing-tab"
 import { AuthModal } from "@/components/ui/auth-modal"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import { getCurrentUser } from "@/amplify-functions"
+import { getCurrentUser } from "@/lib/amplify-functions"
 
 interface PricingSectionProps {
     title: string

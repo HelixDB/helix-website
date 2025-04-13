@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import API, { Query } from "@/app/api";
-import { getCurrentUser } from "@/amplify-functions";
+import { getCurrentUser } from "@/lib/amplify-functions";
 import { PopupState } from "../components/ConfirmationPopup";
 import { useRouter, useSearchParams } from "next/navigation";
 
