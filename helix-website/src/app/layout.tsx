@@ -3,9 +3,10 @@ import { Geist } from "next/font/google";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
+import { Providers } from "@/components/providers";
 import { Footer } from "@/components/footer";
 import { Analytics } from "@vercel/analytics/react";
-import { ThemeProvider } from "@/components/theme-provider"
+
 
 const geist = Geist({
   subsets: ["latin"],
@@ -30,14 +31,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geist.variable} ${playfair.variable} font-sans antialiased`}>
-        <ThemeProvider>
+        <Providers>
           <Analytics />
           <div className="relative flex min-h-screen flex-col">
             <Header />
             <main className="">{children}</main>
             <Footer />
           </div>
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

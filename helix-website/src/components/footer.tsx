@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { File, Github, Linkedin, Twitter, Bug } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "./ui/theme-toggle";
-import { BugReportPopup } from "./bug-report-popup";
 import { Button } from "./ui/button";
 
 const navigation = {
@@ -111,10 +110,6 @@ export function Footer() {
                 </div>
             </div>
 
-            <BugReportPopup
-                isOpen={isBugReportOpen}
-                onClose={() => setIsBugReportOpen(false)}
-            />
         </footer>
     );
 } 
