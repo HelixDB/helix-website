@@ -14,14 +14,70 @@ import { Github } from "lucide-react";
 import { ComparisonSection } from "@/components/sections/comparison-section";
 import { FaDiscord } from "react-icons/fa";
 import { SocialLinks } from "@/components/ui/social-links";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 }
 };
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const titleVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      duration: 0.3
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
+// Add cache helper
+const CACHE_KEY = 'github_stats';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+interface CachedData {
+  data: {
+    stars: number;
+    forks: number;
+    lastCommit: string;
+  };
+  timestamp: number;
+}
 
 const pricingTiers = [
   /* {
@@ -96,11 +152,37 @@ const pricingTiers = [
     callToActionLink: "/signup"
   }
 ];
+// Add comparison query examples
+const comparisonExamples = {
+  cypher: {
+    name: "Cypher",
+    code: `MATCH (user:User)
+WHERE user.age > 25
+WITH user
+MATCH (user)-[:FOLLOWS]->(friend)
+RETURN friend
+ORDER BY friend.name
+LIMIT 10`,
+    lines: 7
+  },
+  gremlin: {
+    name: "Gremlin",
+    code: `g.V().hasLabel('User')
+  .has('age', gt(25))
+  .out('FOLLOWS')
+  .dedup()
+  .order()
+    .by('name')
+  .limit(10)`,
+    lines: 7
+  }
+};
+
 export default function Home() {
+  const [selectedLanguage, setSelectedLanguage] = useState<'cypher' | 'gremlin'>('cypher');
 
   return (
     <div className="relative w-full min-h-screen overflow-x-hidden">
-      <Header />
       <Hero />
       <Install />
       <Better />
@@ -183,8 +265,6 @@ export default function Home() {
         </div>
       </motion.div>
       <DemoSection />
-
-      <Footer />
     </div>
   );
 }
