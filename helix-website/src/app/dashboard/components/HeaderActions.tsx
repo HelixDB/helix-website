@@ -9,9 +9,6 @@ export function HeaderActions() {
                 Feedback
             </Button>
             <Button size="sm" variant="ghost" className="text-xs w-8 h-8 text-foreground p-2">
-                <Bell />
-            </Button>
-            <Button size="sm" variant="ghost" className="text-xs w-8 h-8 text-foreground p-2">
                 <Info />
             </Button>
             <Avatar>

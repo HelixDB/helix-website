@@ -2,26 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Check, CircuitBoard, Copy, Cpu, Feather, File, HardDrive, Ruler, Terminal } from "lucide-react";
 import { toast } from "sonner";
-import { useInstance } from "@/hooks/useInstances";
-import { useAuth } from "@/app/dashboard/components/auth-wrapper";
+import { useInstanceData } from "./layout";
 
 export default function InstancePage() {
     const router = useRouter();
     const params = useParams();
     const instanceId = params.instanceId as string;
     const [copiedEndpoint, setCopiedEndpoint] = useState<string | null>(null);
-    const { user } = useAuth();
-    const { instance, status } = useInstance(user?.userId ?? null, instanceId);
-
-    useEffect(() => {
-        if (status === 'succeeded' && !instance) {
-            toast.error("Instance not found or access denied");
-            router.push("/dashboard/instances");
-        }
-    }, [instance, status, router]);
+    const { instance } = useInstanceData();
 
     if (!instance) {
         return null;

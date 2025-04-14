@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { QueryIcon } from "./components/QueryIcon";
 import { StatusLegend } from "./components/StatusLegend";
 import { ConfirmationPopup } from "./components/ConfirmationPopup";
-import { QueryEditor } from "./components/QueryEditor";
+import { QueryEditor } from "../../../../src/app/dashboard/components/QueryEditor";
 import { useQueryManager } from "./hooks/useQueryManager";
 import { AiQuerySidebar } from "./components/AiQuerySidebar";
 

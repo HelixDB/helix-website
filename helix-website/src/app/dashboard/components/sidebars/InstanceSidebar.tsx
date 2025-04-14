@@ -20,7 +20,7 @@ export function InstanceSidebar({ instanceId }: InstanceSidebarProps) {
                 </Link>
                 <Link
                     href={`/dashboard/instances/${instanceId}/queries`}
-                    className={`p-2 ${pathname === `/dashboard/instances/${instanceId}/queries` ? 'text-foreground' : 'text-foreground/60 hover:text-foreground'}`}
+                    className={`p-2 ${pathname.includes(`/dashboard/instances/${instanceId}/queries`) ? 'text-foreground' : 'text-foreground/60 hover:text-foreground'}`}
                 >
                     <Feather className="w-5 h-5" />
                 </Link>
