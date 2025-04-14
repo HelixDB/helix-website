@@ -1,15 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@/lib/amplify-functions";
 import { AuthUser } from "aws-amplify/auth";
 
-export function AuthWrapper({
-    children,
-}: {
+interface AuthContextType {
+    user: AuthUser | null;
+}
+
+const AuthContext = createContext<AuthContextType>({ user: null });
+
+export const useAuth = () => useContext(AuthContext);
+
+interface AuthWrapperProps {
     children: React.ReactNode;
-}) {
+}
+
+export function AuthWrapper({ children }: AuthWrapperProps) {
     const [user, setUser] = useState<AuthUser | null>(null);
     const router = useRouter();
 
@@ -29,5 +37,9 @@ export function AuthWrapper({
         return null;
     }
 
-    return <>{children}</>;
+    return (
+        <AuthContext.Provider value={{ user }}>
+            {children}
+        </AuthContext.Provider>
+    );
 } 

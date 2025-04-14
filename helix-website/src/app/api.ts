@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // API configuration constants
 const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api',
+  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api',
   GET_USER_RESOURCES_URL: "https://hbdu3d1tz2.execute-api.eu-west-2.amazonaws.com/v1",
   DEFAULT_HEADERS: {
     'Content-Type': 'application/json',

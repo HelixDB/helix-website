@@ -51,7 +51,7 @@ export function Header() {
     }
 
     return (
-        <header className="fixed top-0 z-50 w-full mx-auto border-b border-border/40 dark:border-white/10 bg-background/70 dark:bg-black/70 backdrop-blur-md">
+        <header className="fixed top-0 z-50 w-full mx-auto border-b border-border/40 dark:border-white/10 bg-background/70  backdrop-blur-md">
             <div className="max-w-8xl mx-auto px-4 sm:px-8">
                 <div className="flex items-center w-full justify-between py-2 relative">
                     <Link href="/" className="mr-6 flex items-center space-x-2">

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
-import { AuthWrapper } from "./auth-wrapper";
+import { AuthWrapper } from "./components/auth-wrapper";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "HelixDB | Dashboard",
@@ -13,7 +14,7 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthWrapper>
-      <main className="">{children}</main>
+      <main className="min-h-screen dark:bg-[#171717]">{children}</main>
     </AuthWrapper>
   );
 }
