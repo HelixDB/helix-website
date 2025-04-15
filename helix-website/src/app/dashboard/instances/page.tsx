@@ -46,7 +46,8 @@ export default function InstancesPage() {
                                 variant="default"
                                 size="sm"
                                 className="text-xs h-8"
-                                onClick={() => router.push("/create-instance")}
+                                disabled={instances?.length >= 1}
+                                onClick={() => router.push("/dashboard/instances/create-instance")}
                             >
                                 Create Instance
                             </Button>

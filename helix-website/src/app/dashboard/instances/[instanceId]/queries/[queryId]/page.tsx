@@ -424,7 +424,7 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                         >
                             {isDeleting ? (
                                 <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    <Loader2 className="w-4 h-4 animate-spin" />
                                 </>
                             ) : (
                                 <Trash className="w-4 h-4" />

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Sun, Moon, Laptop } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -8,14 +8,19 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getCurrentUser, signOut } from "aws-amplify/auth";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 export function UserDropdown() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
+    const { theme, setTheme } = useTheme();
     const router = useRouter();
     useEffect(() => {
         const getUser = async () => {
@@ -62,6 +67,43 @@ export function UserDropdown() {
                         </p>
                     </div>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="font-normal">
+                    <p className="text-sm font-medium leading-none">Appearance</p>
+                </DropdownMenuLabel>
+                <DropdownMenuItem
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setTheme("light");
+                    }}
+                    className={theme === "light" ? "bg-accent" : ""}
+                >
+                    <Sun className="mr-2 h-4 w-4" />
+                    <span>Light</span>
+                    {theme === "light" && <span className="ml-auto">✓</span>}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setTheme("dark");
+                    }}
+                    className={theme === "dark" ? "bg-accent" : ""}
+                >
+                    <Moon className="mr-2 h-4 w-4" />
+                    <span>Dark</span>
+                    {theme === "dark" && <span className="ml-auto">✓</span>}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setTheme("system");
+                    }}
+                    className={theme === "system" ? "bg-accent" : ""}
+                >
+                    <Laptop className="mr-2 h-4 w-4" />
+                    <span>System</span>
+                    {theme === "system" && <span className="ml-auto">✓</span>}
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />

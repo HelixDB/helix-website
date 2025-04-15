@@ -113,6 +113,27 @@ export const deleteQueryThunk = createAsyncThunk(
   }
 );
 
+// Thunk for deleting an instance
+export const deleteInstanceThunk = createAsyncThunk(
+  'instances/deleteInstance',
+  async ({ 
+    userId, 
+    instanceId,
+    instanceName,
+    clusterId,
+    region
+  }: { 
+    userId: string;
+    instanceId: string;
+    instanceName: string;
+    clusterId: string;
+    region: string;
+  }) => {
+    await api.deleteInstance(userId, clusterId, region, instanceId);
+    return instanceId;
+  }
+);
+
 export const instancesSlice = createSlice({
   name: 'instances',
   initialState,
@@ -242,6 +263,9 @@ export const instancesSlice = createSlice({
           delete state.queryEdits[queryId];
           state.activeQueryId = null;
         }
+      })
+      .addCase(deleteInstanceThunk.fulfilled, (state, action) => {
+        state.instances = state.instances.filter(instance => instance.instance_id !== action.payload);
       });
   },
 });

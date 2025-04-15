@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useDispatch, useSelector } from "react-redux"
 import { getCurrentUser } from "@/lib/amplify-functions"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -12,6 +13,8 @@ import { Slider } from "@/components/ui/slider"
 import { Loader2, AlertCircle, CheckCircle2, Rocket } from "lucide-react"
 import { Footer } from "@/components/footer"
 import api, { InstanceConfig } from "@/app/api"
+import { RootState } from "@/store/store"
+import { selectAllInstances } from "@/store/features/instancesSlice"
 
 const INSTANCE_TYPES = [
     {
@@ -99,18 +102,16 @@ export default function CreateInstancePage() {
 
     const selectedType = INSTANCE_TYPES.find(type => type.value === formData.instanceType)
 
+    const instances = useSelector(selectAllInstances);
+
     // Auth check effect
     useEffect(() => {
         const checkAuth = async () => {
             try {
                 const user = await getCurrentUser()
-                if (!user) {
-                    router.push("/")
-                    return
-                }
-                const instances = await api.getUserResources(user.userId, "")
-                if (Array.isArray(instances) && instances.length > 0) {
-                    router.push("/dashboard")
+
+                if (instances && instances.length > 0) {
+                    router.push("/dashboard/instances")
                     return
                 }
             } catch (err) {
@@ -122,7 +123,7 @@ export default function CreateInstancePage() {
         }
 
         checkAuth()
-    }, [router])
+    }, [router, instances])
 
     // Storage bounds effect
     useEffect(() => {
@@ -159,8 +160,7 @@ export default function CreateInstancePage() {
         try {
             const user = await getCurrentUser()
             if (!user) {
-                router.push("/")
-                return
+                throw new Error('No user found')
             }
 
             if (!selectedType) {
