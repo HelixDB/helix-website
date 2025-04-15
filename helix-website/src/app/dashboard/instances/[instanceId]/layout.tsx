@@ -1,5 +1,4 @@
 "use client";
-import { createContext, useContext } from "react";
 import { useParams } from "next/navigation";
 import { InstanceHeader } from "@/app/dashboard/components/InstanceHeader";
 import { InstanceSidebar } from "@/app/dashboard/components/sidebars/InstanceSidebar";
@@ -8,18 +7,7 @@ import { useAuth } from "@/app/dashboard/components/auth-wrapper";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
-// Create context for instance data
-export const InstanceContext = createContext<ReturnType<typeof useInstance> | null>(null);
-
-// Custom hook to use instance data
-export const useInstanceData = () => {
-    const context = useContext(InstanceContext);
-    if (!context) {
-        throw new Error("useInstanceData must be used within an InstanceProvider");
-    }
-    return context;
-};
+import { InstanceContext } from "./instance-context";
 
 export default function InstanceLayout({ children }: { children: React.ReactNode }) {
     const params = useParams();

@@ -435,7 +435,6 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
 
                 <QueryEditor
                     content={localContent}
-                    hasUnsavedChanges={hasLocalChanges}
                     onContentChange={handleContentChange}
                     onSave={handleSave}
                     isSaving={isSaving}

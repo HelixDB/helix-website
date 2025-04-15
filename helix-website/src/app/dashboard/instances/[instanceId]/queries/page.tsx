@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useInstanceData } from "../layout";
+import { useInstanceData } from "../instance-context";
 import { useState } from "react";
 import { DeleteInstanceDialog } from "@/components/ui/delete-instance-dialog";
 import { toast } from "sonner";

@@ -4,14 +4,12 @@ import { editor } from 'monaco-editor';
 
 export const QueryEditor = ({
     content,
-    hasUnsavedChanges,
     onContentChange,
     onSave,
     isSaving,
     isDeleting
 }: {
     content: string;
-    hasUnsavedChanges: boolean;
     onContentChange: (content: string) => void;
     onSave: () => void;
     isSaving: boolean;

@@ -14,8 +14,9 @@ export function Providers({
     return (
         <Provider store={store}>
             <ThemeProvider>
-                <ToastProvider />
-                {children}
+                <ToastProvider>
+                    {children}
+                </ToastProvider>
             </ThemeProvider>
         </Provider>
     )

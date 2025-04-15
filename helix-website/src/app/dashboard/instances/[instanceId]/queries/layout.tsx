@@ -12,7 +12,7 @@ import {
     selectQueriesError,
 } from "@/store/features/instancesSlice";
 import { getCurrentUser } from "@/lib/amplify-functions";
-import { useInstanceData } from "../layout";
+import { useInstanceData } from "../instance-context";
 
 export default function QueriesLayout({
     children,
