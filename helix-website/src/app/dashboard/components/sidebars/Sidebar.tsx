@@ -20,7 +20,7 @@ export function Sidebar() {
                         </Link>
                     </div>
                 </div>
-                <div className="border-b dark:border-foreground/10 p-6">
+                {/* <div className="border-b dark:border-foreground/10 p-6">
                     <h2 className="text-sm font-medium text-foreground/50 mb-2">Account</h2>
                     <div className="space-y-1">
                         <Link
@@ -31,7 +31,7 @@ export function Sidebar() {
                             Preferences
                         </Link>
                     </div>
-                </div>
+                </div> */}
                 <div className="p-6">
                     <h2 className="text-sm font-medium text-foreground/50 mb-2">Guides</h2>
                     <div className="space-y-1">

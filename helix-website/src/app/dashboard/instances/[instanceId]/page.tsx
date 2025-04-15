@@ -1,12 +1,12 @@
-"use client";
+/* "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Check, CircuitBoard, Copy, Cpu, Feather, File, HardDrive, Ruler, Terminal } from "lucide-react";
 import { toast } from "sonner";
-import { useInstanceData } from "./layout";
-
+import { useInstanceData } from "./layout"; */
+/* 
 export default function InstancePage() {
     const router = useRouter();
     const params = useParams();
@@ -36,9 +36,9 @@ export default function InstancePage() {
             </div>
 
             <div className="space-y-16">
-                <div className="flex flex-row w-full space-x-8">
+                <div className="flex flex-col lg:flex-row w-full gap-8">
                     <div className="flex flex-col space-y-8 w-full">
-                        {/* Welcome section */}
+                        
                         <section>
                             <h2 className="text-xl font-semibold mb-2">Welcome to your project</h2>
                             <p className="text-foreground/60 mb-4">
@@ -46,7 +46,6 @@ export default function InstancePage() {
                             </p>
                         </section>
 
-                        {/* Start writing queries section */}
                         <section>
                             <h2 className="text-xl font-semibold mb-2">Start writing your queries</h2>
                             <p className="text-foreground/60 mb-4">
@@ -61,7 +60,6 @@ export default function InstancePage() {
                         </section>
                     </div>
 
-                    {/* Instance details card */}
                     <Card className="p-8 bg-card border-foreground/10 space-y-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
@@ -128,9 +126,7 @@ export default function InstancePage() {
                         </div>
                     </Card>
                 </div>
-
-                {/* Integration section */}
-                <section>
+                {/* <section>
                     <h2 className="text-xl font-semibold mb-6">Integrating with your codebase</h2>
                     <div className="grid grid-cols-3 gap-6">
                         <div className="space-y-4">
@@ -166,8 +162,14 @@ export default function InstancePage() {
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> 
             </div>
         </div>
     );
+}
+ */
+
+import { redirect } from "next/navigation";
+export default function InstanceIdPage() {
+    redirect("/dashboard/instances");
 }

@@ -1,50 +1,223 @@
 "use client";
+import { useParams, useRouter } from "next/navigation";
 
-import { use } from "react";
-import { Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { selectQueriesStatus, selectQueriesError, selectInstanceById } from "@/store/features/instancesSlice";
+import { selectQueries, selectQueriesStatus } from "@/store/features/instancesSlice";
+import { Loader2, Plus, ChevronRight, Feather, Copy, Check, Cpu, CircuitBoard, HardDrive, Ruler } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useInstanceData } from "../layout";
+import { useState } from "react";
 
-export default function QueriesPage({ params }: { params: Promise<{ instanceId: string }> }) {
-    const resolvedParams = use(params);
+export default function QueriesPage() {
+    const pathname = usePathname();
+    const queries = useSelector(selectQueries);
     const status = useSelector(selectQueriesStatus);
-    const error = useSelector(selectQueriesError);
-    const instance = useSelector((state: RootState) => selectInstanceById(state, resolvedParams.instanceId));
+    const router = useRouter();
+    const params = useParams();
+    const instanceId = params.instanceId as string;
+    const [copiedEndpoint, setCopiedEndpoint] = useState<string | null>(null);
+    const { instance } = useInstanceData();
 
-    if (status === 'loading') {
-        return (
-            <main className="flex-1 overflow-y-auto p-6">
-                <div className="flex items-center justify-center h-full">
-                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-                </div>
-            </main>
-        );
+    if (!instance) {
+        return null;
     }
 
-    if (error) {
+    const handleCopyEndpoint = async (endpoint: string) => {
+        await navigator.clipboard.writeText(endpoint);
+        setCopiedEndpoint(endpoint);
+        setTimeout(() => setCopiedEndpoint(null), 2000);
+    };
+    if (status === 'loading') {
         return (
-            <main className="flex-1 overflow-y-auto p-6">
-                <div className="text-center text-destructive py-8">
-                    Error loading instance: {error}
-                </div>
-            </main>
+            <div className="flex items-center justify-center h-full">
+                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            </div>
         );
     }
 
     return (
-        <main className="flex-1 overflow-y-auto p-6">
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold">{instance?.instance_name}</h1>
-                {instance?.api_endpoint && (
-                    <p className="text-sm text-muted-foreground font-mono mt-1">
-                        {instance.api_endpoint}
-                    </p>
-                )}
+        <div className="p-8 space-y-16 pb-32">
+
+            <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between w-full space-x-4">
+                    <h1 className="text-3xl font-semibold text-foreground">{instance.instance_name}</h1>
+                    <span className="px-2 py-1 text-sm rounded-full bg-green-500/20 text-green-400">
+                        Active
+                    </span>
+                </div>
             </div>
-            <div className="text-center text-muted-foreground py-8">
-                Select a query from the sidebar or create a new one to get started.
+
+            <div className="space-y-16">
+                <div className="flex flex-col lg:flex-row w-full gap-8">
+                    <div className="flex flex-col space-y-8 w-full">
+                        {/* Welcome section */}
+                        <section>
+                            <h2 className="text-xl font-semibold mb-2">Welcome to your project</h2>
+                            <p className="text-foreground/60 mb-4">
+                                Your instance has been deployed and is ready to start developing on
+                            </p>
+                        </section>
+
+                        {/* Start writing queries section */}
+                        <section>
+                            <h2 className="text-xl font-semibold mb-2">Start writing your queries</h2>
+                            <p className="text-foreground/60 mb-6">
+                                Navigate to the queries tab, you can start defining, editing, and deploying queries.
+                            </p>
+                            <Link href={`${pathname}/new`} >
+                                <Button>
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    New Query
+                                </Button>
+                            </Link>
+                        </section>
+                    </div>
+
+                    {/* Instance details card */}
+                    <Card className="p-8 bg-card border-foreground/10 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                                <>
+                                    <span className="text-muted-foreground font-medium">Endpoint:</span>
+                                    <code className="px-2 py-0.5 rounded text-muted-foreground bg-background font-mono text-xs whitespace-nowrap overflow-hidden text-ellipsis max-w-[300px]">
+                                        {instance.api_endpoint}
+                                    </code>
+                                    <button
+                                        onClick={() => handleCopyEndpoint(instance.api_endpoint || "")}
+                                        className="p-1 hover:bg-muted rounded-md transition-colors"
+                                        title="Copy to clipboard"
+                                    >
+                                        {copiedEndpoint === instance.api_endpoint ? (
+                                            <Check className="h-3.5 w-3.5 text-green-500" />
+                                        ) : (
+                                            <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                                        )}
+                                    </button>
+                                </>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-8">
+                            <div className="flex gap-2">
+                                <Cpu className="my-0.5 h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        vCPUs
+                                    </p>
+                                    <p className="text-sm">{instance.vCPUs}</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <CircuitBoard className="my-0.5 h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        Memory
+                                    </p>
+                                    <p className="text-sm">{instance.memory} GB</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <HardDrive className="my-0.5 h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        Volumes
+                                    </p>
+                                    <p className="text-sm">
+                                        {instance.ebs_volumes?.length || 0}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Ruler className="my-0.5 h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">
+                                        Type
+                                    </p>
+                                    <p className="capitalize text-sm">
+                                        {instance.instance_size}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+
+                {/* Integration section */}
+                {/* <section>
+                    <h2 className="text-xl font-semibold mb-6">Integrating with your codebase</h2>
+                    <div className="grid grid-cols-3 gap-6">
+                        <div className="space-y-4">
+                            <div className="flex items-center space-x-2">
+                                <img src="/python-logo.svg" alt="Python" className="w-6 h-6" />
+                                <span className="font-medium">Python</span>
+                            </div>
+                            <div className="flex space-x-2">
+                                <Button variant="outline" size="sm" className="space-x-2 h-8">
+                                    <File className="w-4 h-4" />
+                                    <span>Docs</span>
+                                </Button>
+                                <Button variant="outline" size="sm" className="space-x-2 h-8">
+                                    <Terminal className="w-4 h-4" />
+                                    <span>Github</span>
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="flex items-center space-x-2">
+                                <img src="/typescript-logo.svg" alt="TypeScript" className="w-6 h-6" />
+                                <span className="font-medium">TypeScript</span>
+                            </div>
+                            <div className="flex space-x-2">
+                                <Button variant="outline" size="sm" className="space-x-2 h-8">
+                                    <File className="w-4 h-4" />
+                                    <span>Docs</span>
+                                </Button>
+                                <Button variant="outline" size="sm" className="space-x-2 h-8">
+                                    <Terminal className="w-4 h-4" />
+                                    <span>Github</span>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </section> */}
             </div>
-        </main>
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-semibold">Queries</h1>
+            </div>
+
+            {queries.length === 0 ? (
+                <div className="text-center text-muted-foreground py-8">
+                    No queries yet. Create your first query to get started.
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {queries.map((query) => (
+                        <Link key={query.id} href={`${pathname}/${query.id}`}>
+                            <Card className="h-full hover:border-primary/50 transition-colors relative group">
+                                <div className="absolute top-4 right-4 text-muted-foreground/50 group-hover:text-primary transition-colors">
+                                    <ChevronRight className="w-6 h-6 transition-transform opacity-60 group-hover:translate-x-0.5 group-hover:scale-110 group-hover:opacity-100" />
+                                </div>
+                                <CardHeader>
+                                    <CardTitle className="text-lg pr-6">{query.name}</CardTitle>
+                                    <CardDescription className="text-xs text-muted-foreground">
+                                        Query ID: {query.id.slice(0, 8)}...
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <pre className="text-sm bg-muted/50 pb-2 px-2 rounded-md overflow-hidden max-h-24">
+                                        <code className="text-xs">
+                                            {query.content.slice(0, 150)}
+                                            {query.content.length > 150 && '...'}
+                                        </code>
+                                    </pre>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 }

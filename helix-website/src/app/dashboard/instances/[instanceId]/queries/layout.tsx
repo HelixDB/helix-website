@@ -12,6 +12,7 @@ import {
     selectQueriesError,
 } from "@/store/features/instancesSlice";
 import { getCurrentUser } from "@/lib/amplify-functions";
+import { useInstanceData } from "../layout";
 
 export default function QueriesLayout({
     children,
@@ -23,6 +24,7 @@ export default function QueriesLayout({
     const pathname = usePathname();
     const resolvedParams = use(params);
     const dispatch = useDispatch<AppDispatch>();
+    const { instance } = useInstanceData();
 
     const queries = useSelector(selectQueries);
     const status = useSelector(selectQueriesStatus);
@@ -47,12 +49,24 @@ export default function QueriesLayout({
 
     return (
         <div className="flex flex-row h-full">
-            <aside className="w-52 border-r dark:border-foreground/10">
-                <div className="border-b dark:border-foreground/10 px-6 py-4">
-                    <Link href={`${basePath}`} className="w-full text-sm font-medium text-foreground">My Queries</Link>
+            <aside className="w-64 border-r dark:border-foreground/10">
+                <div className="border-b dark:border-foreground/10 px-6 py-6">
+                    <h2 className="text-sm font-medium text-foreground/50 mb-2">Instance</h2>
+                    <Link
+                        href={`${basePath}`}
+                        className={`flex items-center text-sm transition font-medium capitalize
+                            ${pathname.endsWith("queries")
+                                ? 'text-foreground'
+                                : 'text-foreground/75 hover:text-foreground'}`}
+                        onClick={(e) => {
+                            if (pathname === basePath) {
+                                e.preventDefault();
+                            }
+                        }}
+                    >{instance?.instance_name} Instance</Link>
                 </div>
                 {/* <div className="border-b dark:border-foreground/10 p-6 space-y-3">
-                    <h2 className="text-sm font-medium text-foreground/50 mb-2">Schema</h2>
+                    <h2 className="text-sm font-medium text-foreground/75 mb-2">Schema</h2>
                     <Link
                         href={`${basePath}/schema`}
                         className={`flex items-center text-sm transition font-medium 
@@ -80,7 +94,12 @@ export default function QueriesLayout({
                                     className={`flex items-center text-sm transition font-medium 
                                         ${pathname.endsWith(query.id)
                                             ? 'text-foreground'
-                                            : 'text-foreground/50 hover:text-foreground'}`}
+                                            : 'text-foreground/75 hover:text-foreground'}`}
+                                    onClick={(e) => {
+                                        if (pathname.endsWith(query.id)) {
+                                            e.preventDefault();
+                                        }
+                                    }}
                                 >
                                     {query.name}
                                 </Link>
@@ -89,7 +108,12 @@ export default function QueriesLayout({
                                 href={`${basePath}/new`}
                                 className={`flex w-full items-center text-sm transition font-medium hover:text-foreground ${pathname.endsWith("/new")
                                     ? 'text-foreground'
-                                    : 'text-foreground/50 hover:text-foreground'}`}
+                                    : 'text-foreground/75 hover:text-foreground'}`}
+                                onClick={(e) => {
+                                    if (pathname.endsWith("/new")) {
+                                        e.preventDefault();
+                                    }
+                                }}
                             >
                                 <Plus className="w-4 h-4 mr-2" /> New Query
                             </Link>

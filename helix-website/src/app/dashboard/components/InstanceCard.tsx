@@ -14,7 +14,7 @@ export function InstanceCard({ instance }: InstanceCardProps) {
         <Card
             className="p-4 rounded-lg transition group cursor-pointer hover:border-foreground/20 hover:bg-transparent"
             onClick={() => instance.instance_status?.toLowerCase() === "active" &&
-                router.push(`/dashboard/instances/${instance.instance_id}`)}
+                router.push(`/dashboard/instances/${instance.instance_id}/queries`)}
         >
             <div className="flex items-center justify-between">
                 <div className="flex flex-col space-y-4">
