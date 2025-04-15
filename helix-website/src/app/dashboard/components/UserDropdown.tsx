@@ -54,7 +54,7 @@ export function UserDropdown() {
             <DropdownMenuTrigger asChild className="focus:ring-0 focus:ring-offset-0">
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar>
-                        <User className="w-4 h-4" />
+                        <User className="w-4 h-4 text-foreground" />
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>
