@@ -250,63 +250,6 @@ export default function QueriesPage() {
                     </div>
                 )}
 
-                {/* Theme Selection Section */}
-                <div className="border-t dark:border-foreground/10 pt-16">
-                    <h2 className="text-xl font-semibold mb-8">APPEARANCE</h2>
-                    <Card className="bg-card border-foreground/10">
-                        <CardContent className="p-6">
-                            <div className="flex items-start gap-4">
-                                <div className="p-2 rounded-lg bg-foreground/5">
-                                    <Sun className="w-6 h-6 text-foreground/60" />
-                                </div>
-                                <div className="space-y-3 flex-1">
-                                    <h3 className="font-medium">Theme preferences</h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        Select your preferred theme for the dashboard interface.
-                                    </p>
-                                    <div className="grid grid-cols-3 gap-4 mt-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setTheme("light")}
-                                            className={cn(
-                                                "flex items-center gap-2",
-                                                resolvedTheme === "light" && "border-2 border-primary"
-                                            )}
-                                        >
-                                            <Sun className="h-4 w-4" />
-                                            Light
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setTheme("dark")}
-                                            className={cn(
-                                                "flex items-center gap-2",
-                                                resolvedTheme === "dark" && "border-2 border-primary"
-                                            )}
-                                        >
-                                            <Moon className="h-4 w-4" />
-                                            Dark
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => setTheme("system")}
-                                            className={cn(
-                                                "flex items-center gap-2",
-                                                theme === "system" && "border-2 border-primary"
-                                            )}
-                                        >
-                                            <Monitor className="h-4 w-4" />
-                                            System
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
 
                 {/* Delete Instance Section */}
                 <div className="border-t dark:border-foreground/10 pt-16">
