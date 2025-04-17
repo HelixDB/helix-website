@@ -218,11 +218,15 @@ export function QueryChat({ onQueryUpdate, currentQuery, queryId, instanceId }: 
                                                 : "bg-muted mr-8"
                                         )}
                                     >
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm font-medium">
-                                                {message.role === 'user' ? 'You' : 'Assistant'}
-                                            </span>
-                                        </div>
+                                        {message.role === 'user' ?
+                                            <></> :
+                                            <div className="flex justify-between items-center">
+
+                                                <span className="text-sm font-medium">
+                                                    AI Assistant
+                                                </span>
+                                            </div>
+                                        }
                                         <p className="text-sm">{message.content}</p>
                                     </div>
                                 ))}
