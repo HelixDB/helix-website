@@ -34,9 +34,7 @@ export default function RootLayout({
         <Providers>
           <Analytics />
           <div className="relative flex min-h-screen flex-col">
-            <Header />
             <main className="">{children}</main>
-            <Footer />
           </div>
         </Providers>
       </body>

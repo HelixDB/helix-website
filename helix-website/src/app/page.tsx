@@ -14,6 +14,8 @@ import { Github } from "lucide-react";
 import { ComparisonSection } from "@/components/sections/comparison-section";
 import { FaDiscord } from "react-icons/fa";
 import { SocialLinks } from "@/components/ui/social-links";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -182,89 +184,93 @@ export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<'cypher' | 'gremlin'>('cypher');
 
   return (
-    <div className="relative w-full min-h-screen overflow-x-hidden">
+    <div className="relative w-full min-h-screen overflow-x-hidden ">
+      <Header />
       <Hero />
-      <Install />
-      <Better />
-      {<PrecompiledQueries />}
-      <ComparisonSection />
-      <UseCases />
-      <PricingSection
-        title="Simple, transparent pricing"
-        subtitle="Helix prices can be used on demand or reserved. No hidden fees, no surprises."
-        tiers={pricingTiers}
-        frequencies={["on demand", "reserved"]}
-      />
-      <motion.div
-        variants={fadeInUp}
-        className="py-16 bg-gradient-to-b from-muted/30 to-background"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-4"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
-              Join Our Growing Community
-            </h2>
-            <p className="text-xl  max-w-2xl mx-auto">
-              Be part of the next generation of graph database technology.
-              Connect with developers and innovators building the future.
-            </p>
-          </motion.div>
-          <div className=" text-center space-y-8">
-            <div className="flex justify-center">
-              <SocialLinks iconSize={24} className="gap-8" />
-            </div>
-
+      <div className="bg-background">
+        <Install />
+        <Better />
+        {<PrecompiledQueries />}
+        <ComparisonSection />
+        <UseCases />
+        <PricingSection
+          title="Simple, transparent pricing"
+          subtitle="Helix prices can be used on demand or reserved. No hidden fees, no surprises."
+          tiers={pricingTiers}
+          frequencies={["on demand", "reserved"]}
+        />
+        <motion.div
+          variants={fadeInUp}
+          className="py-16 bg-gradient-to-b from-muted/30 to-background"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="flex flex-col items-center gap-4"
+              transition={{ duration: 0.5 }}
+              className="text-center mb-4"
             >
-              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="text-lg px-8 shadow-lg w-full sm:w-1/2"
-                  asChild
-                >
-                  <a
-                    href="https://discord.gg/helixdb"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3"
-                  >
-                    <FaDiscord className="w-5 h-5" />
-                    <span className="font-medium">Join Discord</span>
-                  </a>
-                </Button>
-                <Button
-                  size="lg"
-                  className="text-lg px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 w-full sm:w-1/2"
-                  asChild
-                >
-                  <a
-                    href="https://github.com/HelixDB/helix-db"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3"
-                  >
-                    <Github className="w-5 h-5" />
-                    <span className="font-medium">Star on GitHub</span>
-                  </a>
-                </Button>
-              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
+                Join Our Growing Community
+              </h2>
+              <p className="text-xl  max-w-2xl mx-auto">
+                Be part of the next generation of graph database technology.
+                Connect with developers and innovators building the future.
+              </p>
             </motion.div>
+            <div className=" text-center space-y-8">
+              <div className="flex justify-center">
+                <SocialLinks iconSize={24} className="gap-8" />
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="flex flex-col items-center gap-4"
+              >
+                <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="text-lg px-8 shadow-lg w-full sm:w-1/2"
+                    asChild
+                  >
+                    <a
+                      href="https://discord.gg/helixdb"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-3"
+                    >
+                      <FaDiscord className="w-5 h-5" />
+                      <span className="font-medium">Join Discord</span>
+                    </a>
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 w-full sm:w-1/2"
+                    asChild
+                  >
+                    <a
+                      href="https://github.com/HelixDB/helix-db"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-3"
+                    >
+                      <Github className="w-5 h-5" />
+                      <span className="font-medium">Star on GitHub</span>
+                    </a>
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </motion.div>
-      <DemoSection />
+        </motion.div>
+        <DemoSection />
+        <Footer />
+      </div>
     </div>
   );
 }
