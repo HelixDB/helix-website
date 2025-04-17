@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // API configuration constants
 const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api',
+  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api',
   GET_USER_RESOURCES_URL: "https://hbdu3d1tz2.execute-api.eu-west-2.amazonaws.com/v1",
   DEFAULT_HEADERS: {
     'Content-Type': 'application/json',
@@ -164,13 +164,13 @@ class API {
   /**
    * Push queries to an instance
    */
-  public async pushQueries(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, queries: Query[], queriesToDelete: string[]): Promise<{ error?: string }> {
+  public async pushQuery(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, query: Query): Promise<{ error?: string }> {
     try {
         // Validate and transform query names before sending
-        const validatedQueries = queries.map(query => ({
+        const validatedQuery = {
             ...query,
             name: validateQueryName(query.name)
-        }));
+        };
 
         const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
             method: 'POST',
@@ -181,14 +181,14 @@ class API {
                 user_id: userID,
                 instance_id: instanceId,
                 instance_name: instanceName,
-                queries: validatedQueries.map(query => ({
+                queries: [{
                     id: query.id,
-                    name: query.name,
+                    name: validatedQuery.name,
                     content: query.content
-                })),
+                }],
                 cluster_id: clusterId,
                 region: region,
-                queries_to_delete: queriesToDelete
+                queries_to_delete: []
             })
         });
 
@@ -199,6 +199,43 @@ class API {
         console.error('Error uploading queries:', error);
         throw error;
     }
+} /**
+* delete queries from an instance
+*/
+public async deleteQuery(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, query: Query): Promise<{ error?: string }> {
+ try {
+  console.log('deleting this query:', {
+    user_id: userID,
+    instance_id: instanceId,
+    instance_name: instanceName,
+    queries: [],
+    cluster_id: clusterId,
+    region: region,
+    queries_to_delete: [query.id]
+});
+     const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+             user_id: userID,
+             instance_id: instanceId,
+             instance_name: instanceName,
+             queries: [],
+             cluster_id: clusterId,
+             region: region,
+             queries_to_delete: [query.id]
+         })
+     });
+
+     const result = await response.json();
+     console.log('Queries uploaded successfully:', result);
+     return result;
+ } catch (error) {
+     console.error('Error uploading queries:', error);
+     throw error;
+ }
 }
 
   /**

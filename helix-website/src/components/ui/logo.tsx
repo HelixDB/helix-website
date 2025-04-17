@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
-export function Logo() {
+export function Logo({ className }: { className?: string }) {
     const { theme, systemTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
@@ -19,7 +20,7 @@ export function Logo() {
     const currentTheme = theme === "system" ? systemTheme : theme;
 
     return (
-        <div className="relative h-10 w-10">
+        <div className={cn("relative h-10 w-10", className)}>
             <Image
                 src={currentTheme === "dark" ? "/dark-helix.png" : "/light-helix.png"}
                 alt="HelixDB Logo"

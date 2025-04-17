@@ -104,9 +104,9 @@ export function Footer() {
                     <p className="text-center text-muted-foreground text-sm">
                         &copy; {new Date().getFullYear()} HelixDB. All rights reserved.
                     </p>
-                    <p className="text-center text-muted-foreground text-sm">
+                    {/* <p className="text-center text-muted-foreground text-sm">
                         Backed by Y Combinator
-                    </p>
+                    </p> */}
                 </div>
             </div>
 

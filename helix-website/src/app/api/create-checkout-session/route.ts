@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         customer_id: userId,
         product_id: priceId,
-        success_url: new URL('/payment-success', process.env.NEXT_PUBLIC_BASE_URL!).toString() + '?payment_id={PAYMENT_ID}',
+        success_url: new URL('/dashboard/instances', process.env.NEXT_PUBLIC_BASE_URL!).toString() + '?payment_id={PAYMENT_ID}',
         cancel_url: new URL('/create-instance', process.env.NEXT_PUBLIC_BASE_URL!).toString(),
         metadata: {
           userId: userId,
