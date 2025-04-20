@@ -412,7 +412,7 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                                     {resolvedParams.queryId !== 'new' && (
                                         <DropdownMenuItem
                                             onClick={handleDelete}
-                                            disabled={isSaving || isDeleting}
+                                            disabled={isSaving || isDeleting || instance.instance_status?.toLowerCase() === 'redeploying'}
                                             className="flex items-center text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400"
                                         >
                                             {isDeleting ? (
