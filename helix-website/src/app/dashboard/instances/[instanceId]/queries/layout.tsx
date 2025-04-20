@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { use, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import {
     fetchQueries,
     selectQueries,
     selectQueriesStatus,
-    selectQueriesError,
+    clearQueries,
 } from "@/store/features/instancesSlice";
 import { getCurrentUser } from "@/lib/amplify-functions";
 import { useInstanceData } from "../instance-context";
@@ -28,21 +28,21 @@ export default function QueriesLayout({
 
     const queries = useSelector(selectQueries);
     const status = useSelector(selectQueriesStatus);
-    const error = useSelector(selectQueriesError);
 
-    // Split the effect into two - one for fetching and one for cleanup
     useEffect(() => {
         async function fetchData() {
-            if (status === 'idle' || status === 'failed') {
-                const user = await getCurrentUser();
-                if (user) {
-                    dispatch(fetchQueries({ userId: user.userId, instanceId: resolvedParams.instanceId }));
-                }
+            const user = await getCurrentUser();
+            if (user && resolvedParams.instanceId) {
+                dispatch(fetchQueries({ userId: user.userId, instanceId: resolvedParams.instanceId }));
             }
         }
         fetchData();
-    }, [dispatch, resolvedParams.instanceId, status]);
 
+        // Clear queries when unmounting or when instance changes
+        return () => {
+            dispatch(clearQueries());
+        };
+    }, [dispatch, resolvedParams.instanceId]);
 
     // Get the base path without any query ID
     const basePath = pathname.split('/queries')[0] + '/queries';
@@ -75,13 +75,13 @@ export default function QueriesLayout({
                         Schema
                     </Link>
                 </div> */}
-                <div className="p-6 space-y-3">
+                <div className="p-6 space-y-3 border-b dark:border-foreground/10">
                     <h2 className="text-sm font-medium text-foreground/50 mb-2">Queries</h2>
                     {status === 'loading' ? (
                         <div className="flex items-center justify-center py-4">
                             <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                         </div>
-                    ) : error ? (
+                    ) : status === 'failed' ? (
                         <div className="text-sm text-destructive">
                             Failed to load queries
                         </div>
@@ -119,6 +119,17 @@ export default function QueriesLayout({
                             </Link>
                         </>
                     )}
+                </div>
+                <div className="p-6">
+                    <h2 className="text-sm font-medium text-foreground/50 mb-2">Guides</h2>
+                    <div className="space-y-1">
+                        <Link
+                            href="https://docs.helix-db.com"
+                            className="flex items-center text-sm text-foreground/75 hover:text-foreground transition font-medium"
+                        >
+                            <ArrowUpRight className="w-4 h-4 mr-2" /> Documentation
+                        </Link>
+                    </div>
                 </div>
             </aside>
             <main className="flex-1 overflow-y-auto">

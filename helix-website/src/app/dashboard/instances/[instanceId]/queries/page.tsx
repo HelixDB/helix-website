@@ -13,8 +13,6 @@ import { DeleteInstanceDialog } from "@/components/ui/delete-instance-dialog";
 import { toast } from "sonner";
 import { getCurrentUser } from "@/lib/amplify-functions";
 import { AppDispatch } from "@/store/store";
-import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
 
 export default function QueriesPage() {
     const pathname = usePathname();
@@ -27,7 +25,6 @@ export default function QueriesPage() {
     const [copiedEndpoint, setCopiedEndpoint] = useState<string | null>(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const { instance } = useInstanceData();
-    const { setTheme, resolvedTheme, theme } = useTheme();
 
     if (!instance) {
         return null;
@@ -47,10 +44,9 @@ export default function QueriesPage() {
             await dispatch(deleteInstanceThunk({
                 userId: user.userId,
                 instanceId: instanceId,
-                instanceName: instance.instance_name,
                 clusterId: instance.cluster_id,
                 region: instance.instance_region
-            })).unwrap();
+            }));
 
             router.push('/dashboard/instances');
             toast.success('Instance deleted successfully');
@@ -61,7 +57,7 @@ export default function QueriesPage() {
         }
     };
 
-    if (status === 'loading') {
+    if (status === 'loading' || status === 'idle') {
         return (
             <div className="flex items-center justify-center h-full">
                 <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -75,8 +71,13 @@ export default function QueriesPage() {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center justify-between w-full space-x-4">
                         <h1 className="text-3xl font-semibold text-foreground">{instance.instance_name}</h1>
-                        <span className="px-2 py-1 text-sm rounded-full bg-green-500/20 text-green-400">
-                            Active
+                        <span className={`px-2 py-1 text-sm rounded-full ${instance.instance_status?.toLowerCase() === 'active'
+                            ? 'bg-green-500/20 text-green-400 capitalize'
+                            : instance.instance_status?.toLowerCase() === 'redeploying'
+                                ? 'bg-yellow-500/20 text-yellow-400'
+                                : 'bg-red-500/20 text-red-400'
+                            }`}>
+                            {instance.instance_status || 'Unknown'}
                         </span>
                     </div>
                 </div>
@@ -218,13 +219,13 @@ export default function QueriesPage() {
                     <h1 className="text-3xl font-semibold">Queries</h1>
                 </div>
 
-                {queries.length === 0 ? (
+                {queries?.length === 0 ? (
                     <div className="text-center text-muted-foreground py-8">
                         No queries yet. Create your first query to get started.
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {queries.map((query) => (
+                        {queries?.map((query) => (
                             <Link key={query.id} href={`${pathname}/${query.id}`}>
                                 <Card className="h-full hover:border-primary/50 transition-colors relative group">
                                     <div className="absolute top-4 right-4 text-muted-foreground/50 group-hover:text-primary transition-colors">

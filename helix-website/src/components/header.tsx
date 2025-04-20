@@ -68,38 +68,15 @@ export function Header() {
 
                     <div className="flex items-center gap-4">
                         {isAuthenticated ? (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="secondary"
-                                        size="icon"
-                                    >
-                                        <User className="h-4 w-4" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/dashboard" className="cursor-pointer">
-                                            <User className="mr-2 h-4 w-4" />
-                                            <span>Dashboard</span>
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    {/* <DropdownMenuItem asChild>
-                                        <Link href="/billing" className="cursor-pointer">
-                                            <CreditCard className="mr-2 h-4 w-4" />
-                                            <span>Billing</span>
-                                        </Link>
-                                    </DropdownMenuItem> */}
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                        className="cursor-pointer"
-                                        onClick={handleSignOut}
-                                    >
-                                        <LogOut className="mr-2 h-4 w-4" />
-                                        <span>Log out</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+
+                            <Link href="/dashboard" className="cursor-pointer ">
+                                <Button variant="secondary" size="sm">
+                                    <User className="mr-2 h-4 w-4" />
+                                    <span>Dashboard</span>
+                                </Button>
+                            </Link>
+
+
                         ) : (
                             <Button
                                 variant="secondary"

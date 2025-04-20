@@ -19,7 +19,7 @@ export function useInstances(userId: string | null) {
   // Function to start polling
   const startPolling = (userId: string) => {
     if (pollingRef.current) return; // Don't start if already polling
-    
+
     pollingRef.current = setInterval(() => {
       dispatch(fetchInstances(userId));
     }, POLLING_INTERVAL);
@@ -36,11 +36,6 @@ export function useInstances(userId: string | null) {
   useEffect(() => {
     if (!userId) return;
 
-    // Only fetch initially if we don't have any instances data
-    if (instances.length === 0 && status === 'idle') {
-      dispatch(fetchInstances(userId));
-    }
-
     // Check if we need to start or stop polling based on instance status
     const hasInitializingInstances = instances.some(
       (instance) => instance.instance_status?.toLowerCase() !== "active"
@@ -54,7 +49,7 @@ export function useInstances(userId: string | null) {
 
     // Cleanup on unmount
     return () => stopPolling();
-  }, [dispatch, userId, status, instances]);
+  }, [dispatch, userId, instances]);
 
   return { instances, status };
 }
@@ -69,7 +64,7 @@ export function useInstance(userId: string | null, instanceId: string) {
   // Function to start polling
   const startPolling = (userId: string) => {
     if (pollingRef.current) return; // Don't start if already polling
-    
+
     pollingRef.current = setInterval(() => {
       dispatch(fetchInstances(userId));
     }, POLLING_INTERVAL);
@@ -86,11 +81,6 @@ export function useInstance(userId: string | null, instanceId: string) {
   useEffect(() => {
     if (!userId || !instanceId) return;
 
-    // Only fetch initially if we don't have any instances data
-    if (instances.length === 0 && status === 'idle') {
-      dispatch(fetchInstances(userId));
-    }
-
     // Check if we need to start or stop polling based on instance status
     const isInitializing = instance?.instance_status?.toLowerCase() !== "active";
 
@@ -102,7 +92,7 @@ export function useInstance(userId: string | null, instanceId: string) {
 
     // Cleanup on unmount
     return () => stopPolling();
-  }, [dispatch, userId, status, instanceId, instance, instances]);
+  }, [dispatch, userId, instanceId, instance]);
 
   return { instance, status };
 } 

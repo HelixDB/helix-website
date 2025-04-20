@@ -4,17 +4,18 @@ import { use, useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter, usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Loader2, RotateCcw, Trash, Save, Copy, Check } from "lucide-react";
+import { Loader2, RotateCcw, Trash, Save, Copy, Check, MoreVertical } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppDispatch, RootState } from "@/store/store";
 import {
-    deleteQueryThunk,
+    selectQueriesStatus,
     selectInstanceById,
     selectQueries,
     fetchQueries,
+    deleteQuery,
+    pushQuery,
 } from "@/store/features/instancesSlice";
-
 import { getCurrentUser } from "@/lib/amplify-functions";
 import API from "@/app/api";
 import { toSnakeCase } from "@/lib/utils";
@@ -23,6 +24,12 @@ import { QueryEditor } from "@/app/dashboard/components/QueryEditor";
 import { ConfirmDialog } from "@/app/dashboard/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { QueryChat } from "@/app/dashboard/components/QueryChat";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Query {
     id: string;
@@ -51,6 +58,7 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
         selectInstanceById(state, resolvedParams.instanceId)
     );
     const queries = useSelector((state: RootState) => selectQueries(state));
+    const queriesStatus = useSelector(selectQueriesStatus);
 
     // Save original router.push so we can use it even after we override it
     const originalPushRef = useRef(router.push);
@@ -67,42 +75,23 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                 setQuery(newQuery);
                 setLocalContent(newQuery.content);
                 setIsLoading(false);
-                setHasLocalChanges(false); // Changed this line - new queries start without unsaved changes
+                setHasLocalChanges(false);
             } else {
                 const foundQuery = queries.find((q: Query) => q.id === resolvedParams.queryId);
-
-                if (foundQuery) {
+                // Only redirect if we're not in a loading state, not deleting, and the query wasn't found
+                if (!foundQuery && queriesStatus === 'succeeded' && !isDeleting) {
+                    toast.error("Query not found");
+                    router.push(`/dashboard/instances/${resolvedParams.instanceId}/queries`);
+                } else if (foundQuery) {
                     setQuery(foundQuery);
                     setLocalContent(foundQuery.content);
                     setIsLoading(false);
-                } else if (!isFetchingQueries && queries.length === 0) {
-                    // If we don't have any queries yet, fetch them first
-                    try {
-                        setIsFetchingQueries(true);
-                        const user = await getCurrentUser();
-                        if (user) {
-                            await dispatch(fetchQueries({
-                                userId: user.userId,
-                                instanceId: resolvedParams.instanceId
-                            })).unwrap();
-                        }
-                    } catch (error) {
-                        console.error('Failed to fetch queries:', error);
-                        toast.error("Failed to fetch queries");
-                        router.push(`/dashboard/instances/${resolvedParams.instanceId}/queries`);
-                    } finally {
-                        setIsFetchingQueries(false);
-                    }
-                } else if (!isFetchingQueries) {
-                    // If we have queries but didn't find the one we're looking for
-                    toast.error("Query not found");
-                    router.push(`/dashboard/instances/${resolvedParams.instanceId}/queries`);
                 }
             }
         };
 
         loadQuery();
-    }, [resolvedParams.instanceId, resolvedParams.queryId, queries, router, dispatch, isFetchingQueries]);
+    }, [resolvedParams.instanceId, resolvedParams.queryId, queries, router, queriesStatus, isDeleting]);
 
     // --- Warn on browser refresh/tab close ---
     useEffect(() => {
@@ -235,38 +224,32 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
 
             const updatedQuery = {
                 ...query,
+                name: queryName,
                 content: localContent
             };
 
-            await API.pushQuery(
-                user.userId,
-                resolvedParams.instanceId,
-                instance.instance_name,
-                instance.cluster_id,
-                instance.instance_region,
-                updatedQuery
-            );
+            // Dispatch the pushQuery thunk and wait for it to complete
+            const result = await dispatch(pushQuery({
+                userId: user.userId,
+                instanceId: resolvedParams.instanceId,
+                instanceName: instance.instance_name,
+                clusterId: instance.cluster_id,
+                region: instance.instance_region,
+                query: updatedQuery
+            })).unwrap();
 
             // After successful save, update local state
-            setQuery(updatedQuery);
             setHasLocalChanges(false);
+            setQuery(updatedQuery);
 
-            // Fetch latest queries to update Redux store
-            await dispatch(fetchQueries({
-                userId: user.userId,
-                instanceId: resolvedParams.instanceId
-            }));
-
-            // If this was a new query, replace the URL and update local state from Redux
+            // If this was a new query, refetch queries before navigating
             if (resolvedParams.queryId === 'new') {
-                router.push(`/dashboard/instances/${resolvedParams.instanceId}/queries/${updatedQuery.id}`);
-
-                // Find the newly created query in Redux and update local state
-                const savedQuery = queries.find(q => q.id === updatedQuery.id);
-                if (savedQuery) {
-                    setQuery(savedQuery);
-                    setLocalContent(savedQuery.content);
-                }
+                await dispatch(fetchQueries({
+                    userId: user.userId,
+                    instanceId: resolvedParams.instanceId
+                })).unwrap();
+                // Use originalPushRef directly to bypass the unsaved changes check
+                originalPushRef.current(`/dashboard/instances/${resolvedParams.instanceId}/queries/${updatedQuery.id}`);
             } else {
                 toast.success("Query saved successfully");
             }
@@ -275,9 +258,11 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                 originalPushRef.current(pendingUrl);
                 setPendingUrl(null);
             }
-        } catch (error) {
+        } catch (error: any) {
+            // Handle rejected action with error message
+            const errorMessage = error?.error || error?.message || "Unknown error occurred";
             toast.error("Failed to save query", {
-                description: error instanceof Error ? error.message : "Unknown error occurred"
+                description: errorMessage
             });
         } finally {
             setIsSaving(false);
@@ -294,8 +279,8 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
 
     const performDelete = async () => {
         if (!query || !instance) return;
+        setIsDeleting(true);
         try {
-            setIsDeleting(true);
             const user = await getCurrentUser();
             if (!user) {
                 toast.error("No user found", {
@@ -304,7 +289,7 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                 return;
             }
 
-            const result = await dispatch(deleteQueryThunk({
+            const result = await dispatch(deleteQuery({
                 userId: user.userId,
                 instanceId: resolvedParams.instanceId,
                 instanceName: instance.instance_name,
@@ -313,23 +298,15 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                 query
             })).unwrap();
 
-            if (result.error) {
-                toast.error("Error deleting query", { description: result.error });
-            } else {
-                await dispatch(fetchQueries({
-                    userId: user.userId,
-                    instanceId: resolvedParams.instanceId
-                }));
-                router.push(`/dashboard/instances/${resolvedParams.instanceId}/queries`);
-                toast.success("Query deleted successfully");
-            }
-        } catch (error) {
+            toast.success("Query deleted successfully");
+            router.push(`/dashboard/instances/${resolvedParams.instanceId}/queries`);
+        } catch (error: any) {
+            // Handle rejected action with error message
+            const errorMessage = error?.error || error?.message || "Unknown error occurred";
             toast.error("Failed to delete query", {
-                description: error instanceof Error ? error.message : "Unknown error occurred"
+                description: errorMessage
             });
-        } finally {
-            setIsDeleting(false);
-            setShowDeleteDialog(false);
+            setIsDeleting(false); // Reset deleting state on error
         }
     };
 
@@ -400,7 +377,7 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                                 variant="default"
                                 size="sm"
                                 onClick={handleSave}
-                                disabled={isSaving || isDeleting || !hasLocalChanges}
+                                disabled={isSaving || isDeleting || !hasLocalChanges || instance.instance_status?.toLowerCase() === 'redeploying'}
                             >
                                 {isSaving ? (
                                     <>
@@ -409,29 +386,45 @@ export default function QueryEditorPage({ params }: { params: Promise<{ instance
                                     </>
                                 ) : 'Commit Changes'}
                             </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleRevert}
-                                disabled={isSaving || isDeleting || !hasLocalChanges}
-                            >
-                                <RotateCcw className="w-4 h-4" />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleDelete}
-                                className="bg-red-500/20 hover:bg-red-500/50 text-white"
-                                disabled={isSaving || isDeleting}
-                            >
-                                {isDeleting ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                    </>
-                                ) : (
-                                    <Trash className="w-4 h-4" />
-                                )}
-                            </Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="aspect-square"
+                                        disabled={isSaving || isDeleting}
+                                    >{isDeleting ? (
+                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                    ) : (
+                                        <MoreVertical className="h-4 w-4" />
+                                    )}
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                        onClick={handleRevert}
+                                        disabled={!hasLocalChanges || isSaving || isDeleting}
+                                        className="flex items-center"
+                                    >
+                                        <RotateCcw className="h-4 w-4 mr-2" />
+                                        Revert Changes
+                                    </DropdownMenuItem>
+                                    {resolvedParams.queryId !== 'new' && (
+                                        <DropdownMenuItem
+                                            onClick={handleDelete}
+                                            disabled={isSaving || isDeleting}
+                                            className="flex items-center text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400"
+                                        >
+                                            {isDeleting ? (
+                                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                            ) : (
+                                                <Trash className="h-4 w-4 mr-2" />
+                                            )}
+                                            Delete Query
+                                        </DropdownMenuItem>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
 

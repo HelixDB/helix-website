@@ -83,9 +83,9 @@ interface Return {
 }
 
 export interface InstanceNameCheckResponse {
-    message?: string;
-    error?: string;
-    code: 'NAME_AVAILABLE' | 'NAME_EXISTS' | 'INVALID_NAME_FORMAT' | 'MISSING_NAME' | 'SERVER_ERROR';
+  message?: string;
+  error?: string;
+  code: 'NAME_AVAILABLE' | 'NAME_EXISTS' | 'INVALID_NAME_FORMAT' | 'MISSING_NAME' | 'SERVER_ERROR';
 }
 
 /**
@@ -129,17 +129,17 @@ class API {
         body: JSON.stringify({ queryName, queryContent, schemaContent, id: this.id }),
       });
       const query_response = await response.json();
-      
+
       if (!query_response.result.success) {
-        return { 
-          result: query_response.result.error, 
-          newGraphData: { nodes: {}, links: {} } 
+        return {
+          result: query_response.result.error,
+          newGraphData: { nodes: {}, links: {} }
         };
       }
 
-      return { 
-        result: query_response.result.result, 
-        newGraphData: query_response.result.graph_data 
+      return {
+        result: query_response.result.result,
+        newGraphData: query_response.result.graph_data
       };
     } catch (error) {
       console.error('Error executing query:', error);
@@ -166,77 +166,86 @@ class API {
    */
   public async pushQuery(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, query: Query): Promise<{ error?: string }> {
     try {
-        // Validate and transform query names before sending
-        const validatedQuery = {
-            ...query,
-            name: validateQueryName(query.name)
-        };
+      // Validate and transform query names before sending
+      const validatedQuery = {
+        ...query,
+        name: validateQueryName(query.name)
+      };
 
-        const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_id: userID,
-                instance_id: instanceId,
-                instance_name: instanceName,
-                queries: [{
-                    id: query.id,
-                    name: validatedQuery.name,
-                    content: query.content
-                }],
-                cluster_id: clusterId,
-                region: region,
-                queries_to_delete: []
-            })
-        });
+      const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userID,
+          instance_id: instanceId,
+          instance_name: instanceName,
+          queries: [{
+            id: query.id,
+            name: validatedQuery.name,
+            content: query.content
+          }],
+          cluster_id: clusterId,
+          region: region,
+          queries_to_delete: []
+        })
+      });
 
-        const result = await response.json();
-        console.log('Queries uploaded successfully:', result);
-        return result;
+      const result = await response.json();
+      console.log('Queries uploaded successfully:', result);
+      return result;
     } catch (error) {
-        console.error('Error uploading queries:', error);
-        throw error;
+      console.error('Error uploading queries:', error);
+      throw error;
     }
-} /**
+  } /**
 * delete queries from an instance
 */
-public async deleteQuery(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, query: Query): Promise<{ error?: string }> {
- try {
-  console.log('deleting this query:', {
-    user_id: userID,
-    instance_id: instanceId,
-    instance_name: instanceName,
-    queries: [],
-    cluster_id: clusterId,
-    region: region,
-    queries_to_delete: [query.id]
-});
-     const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
-         method: 'POST',
-         headers: {
-             'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-             user_id: userID,
-             instance_id: instanceId,
-             instance_name: instanceName,
-             queries: [],
-             cluster_id: clusterId,
-             region: region,
-             queries_to_delete: [query.id]
-         })
-     });
+  public async deleteQuery(userID: string, instanceId: string, instanceName: string, clusterId: string, region: string, query: Query): Promise<{ error?: string }> {
+    try {
+      console.log('deleting this query:', {
+        user_id: userID,
+        instance_id: instanceId,
+        instance_name: instanceName,
+        queries: [],
+        cluster_id: clusterId,
+        region: region,
+        queries_to_delete: [query.id]
+      });
+      console.log("OWKOLOLOLOLO:", JSON.stringify({
+        user_id: userID,
+        instance_id: instanceId,
+        instance_name: instanceName,
+        queries: [],
+        cluster_id: clusterId,
+        region: region,
+        queries_to_delete: [query.id]
+      }))
+      const response = await fetch(`${API_CONFIG.GET_USER_RESOURCES_URL}/upload-queries`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userID,
+          instance_id: instanceId,
+          instance_name: instanceName,
+          queries: [],
+          cluster_id: clusterId,
+          region: region,
+          queries_to_delete: [query.id]
+        })
+      });
 
-     const result = await response.json();
-     console.log('Queries uploaded successfully:', result);
-     return result;
- } catch (error) {
-     console.error('Error uploading queries:', error);
-     throw error;
- }
-}
+      const result = await response.json();
+      console.log('Queries uploaded successfully:', result);
+      return result;
+    } catch (error) {
+      console.error('Error uploading queries:', error);
+      throw error;
+    }
+  }
 
   /**
    * Get queries from an instance
@@ -255,7 +264,7 @@ public async deleteQuery(userID: string, instanceId: string, instanceName: strin
         })
       });
       console.log('Response from get-queries:', response);
-      
+
       if (!response.ok) {
         throw new Error('Failed to get queries');
       }

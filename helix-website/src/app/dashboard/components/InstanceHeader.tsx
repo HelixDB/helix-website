@@ -18,7 +18,7 @@ export function InstanceHeader() {
         instanceId ? selectInstanceById(state, instanceId) : null
     );
     const queries = useSelector((state: RootState) => selectQueries(state));
-    const query = queryId ? queries.find(q => q.id === queryId) : null;
+    const query = queryId ? queries?.find(q => q.id === queryId) : null;
 
     return (
         <header className="flex items-center justify-between border-b dark:border-foreground/10">
@@ -30,8 +30,14 @@ transition" />
                     </span>
                 </Link>
                 <div className="flex items-center gap-2 ml-4">
-                    <Link href={`/dashboard/instances/${instanceId}/queries`}>
-                        <Button variant="ghost" className="text-sm h-8 font-medium">
+                    <Link href={`/dashboard/instances/${instanceId}/queries`} className="flex items-center">
+                        <Button variant="ghost" className="text-sm h-8 gap-4 font-medium">
+                            <div className={`w-2 h-2 rounded-full ${instance?.instance_status?.toLowerCase() === 'active'
+                                ? 'bg-green-500'
+                                : instance?.instance_status?.toLowerCase() === 'redeploying'
+                                    ? 'bg-yellow-500'
+                                    : ''
+                                }`} />
                             {instance?.instance_name}
                         </Button>
                     </Link>

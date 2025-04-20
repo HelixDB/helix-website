@@ -13,7 +13,7 @@ export function InstanceCard({ instance }: InstanceCardProps) {
     return (
         <Card
             className="p-4 rounded-lg transition group cursor-pointer hover:border-foreground/20 hover:bg-transparent"
-            onClick={() => instance.instance_status?.toLowerCase() === "active" &&
+            onClick={() => (instance.instance_status?.toLowerCase() === "active" || instance.instance_status?.toLowerCase() === "redeploying") &&
                 router.push(`/dashboard/instances/${instance.instance_id}/queries`)}
         >
             <div className="flex items-center justify-between">
@@ -25,13 +25,13 @@ export function InstanceCard({ instance }: InstanceCardProps) {
                     <span className={`px-2 py-1 text-xs rounded-full ${instance.instance_status?.toLowerCase() === "active"
                         ? "bg-green-500/20 text-green-400"
                         : instance.instance_status?.toLowerCase() === "stopped"
-                            ? "bg-red-500/20 text-red-400"
-                            : "bg-yellow-500/20 text-yellow-400"
+                            ? "bg-red-500/20 text-red-600"
+                            : "bg-yellow-500/20 text-yellow-600"
                         }`}>
                         {instance.instance_status?.charAt(0).toUpperCase() +
                             instance.instance_status?.slice(1)}
                     </span>
-                    {instance.instance_status?.toLowerCase() === "active" && (
+                    {(instance.instance_status?.toLowerCase() === "active" || instance.instance_status?.toLowerCase() === "redeploying") && (
                         <ChevronRight className="w-6 h-6 transition-transform opacity-60 group-hover:translate-x-0.5 group-hover:scale-110 group-hover:opacity-100" />
                     )}
                 </div>
