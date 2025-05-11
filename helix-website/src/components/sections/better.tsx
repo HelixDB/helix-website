@@ -43,7 +43,7 @@ const featureVariants = {
 
 export function Better() {
     return (
-        <div className="min-h-[80vh] flex items-center relative py-24 bg-gradient-to-b from-transparent via-neutral-100/5 to-neutral-100/10 dark:via-neutral-900/5 dark:to-neutral-900/10">
+        <div className="min-h-[80vh] flex items-center relative py-24 ">
             <div className="container mx-auto px-4 sm:px-8 relative z-10">
                 <motion.div
                     className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center max-w-8xl mx-auto"

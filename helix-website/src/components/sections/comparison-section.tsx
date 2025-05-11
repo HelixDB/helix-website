@@ -102,7 +102,7 @@ export function ComparisonSection() {
             }}
             className="py-20 relative overflow-hidden"
         >
-            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-background/50 " />
+            <div className="absolute inset-0  " />
             <div className="absolute inset-0 bg-grid-white/[0.01] bg-grid-primary/[0.01]" />
             <div className="container relative mx-auto px-4">
                 <motion.div
@@ -333,7 +333,7 @@ export function ComparisonSection() {
                         >
                             <Zap className="w-7 h-7 text-primary" />
                         </motion.div>
-                        <h3 className="text-xl font-semibold mb-2 text-foreground">70% Less Code</h3>
+                        <h3 className="text-xl font-semibold mb-2 text-foreground">Less Code</h3>
                         <p className="text-muted-foreground">Write cleaner, more maintainable queries with our intuitive syntax</p>
                     </motion.div>
 

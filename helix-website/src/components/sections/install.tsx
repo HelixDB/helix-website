@@ -93,7 +93,7 @@ export function Install() {
     };
 
     return (
-        <div className="min-h-[90vh]  bg-gradient-to-b from-transparent via-neutral-100/5 to-neutral-100/10 dark:via-neutral-900/5 dark:to-neutral-900/10 flex items-center relative py-24">
+        <div className="min-h-[90vh]  flex items-center relative py-24">
             {/* Background */}
 
             <div className="container mx-auto px-4 sm:px-8 relative z-10">

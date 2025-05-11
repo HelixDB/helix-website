@@ -147,7 +147,7 @@ const UseCaseCard = ({
 
 const UseCases = () => {
     return (
-        <section className="py-20 relative bg-gradient-to-b from-neutral-100/5 via-neutral-100/10 to-transparent dark:from-neutral-900/5 dark:via-neutral-900/10 dark:to-transparent">
+        <section className="py-20 relative ">
             <motion.div
                 className="text-center mb-16"
                 variants={containerVariants}

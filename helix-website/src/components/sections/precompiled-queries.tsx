@@ -67,7 +67,7 @@ export function PrecompiledQueries() {
 
     return (
         <>
-            <div className="min-h-[80vh] flex items-center relative py-24 bg-gradient-to-b from-neutral-100/10 via-neutral-100/5 to-transparent dark:from-neutral-900/10 dark:via-neutral-900/5 dark:to-transparent mb-20">
+            <div className="min-h-[80vh] flex items-center relative py-24  mb-20">
                 <div className="container mx-auto px-4 sm:px-8 relative z-10">
                     <motion.div
                         className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center max-w-8xl mx-auto"

@@ -187,21 +187,21 @@ export default function Home() {
     <div className="relative w-full min-h-screen overflow-x-hidden ">
       <Header />
       <Hero />
-      <div className="bg-background">
+      <div className="bg-gradient-to-b from-transparent via-neutral-100/5 to-neutral-100/10 dark:via-neutral-900/5 dark:to-neutral-900/10">
         <Install />
         <Better />
         {<PrecompiledQueries />}
         <ComparisonSection />
         <UseCases />
-        <PricingSection
+        {/* <PricingSection
           title="Simple, transparent pricing"
           subtitle="Helix prices can be used on demand or reserved. No hidden fees, no surprises."
           tiers={pricingTiers}
           frequencies={["on demand", "reserved"]}
-        />
+        /> */}
         <motion.div
           variants={fadeInUp}
-          className="py-16 bg-gradient-to-b from-muted/30 to-background"
+          className="py-16 "
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <motion.div

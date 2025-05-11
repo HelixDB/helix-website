@@ -67,7 +67,7 @@ export function Header() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        {isAuthenticated ? (
+                        {/* {isAuthenticated ? (
 
                             <Link href="/dashboard" className="cursor-pointer ">
                                 <Button variant="secondary" size="sm">
@@ -84,8 +84,18 @@ export function Header() {
                             >
                                 Sign Up
                             </Button>
-                        )}
-
+                        )} */}
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            className="sm:flex items-center gap-2 border border-white/10 hover:bg-white/5"
+                        >
+                            <a
+                                href="/waitlist"
+                            >
+                                <span>Join the waitlist</span>
+                            </a>
+                        </Button>
                         <Button
                             variant="default"
                             size="sm"

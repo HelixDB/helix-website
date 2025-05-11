@@ -30,7 +30,7 @@ const itemVariants = {
 
 export function DemoSection() {
     return (
-        <section className="min-h-[90vh] py-12 md:py-24 flex items-center relative overflow-hidden bg-gradient-to-b from-transparent via-neutral-100/5 to-neutral-100/10 dark:via-neutral-900/5 dark:to-neutral-900/10">
+        <section className="min-h-[90vh] py-12 md:py-24 flex items-center relative overflow-hidden ">
             <div className="absolute bottom-0 right-0 left-0 opacity-5">
                 <div className="container mx-auto h-[200px] md:h-[300px]">
                     <div className="relative h-full">
@@ -54,13 +54,13 @@ export function DemoSection() {
                         variants={itemVariants}
                         className="text-3xl md:text-4xl font-bold mb-3 md:mb-4"
                     >
-                        Book a Demo
+                        Join the Waitlist
                     </motion.h2>
                     <motion.p
                         variants={itemVariants}
                         className="text-lg md:text-xl text-gray-600 dark:text-gray-400 px-4 md:px-0"
                     >
-                        See how Helix can transform your development workflow. Schedule a personalized demo with our team.
+                        Sign up to get early access to Helix's managed service and to hear more about our development plans.
                     </motion.p>
 
                     <motion.div
@@ -73,11 +73,9 @@ export function DemoSection() {
                             className="px-6 md:px-8 py-4 md:py-6 text-base md:text-lg"
                         >
                             <a
-                                href="https://cal.com/helix-db"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                href="/waitlist"
                             >
-                                Schedule a Demo
+                                Join Now
                             </a>
                         </Button>
                     </motion.div>

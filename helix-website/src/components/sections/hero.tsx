@@ -119,13 +119,30 @@ export function Hero() {
                                     Backed by Y Combinator
                                 </span>
                             </motion.div> */}
-                            <HeroPill
+                            <motion.div
+                                className="flex items-center gap-2 mb-6 bg-[#76b900]/10 dark:bg-[#76b900]/5 w-fit px-3 py-1.5 rounded-full pointer border border-[#76b900]/20"
+
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8, ease: "easeOut" }}
+                                onClick={() => window.open('https://github.com/HelixDB/helix-db', '_blank')}
+                            >
+                                <img
+                                    src="/nvidia.png"
+                                    alt="Nvidia Logo"
+                                    className="h-5"
+                                />
+                                <span className="text-sm font-medium text-[#76b900] dark:text-[#76b900]/90">
+                                    Backed by NVIDIA
+                                </span>
+                            </motion.div>
+                            {/* <HeroPill
                                 className="w-min mb-6"
                                 href="https://github.com/HelixDB/helix-db"
                                 label="Vector types available!"
                                 announcement="🎉 New"
                                 isExternal
-                            />
+                            /> */}
                         </motion.div>
 
                         <motion.h1
@@ -151,9 +168,11 @@ export function Hero() {
                                     size="lg"
                                     variant="secondary"
                                     className="px-8 py-6 text-lg border-white/10 hover:bg-white/5 mb-4 sm:mb-0 w-full"
-                                    onClick={() => window.open('https://cal.com/helix-db', '_blank')}
+                                ><a
+                                    href="/waitlist"
                                 >
-                                    Book Demo
+                                        <span>Join the waitlist</span>
+                                    </a>
                                 </Button>
                             </motion.div>
 
