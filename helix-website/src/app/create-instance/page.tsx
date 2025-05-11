@@ -1,5 +1,8 @@
 "use client"
 
+import { redirect } from "next/navigation"
+
+/* 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useDispatch, useSelector } from "react-redux"
@@ -409,4 +412,9 @@ export default function CreateInstancePage() {
             </div>
         </div>
     )
+} */
+
+
+export default function CreateInstancePage() {
+    redirect("/")
 }

@@ -1,5 +1,5 @@
 "use client";
-import { AuthWrapper } from "./components/auth-wrapper";
+/* import { AuthWrapper } from "./components/auth-wrapper";
 import { Footer } from "@/components/footer";
 import { useEffect } from "react";
 import { useAppDispatch } from "@/store/hooks";
@@ -33,4 +33,22 @@ export default function DashboardLayout({
       <main className="min-h-screen dark:bg-[#171717]">{children}</main>
     </AuthWrapper>
   );
+}
+ */
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/");
+  }, [router]);
+
+  return null;
 }
