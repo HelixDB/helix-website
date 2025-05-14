@@ -46,28 +46,20 @@ export default function WaitlistPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://432iuxg90i.execute-api.eu-west-2.amazonaws.com/prod/subscribe', {
-        method: 'OPTIONS',
+      const response = await fetch('https://script.google.com/a/macros/helix-db.com/s/AKfycbzjLnsS-PR87qfrxrcKYJNRBQeodB8-eWN5JfMCDh8xQ5Lw_HJUUZixg1QDwi1w45Cduw/exec', {
+        method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email }),
       });
 
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({ message: 'Unknown error occurred' }));
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
-      }
-
       setSuccess(true);
       toast.success("Successfully joined the waitlist!");
     } catch (error) {
       console.error('Waitlist signup error:', error);
-      if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        toast.error("Network error. Please check your connection and try again.");
-      } else {
-        toast.error(error instanceof Error ? error.message : "Failed to join waitlist. Please try again.");
-      }
+      toast.error("Failed to join waitlist. Please try again.");
     } finally {
       setLoading(false);
     }
