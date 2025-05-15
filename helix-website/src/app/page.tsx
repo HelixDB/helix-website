@@ -239,7 +239,7 @@ export default function Home() {
                     asChild
                   >
                     <a
-                      href="https://discord.gg/helixdb"
+                      href="https://discord.gg/2stgMPr5BD"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-3"
