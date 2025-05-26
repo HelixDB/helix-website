@@ -68,43 +68,6 @@ export function UserDropdown() {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel className="font-normal">
-                    <p className="text-sm font-medium leading-none">Appearance</p>
-                </DropdownMenuLabel>
-                <DropdownMenuItem
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setTheme("light");
-                    }}
-                    className={theme === "light" ? "bg-accent" : ""}
-                >
-                    <Sun className="mr-2 h-4 w-4" />
-                    <span>Light</span>
-                    {theme === "light" && <span className="ml-auto">✓</span>}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setTheme("dark");
-                    }}
-                    className={theme === "dark" ? "bg-accent" : ""}
-                >
-                    <Moon className="mr-2 h-4 w-4" />
-                    <span>Dark</span>
-                    {theme === "dark" && <span className="ml-auto">✓</span>}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setTheme("system");
-                    }}
-                    className={theme === "system" ? "bg-accent" : ""}
-                >
-                    <Laptop className="mr-2 h-4 w-4" />
-                    <span>System</span>
-                    {theme === "system" && <span className="ml-auto">✓</span>}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
