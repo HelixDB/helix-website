@@ -241,7 +241,7 @@ export function ComparisonSection() {
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <div className="flex flex-col gap-6 w-2/3 md:w-1/2 pr-6 drop-shadow-lg shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                        <div className="flex flex-col gap-6 w-2/3 md:w-1/2 pr-6 ">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
                                     {featureCards[0].icon}
@@ -307,7 +307,7 @@ export function ComparisonSection() {
 
                         <p className="text-muted-foreground mb-6 text-lg leading-relaxed">{featureCards[1].description}</p>
 
-                        <div className="flex flex-col ">
+                        <div className="flex-1 flex flex-col ">
                             {featureCards[1].code && featureCards[1].codeLang && (
                                 <div className="flex flex-col overflow-hidden bg-black rounded-xl border border-foreground/30 shadow-[0_0_30px_rgba(255,0,0,0.1)] mb-6 w-[700px]">
                                     <p className="text-md text-foreground/90 px-4 py-2">Type Checker</p>
@@ -375,22 +375,49 @@ Successfully started Helix instance
 
                         <div className="flex-1 flex flex-col justify-between">
                             {/* Cost Savings Visualization */}
-                            <div className="space-y-4 mb-6">
-
-
-                                <div className="grid grid-cols-2 gap-3 text-center">
-                                    <div className="p-3 bg-background/50 rounded-lg border border-white/10">
-                                        <div className="text-lg font-bold text-red-400">2</div>
-                                        <div className="text-xs text-muted-foreground">Databases</div>
+                            <div className=" grid grid-cols-2 gap-4">
+                                {/* Database Comparison */}
+                                <div className="">
+                                    <div className="text-sm font-medium text-muted-foreground mb-3 text-center">Database Infrastructure</div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="relative group">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-red-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
+                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-red-500/20 aspect-square flex flex-col justify-center shadow-lg">
+                                                <div className="text-xl font-bold text-red-400 mb-2">2+</div>
+                                                <div className="text-xs text-center text-muted-foreground leading-tight">Separate Databases</div>
+                                            </div>
+                                        </div>
+                                        <div className="relative group">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-emerald-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
+                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-emerald-500/20 aspect-square flex flex-col justify-center shadow-lg">
+                                                <div className="text-xl font-bold text-emerald-400 mb-2">1</div>
+                                                <div className="text-xs text-center text-emerald-300 leading-tight">Unified Database</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="p-3 bg-background/50 rounded-lg border border-emerald-500/30 bg-emerald-500/10">
-                                        <div className="text-lg font-bold text-emerald-400">1</div>
-                                        <div className="text-xs text-emerald-300">Database</div>
+                                </div>
+
+                                {/* Storage Usage Comparison */}
+                                <div>
+                                    <div className="text-sm font-medium text-muted-foreground mb-3 text-center">Storage Usage</div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="relative group">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-transparent to-orange-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
+                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-orange-500/20 aspect-square flex flex-col justify-center shadow-lg">
+                                                <div className="text-xl font-bold text-orange-400 mb-2">100%</div>
+                                                <div className="text-xs text-center text-muted-foreground leading-tight">Duplicated Data</div>
+                                            </div>
+                                        </div>
+                                        <div className="relative group">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-blue-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
+                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-blue-500/20 aspect-square flex flex-col justify-center shadow-lg">
+                                                <div className="text-xl font-bold text-blue-400 mb-2">50%</div>
+                                                <div className="text-xs text-blue-300 leading-tight">Shared Storage</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </motion.div>
 
@@ -413,17 +440,23 @@ Successfully started Helix instance
 
                         <div className="flex-1 flex flex-col justify-between">
                             {/* Speed Visualization */}
-                            <div className="space-y-4 mb-6">
+                            <div className="space-y-4 ">
 
 
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="text-center p-3 bg-background/50 rounded-lg border border-white/10">
-                                        <div className="text-sm font-medium text-emerald-400 mb-1">Vector</div>
-                                        <div className="text-lg font-bold text-foreground">2ms</div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="relative group">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-emerald-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                                        <div className="text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-emerald-500/20 aspect-square flex flex-col justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-emerald-500/40">
+                                            <div className="text-lg font-bold text-emerald-400 mb-2">~2ms</div>
+                                            <div className="text-xs text-muted-foreground leading-tight">Vector Similarity Search</div>
+                                        </div>
                                     </div>
-                                    <div className="text-center p-3 bg-background/50 rounded-lg border border-white/10">
-                                        <div className="text-sm font-medium text-cyan-400 mb-1">Graph</div>
-                                        <div className="text-lg font-bold text-foreground">1M/s</div>
+                                    <div className="relative group">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-transparent to-cyan-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                                        <div className="text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-cyan-500/20 aspect-square flex flex-col justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-cyan-500/40">
+                                            <div className="text-lg font-bold text-cyan-400 mb-2">Sub 1ms</div>
+                                            <div className="text-xs text-muted-foreground leading-tight">Graph Traversals</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
