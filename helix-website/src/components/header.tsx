@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { User, LogOut, CreditCard, Star } from "lucide-react"
+import { User, LogOut, CreditCard, Star, Github, PhoneCall, Calendar } from "lucide-react"
 import { Button } from "./ui/button"
 import { Logo } from "./ui/logo"
 import { AuthModal } from "./ui/auth-modal"
@@ -17,8 +17,16 @@ import {
 } from "./ui/dropdown-menu"
 import { signOut } from "aws-amplify/auth"
 import { SocialLinks } from "./ui/social-links"
+import { formatNumber } from "@/lib/github"
+import { getGithubStars } from "@/lib/github"
 
 export function Header() {
+    const [stars, setStars] = useState<number | null>(null);
+
+    useEffect(() => {
+        getGithubStars().then(setStars);
+    }, []);
+
     const router = useRouter()
     const [showAuthModal, setShowAuthModal] = useState(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -85,31 +93,44 @@ export function Header() {
                                 Sign Up
                             </Button>
                         )} */}
-                        <Button
-                            size="sm"
-                            variant="secondary"
-                            className="sm:flex items-center gap-2 border border-white/10 hover:bg-white/5"
+
+                        <a
+                            href="https://github.com/HelixDB/helix-db"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-row items-center hover:text-yellow-300"
                         >
-                            <a
-                                href="/waitlist"
-                            >
-                                <span>Join the waitlist</span>
-                            </a>
-                        </Button>
+                            <Github className="w-4 h-4" />
+                            {stars !== null && (
+                                <span className="ml-2">
+                                    {formatNumber(stars)}
+                                </span>
+                            )}
+                        </a>
                         <Button
-                            variant="default"
+                            variant="secondary"
                             size="sm"
-                            className="sm:flex items-center gap-2"
+                            className="sm:flex items-center gap-2 border border-white/10 hover:bg-white/5"
                             asChild
                         >
                             <a
-                                href="https://github.com/HelixDB/helix-db"
+                                href="https://docs.helix-db.com"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2"
                             >
-                                <Star className="h-4 w-4" />
-                                <span className="hidden sm:inline">Star on GitHub</span>
+                                Docs
+                            </a>
+                        </Button>
+                        <Button
+                            size="sm"
+                            className="sm:flex items-center gap-2 "
+                        >
+                            <a
+                                href="https://cal.com/helix-db/30min"
+                                className="flex items-center gap-4"
+                            >
+                                <Calendar className="w-5 h-5" />
+                                <span>Book a Call</span>
                             </a>
                         </Button>
                     </div>

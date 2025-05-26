@@ -97,7 +97,7 @@ export function Footer() {
                         </ul>
                     </div>
                     <div className="flex flex-row sm:flex-col justify-center sm:justify-start gap-2">
-                        <ThemeToggle />
+                        {/* <ThemeToggle /> */}
                     </div>
                 </div>
                 <div className="mt-8 md:mt-12 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">

@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { Calendar, Github, PhoneCall, Star } from "lucide-react";
 import { HeroPill } from "@/components/ui/hero-pill";
 import { Graph } from "./graph";
 import { motion } from "framer-motion";
+import { getGithubStars, formatNumber } from "@/lib/github";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -74,9 +75,15 @@ const buttonVariants = {
 };
 
 export function Hero() {
+    const [stars, setStars] = React.useState<number | null>(null);
+
+    React.useEffect(() => {
+        getGithubStars().then(setStars);
+    }, []);
+
     return (
         <motion.div
-            className="min-h-[100vh] flex items-center relative overflow-hidden"
+            className="min-h-[1080px] py-16 flex items-center relative overflow-hidden"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -89,7 +96,7 @@ export function Hero() {
             <div className="container mx-auto px-4 sm:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <motion.div
-                        className="flex flex-col max-w-2xl relative w-full"
+                        className="flex flex-col relative w-full col-span-2"
                         variants={containerVariants}
                     >
                         {/* Radial gradient underlay for better contrast with the graph */}
@@ -103,7 +110,7 @@ export function Hero() {
                             variants={pillVariants}
                         >
                             {/* Y Combinator Badge */}
-                            {/* <motion.div
+                            <motion.div
                                 className="flex items-center gap-2 mb-6 bg-[#FF5733]/10 dark:bg-[#FF5733]/5 w-fit px-3 py-1.5 rounded-full border border-[#FF5733]/20"
 
                                 initial={{ opacity: 0, y: -20 }}
@@ -118,7 +125,7 @@ export function Hero() {
                                 <span className="text-sm font-medium text-[#FF5733] dark:text-[#FF5733]/90">
                                     Backed by Y Combinator
                                 </span>
-                            </motion.div> */}
+                            </motion.div>
                             <motion.div
                                 className="flex items-center gap-2 mb-6 bg-[#76b900]/10 dark:bg-[#76b900]/5 w-fit px-3 py-1.5 rounded-full pointer border border-[#76b900]/20"
 
@@ -136,6 +143,7 @@ export function Hero() {
                                     Backed by NVIDIA
                                 </span>
                             </motion.div>
+
                             {/* <HeroPill
                                 className="w-min mb-6"
                                 href="https://github.com/HelixDB/helix-db"
@@ -146,44 +154,29 @@ export function Hero() {
                         </motion.div>
 
                         <motion.h1
-                            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-6"
+                            className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-6 "
                             variants={headingVariants}
                         >
-                            Build 10x Faster with the First Native Graph-Vector Database
+                            Unified <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span> Database for AI Retrieval
                         </motion.h1>
 
                         <motion.p
-                            className="text-xl text-transparent bg-gradient-to-r bg-clip-text from-foreground to-foreground/80 mb-8"
+                            className="text-xl text-foreground bg-gradient-to-r bg-clip-text from-foreground to-foreground/80 mb-8 mr-16"
                             variants={paragraphVariants}
                         >
-                            Accelerate development with a unified graph and vector database, built in Rust, designed for RAG and AI applications.
+                            Get more relevant context for AI with the fastest and most cost-effective graph-vector database, built in Rust.
                         </motion.p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             <motion.div
+                                className="flex flex-col"
                                 variants={buttonVariants}
                                 custom={1.2}
                             >
                                 <Button
                                     size="lg"
+                                    className="px-8 py-6 lg:py-8 text-xl lg:text-2xl flex items-center gap-2 border-white/10 hover:bg-white/5"
                                     variant="secondary"
-                                    className="px-8 py-6 text-lg border-white/10 hover:bg-white/5 mb-4 sm:mb-0 w-full"
-                                ><a
-                                    href="/waitlist"
-                                >
-                                        <span>Join the waitlist</span>
-                                    </a>
-                                </Button>
-                            </motion.div>
-
-                            <motion.div
-                                className="flex flex-col"
-                                variants={buttonVariants}
-                                custom={1.5}
-                            >
-                                <Button
-                                    size="lg"
-                                    className="px-8 py-6 text-lg flex items-center gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
                                     asChild
                                 >
                                     <a
@@ -191,18 +184,39 @@ export function Hero() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        <Star className="w-5 h-5" />
-                                        <span>Star on GitHub</span>
+                                        <Github className="w-5 h-5" />
+                                        {stars !== null && (
+                                            <span className="ml-2">
+                                                {formatNumber(stars)}
+                                            </span>
+                                        )}
                                     </a>
                                 </Button>
-                                <span className="text-muted-foreground mt-1 text-center italic mt-2">only takes 3 seconds 🙏🏻</span>
                             </motion.div>
+
+                            <motion.div
+                                variants={buttonVariants}
+                                custom={1.5}
+                            >
+                                <Button
+                                    className="px-8 py-6 lg:py-8 text-xl lg:text-2xl mb-4 sm:mb-0 w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
+                                ><a
+                                    href="https://cal.com/helix-db/30min"
+                                    className="flex items-center gap-4"
+                                >
+                                        <Calendar className="w-5 h-5" />
+                                        <span>Book a Call</span>
+                                    </a>
+                                </Button>
+                            </motion.div>
+
+
                         </div>
 
                     </motion.div>
 
                     {/* Empty column that the graph will appear behind */}
-                    <div className="hidden lg:block"></div>
+                    <div className="hidden lg:block col-span-11"></div>
                 </div>
             </div>
         </motion.div>

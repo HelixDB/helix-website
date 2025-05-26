@@ -1,97 +1,228 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Brain, Shield, Zap } from "lucide-react";
 import { Highlight, themes } from 'prism-react-renderer';
 import { useTheme } from "next-themes";
+import { Zap, Shield, Brain, DollarSign, CheckCircle, ArrowRight } from "lucide-react";
 
-const titleVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 15
-        }
-    }
-};
-
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1,
-            duration: 0.3
-        }
-    }
-};
-
-const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 15
-        }
-    }
-};
-
-const comparisonExamples = {
-    cypher: {
-        name: "Cypher",
-        code: `MATCH (user:User)
-WHERE id(user) = $userID
-MATCH (user)-[:Posts]->(posts)
-WITH user, collect(posts)[..20] as posts
-RETURN user.name as name,
-       user.age as age,
-       id(user) as id,
-       [(follower)-[:Follows]->(user) | follower] as following,
-       [p IN posts | {
-           postID: id(p),
-           creatorID: id(user),
-           title: p.title,
-           createdAt: p.createdAt,
-           content: p.content
-       }] as posts`,
-        lines: 6
+const featureCards = [
+    {
+        title: "Hybrid Query Traversals",
+        icon: <Brain className="w-8 h-8 text-primary" />,
+        description: "Seamlessly combine vector similarity search with graph traversals in a single, powerful query. No more complex joins or multiple database calls.",
+        code: `QUERY findSimilarFriends(userID: String, queryVec: Vector) =>
+      similar <- V<User>::VectorSearch(queryVec, topK: 5)
+      friends <- similar::Out<Friends>
+      RETURN friends::{ ID, name, similarityScore }`,
+        codeLang: "typescript",
+        benefits: [
+            "Single query for complex operations",
+            "Native vector + graph integration",
+            "Intuitive syntax design"
+        ]
     },
-    gremlin: {
-        name: "Gremlin",
-        code: `g.V(userID)
-  .as('user')
-  .out('posts')
-  .limit(20)
-  .as('posts')
-  .select('user')
-  .project('name', 'age', 'id', 'following', 'posts')
-  .by('name')
-  .by('age')
-  .by('id')
-  .by(__.in('Follows'))
-  .by(__.out('Posts').limit(20)
-    .project('postID', 'creatorID', 'title', 'createdAt', 'content')
-    .by('id')
-    .by(__.select('user').id())
-    .by('title')
-    .by('createdAt')
-    .by('content')
-)`,
-        lines: 5
+    {
+        title: "Type-Safety",
+        icon: <Shield className="w-8 h-8 text-primary" />,
+        description: "Advanced static analysis provides real-time feedback, autocomplete, and error detection. Write queries with confidence.",
+        code: `// ❌ Compile-time error detection
+user_nodes <- N<User>(node_id)::Out<Know>
+// Error: 'Know' is not a valid edge type
+
+old_users <- user_nodes::WHERE(_::{ag}:EQ("60"))
+// Error: 'ag' is not a field of node 'User'
+
+// ✅ Intelligent autocomplete  
+user_nodes::WHERE(_::{<Ctrl+Space>}
+// Suggestions: id, name, age, email, createdAt...`,
+        codeLang: "typescript",
+
+    },
+    {
+        title: "High Speeds",
+        icon: <Zap className="w-8 h-8 text-primary" />,
+        description: "Optimized for both vector similarity and graph traversal workloads with industry-leading performance metrics.",
+
+    },
+    {
+        title: "Lower Costs",
+        icon: <DollarSign className="w-8 h-8 text-primary" />,
+        description: "Eliminate the complexity and cost of maintaining separate vector and graph databases. One unified solution.",
     }
+];
+
+// Clean SVG Graph Component
+const GraphVisualization = () => {
+    return (
+        <div className="flex flex-col justify-center w-full h-full p-4 min-w-[300px]">
+            <svg width="100%" height="100%" viewBox="0 0 320 240" className="overflow-visible  min-h-[200px]">
+                {/* Grey edges - structured network connections */}
+                <line x1="60" y1="60" x2="120" y2="80" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="60" y1="60" x2="80" y2="120" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="60" y1="60" x2="40" y2="100" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="120" y1="80" x2="180" y2="60" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="120" y1="80" x2="140" y2="120" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="120" y1="80" x2="100" y2="140" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="120" y1="80" x2="160" y2="40" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="80" y1="120" x2="140" y2="120" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="80" y1="120" x2="100" y2="140" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="80" y1="120" x2="60" y2="180" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="80" y1="120" x2="40" y2="100" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="140" y1="120" x2="180" y2="60" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="140" y1="120" x2="200" y2="120" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="140" y1="120" x2="160" y2="160" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="140" y1="120" x2="120" y2="200" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="100" y1="140" x2="160" y2="160" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="100" y1="140" x2="60" y2="180" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="100" y1="140" x2="120" y2="200" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="180" y1="60" x2="240" y2="80" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="180" y1="60" x2="200" y2="120" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="180" y1="60" x2="160" y2="40" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="180" y1="60" x2="220" y2="40" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="200" y1="120" x2="240" y2="80" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="200" y1="120" x2="260" y2="120" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="200" y1="120" x2="220" y2="160" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="200" y1="120" x2="280" y2="100" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="160" y1="160" x2="220" y2="160" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="160" y1="160" x2="180" y2="200" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="240" y1="80" x2="260" y2="120" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="240" y1="80" x2="280" y2="100" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="240" y1="80" x2="220" y2="40" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="260" y1="120" x2="220" y2="160" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="260" y1="120" x2="280" y2="100" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="260" y1="120" x2="300" y2="140" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="220" y1="160" x2="180" y2="200" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="220" y1="160" x2="260" y2="180" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="40" y1="100" x2="20" y2="140" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="60" y1="180" x2="120" y2="200" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="60" y1="180" x2="20" y2="140" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="120" y1="200" x2="180" y2="200" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="180" y1="200" x2="260" y2="180" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="280" y1="100" x2="300" y2="140" stroke="#374151" strokeWidth="2" opacity="0.4" />
+                <line x1="300" y1="140" x2="260" y2="180" stroke="#374151" strokeWidth="2" opacity="0.4" />
+
+                {/* Animated edges - highlighted during animation */}
+                {/* First vector (60,60) to all its neighbors */}
+                <line x1="60" y1="60" x2="120" y2="80" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </line>
+                <line x1="60" y1="60" x2="80" y2="120" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </line>
+                <line x1="60" y1="60" x2="40" y2="100" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </line>
+
+                {/* Second vector (100,140) to all its neighbors */}
+                <line x1="100" y1="140" x2="140" y2="120" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </line>
+                <line x1="100" y1="140" x2="160" y2="160" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </line>
+                <line x1="100" y1="140" x2="60" y2="180" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </line>
+
+                {/* Third vector (180,60) to all its neighbors */}
+                <line x1="180" y1="60" x2="200" y2="120" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;0" dur="20s" repeatCount="indefinite" />
+                </line>
+                <line x1="180" y1="60" x2="240" y2="80" stroke="#9333ea" strokeWidth="3" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1" dur="20s" repeatCount="indefinite" />
+                </line>
+
+                {/* Grey squares (vectors) - positioned as part of network */}
+                <rect x="166" y="46" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="206" y="146" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="46" y="166" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="146" y="26" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="206" y="26" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="26" y="86" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="106" y="186" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="166" y="186" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="246" y="166" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="286" y="126" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="6" y="126" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+
+                {/* Static grey squares that will be animated */}
+                <rect x="46" y="46" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="86" y="126" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+                <rect x="166" y="46" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
+
+                {/* Animated vector squares - cycle through different ones */}
+                <rect x="46" y="46" width="28" height="28" fill="#9333ea" rx="4" opacity="0" stroke="#a855f7" strokeWidth="2" className="drop-shadow-lg">
+                    <animate attributeName="opacity" values="0;1;1;1;1;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </rect>
+                <rect x="86" y="126" width="28" height="28" fill="#9333ea" rx="4" opacity="0" stroke="#a855f7" strokeWidth="2" className="drop-shadow-lg">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;1;1;1;1;1;1;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </rect>
+                <rect x="166" y="46" width="28" height="28" fill="#9333ea" rx="4" opacity="0" stroke="#a855f7" strokeWidth="2" className="drop-shadow-lg">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;1" dur="20s" repeatCount="indefinite" />
+                </rect>
+
+                {/* Grey circles (nodes) - positioned as part of network */}
+                <circle cx="100" cy="140" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="280" cy="100" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="120" cy="200" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="180" cy="200" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="260" cy="180" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="300" cy="140" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="20" cy="140" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="80" cy="40" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="300" cy="60" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="20" cy="60" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="160" cy="220" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="260" cy="120" r="11" fill="#374151" opacity="0.4" />
+
+                {/* Static grey circles that will be animated */}
+                <circle cx="120" cy="80" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="80" cy="120" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="40" cy="100" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="140" cy="120" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="160" cy="160" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="60" cy="180" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="200" cy="120" r="11" fill="#374151" opacity="0.4" />
+                <circle cx="240" cy="80" r="11" fill="#374151" opacity="0.4" />
+
+                {/* Animated circles - first vector's neighbors */}
+                <circle cx="120" cy="80" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="80" cy="120" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="40" cy="100" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </circle>
+
+                {/* Animated circles - second vector's neighbors */}
+                <circle cx="140" cy="120" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;1;1;1;1;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="160" cy="160" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="60" cy="180" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0" dur="20s" repeatCount="indefinite" />
+                </circle>
+
+                {/* Animated circles - third vector's neighbors */}
+                <circle cx="200" cy="120" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;0" dur="20s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="240" cy="80" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1" dur="20s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+
+            {/* Labels */}
+
+        </div>
+    );
 };
 
 export function ComparisonSection() {
-    const [selectedLanguage, setSelectedLanguage] = useState<'cypher' | 'gremlin'>('cypher');
     const { theme } = useTheme();
-
-    // Choose theme based on system/user preference
     const codeTheme = theme === 'light' ? themes.github : themes.nightOwl;
 
     return (
@@ -100,289 +231,206 @@ export function ComparisonSection() {
                 initial: { opacity: 0, y: 20 },
                 animate: { opacity: 1, y: 0 },
             }}
-            className="py-20 relative overflow-hidden"
+            className="min-h-[1080px] flex items-center relative py-24 bg-background"
         >
-            <div className="absolute inset-0  " />
-            <div className="absolute inset-0 bg-grid-white/[0.01] bg-grid-primary/[0.01]" />
-            <div className="container relative mx-auto px-4">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    variants={titleVariants}
-                    className="text-center mb-16 max-w-7xl mx-auto"
-                >
-                    <div className="relative inline-block">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent [text-wrap:balance] bg-gradient-to-br from-foreground via-foreground/90 to-primary/80">
-                            Simple, Powerful, and Intuitive
-                        </h2>
-                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            See how HelixQL simplifies complex queries compared to traditional query languages
-                        </p>
-                    </div>
-                </motion.div>
-
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-7xl mx-auto"
-                >
-                    {/* Combined card for mobile, split on desktop */}
+            <div className="container relative mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-8xl mx-auto grid-flow-dense">
+                    {/* Hybrid Query Traversals - spans two columns on top row */}
                     <motion.div
-                        variants={itemVariants}
-                        className="md:hidden p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
+                        className="p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-row min-h-[380px] col-span-1 md:col-span-2 group overflow-hidden"
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        <div className="flex flex-col gap-6">
-                            {/* HelixQL section */}
-                            <div>
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
+                        <div className="flex flex-col gap-6 w-2/3 md:w-1/2 pr-6 drop-shadow-lg shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                                    {featureCards[0].icon}
                                 </div>
-                                <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                                    <Highlight
-                                        theme={codeTheme}
-                                        code={`QUERY findFriends(userID: String) =>
-  user <- V<User>(userID)
-  posts <- user::Out<Posts>::RANGE(20)
-  RETURN user::|usr|{
-            ID, name, age, 
-            following: usr::In<Follows>,
-            posts: posts::{
-                postID: ID,
-                creatorID: usr::ID,
-                ..
-            },
-        }`}
-                                        language="typescript"
-                                    >
-                                        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                                            <code className={`${className} text-sm`}>
-                                                {tokens.map((line, i) => (
-                                                    <div key={i} {...getLineProps({ line })}>
-                                                        {line.map((token, key) => (
-                                                            <span key={key} {...getTokenProps({ token })} />
-                                                        ))}
-                                                    </div>
-                                                ))}
-                                            </code>
-                                        )}
-                                    </Highlight>
-                                </pre>
+                                <div>
+                                    <h3 className="text-2xl font-bold text-foreground mb-1">{featureCards[0].title}</h3>
+                                </div>
                             </div>
-
-                            {/* Comparison section */}
-                            <div>
-                                <div className="flex flex-col gap-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex gap-2">
-                                            <Button
-                                                variant={selectedLanguage === 'cypher' ? 'default' : 'outline'}
-                                                size="sm"
-                                                onClick={() => setSelectedLanguage('cypher')}
-                                                className="text-sm"
-                                            >
-                                                Cypher
-                                            </Button>
-                                            <Button
-                                                variant={selectedLanguage === 'gremlin' ? 'default' : 'outline'}
-                                                size="sm"
-                                                onClick={() => setSelectedLanguage('gremlin')}
-                                                className="text-sm"
-                                            >
-                                                Gremlin
-                                            </Button>
+                            {/* Left side - Code with custom highlighting */}
+                            <div className="flex-1 flex flex-col gap-6">
+                                <p className="text-muted-foreground mb-4 text-base leading-relaxed">{featureCards[0].description}</p>
+                                <div className="bg-background/90 border border-white/20 rounded-lg p-3 overflow-hidden">
+                                    <pre className="text-xs font-mono leading-relaxed">
+                                        <div className="text-cyan-400">QUERY <span className="text-emerald-400">findSimilarFriends</span><span className="text-slate-200">(userID: String, queryVec: Vector) =&gt;</span></div>
+                                        <div className="mt-2">
+                                            <span className="text-slate-200">similar &lt;- </span>
+                                            <span className="bg-purple-500/30 text-purple-200 px-2 py-1 rounded">V&lt;User&gt;::VectorSearch</span>
+                                            <span className="text-slate-200">(queryVec, topK: 5)</span>
                                         </div>
-                                    </div>
-                                    <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                                        <Highlight
-                                            theme={codeTheme}
-                                            code={comparisonExamples[selectedLanguage].code}
-                                            language="javascript"
-                                        >
-                                            {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                                                <code className={`${className} text-sm`}>
-                                                    {tokens.map((line, i) => (
-                                                        <div key={i} {...getLineProps({ line })}>
-                                                            {line.map((token, key) => (
-                                                                <span key={key} {...getTokenProps({ token })} />
-                                                            ))}
-                                                        </div>
-                                                    ))}
-                                                </code>
-                                            )}
-                                        </Highlight>
+                                        <div className="mt-1">
+                                            <span className="text-slate-200">friends &lt;- </span>
+                                            <span className="bg-blue-500/30 text-blue-200 px-2 py-1 rounded">similar::Out&lt;Friends&gt;</span>
+                                        </div>
+                                        <div className="mt-2">
+                                            <span className="text-cyan-400">RETURN</span>
+                                            <span className="text-slate-200"> friends::&#123; ID, name, similarityScore &#125;</span>
+                                        </div>
                                     </pre>
                                 </div>
                             </div>
                         </div>
-                    </motion.div>
 
-                    {/* Desktop layout */}
-                    <motion.div
-                        variants={itemVariants}
-                        className="hidden md:block p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
-                    >
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-semibold text-foreground">HelixQL</h3>
-                        </div>
-                        <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                            <Highlight
-                                theme={codeTheme}
-                                code={`QUERY findFriends(userID: String) =>
-  user <- V<User>(userID)
-  posts <- user::Out<Posts>::RANGE(20)
-  RETURN user::|usr|{
-            ID, name, age, 
-            following: usr::In<Follows>,
-            posts: posts::{
-                postID: ID,
-                creatorID: usr::ID,
-                ..
-            },
-        }`}
-                                language="javascript"
-                            >
-                                {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                                    <code className={`${className} text-sm`}>
-                                        {tokens.map((line, i) => (
-                                            <div key={i} {...getLineProps({ line })}>
-                                                {line.map((token, key) => (
-                                                    <span key={key} {...getTokenProps({ token })} />
-                                                ))}
-                                            </div>
-                                        ))}
-                                    </code>
-                                )}
-                            </Highlight>
-                        </pre>
-                    </motion.div>
-
-                    <motion.div
-                        variants={itemVariants}
-                        className="hidden md:block p-6 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl"
-                    >
-                        <div className="flex flex-col gap-4">
-                            <div className="flex items-center justify-between">
-                                <div className="flex gap-2">
-                                    <Button
-                                        variant={selectedLanguage === 'cypher' ? 'default' : 'outline'}
-                                        size="sm"
-                                        onClick={() => setSelectedLanguage('cypher')}
-                                        className="text-sm"
-                                    >
-                                        Cypher
-                                    </Button>
-                                    <Button
-                                        variant={selectedLanguage === 'gremlin' ? 'default' : 'outline'}
-                                        size="sm"
-                                        onClick={() => setSelectedLanguage('gremlin')}
-                                        className="text-sm"
-                                    >
-                                        Gremlin
-                                    </Button>
+                        <div className="w-1/3 md:w-1/2 flex flex-col items-center justify-center pl-4">
+                            <GraphVisualization />
+                            <div className="flex justify-between w-full mt-2 px-4 md:flex-row flex-col space-y-4">
+                                <div className="flex items-center gap-2 flex-row">
+                                    <div className="w-4 h-4 bg-purple-500 rounded"></div>
+                                    <span className="text-purple-200 text-xs font-semibold">Vector Entry</span>
+                                </div>
+                                <div className="flex items-center gap-2 flex-row">
+                                    <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                                    <span className="text-blue-200 text-xs font-semibold">Connected Node</span>
                                 </div>
                             </div>
-                            <pre className="bg-background/80 p-4 rounded-md overflow-x-auto border border-white/10">
-                                <Highlight
-                                    theme={codeTheme}
-                                    code={comparisonExamples[selectedLanguage].code}
-                                    language="javascript"
-                                >
-                                    {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                                        <code className={`${className} text-sm`}>
-                                            {tokens.map((line, i) => (
-                                                <div key={i} {...getLineProps({ line })}>
-                                                    {line.map((token, key) => (
-                                                        <span key={key} {...getTokenProps({ token })} />
-                                                    ))}
-                                                </div>
-                                            ))}
-                                        </code>
-                                    )}
-                                </Highlight>
-                            </pre>
                         </div>
                     </motion.div>
-                </motion.div>
 
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-                >
+                    {/* Type-Safety - spans two rows on the right */}
                     <motion.div
-                        variants={itemVariants}
-                        className="p-6 rounded-xl border border-white/5 bg-muted/10 backdrop-blur-sm"
+                        className="p-8 rounded-xl border shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] md:row-span-2 lg:col-start-3 md:col-span-1 group"
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{
-                                type: "spring",
-                            }}
-                            className="w-14 h-14 rounded-lg flex items-center justify-center mb-4 relative"
-                            style={{
-                                background: `linear-gradient(135deg, 
-                                    rgba(99, 102, 241, 0.1) 0%,
-                                    rgba(139, 92, 246, 0.1) 100%)`
-                            }}
-                        >
-                            <Zap className="w-7 h-7 text-primary" />
-                        </motion.div>
-                        <h3 className="text-xl font-semibold mb-2 text-foreground">Less Code</h3>
-                        <p className="text-muted-foreground">Write cleaner, more maintainable queries with our intuitive syntax</p>
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                                {featureCards[1].icon}
+                            </div>
+                            <div>
+                                <h3 className="text-2xl font-bold text-foreground mb-1">{featureCards[1].title}</h3>
+
+                            </div>
+                        </div>
+
+                        <p className="text-muted-foreground mb-6 text-lg leading-relaxed">{featureCards[1].description}</p>
+
+                        <div className="flex flex-col ">
+                            {featureCards[1].code && featureCards[1].codeLang && (
+                                <div className="flex flex-col overflow-hidden bg-black rounded-xl border border-foreground/30 shadow-[0_0_30px_rgba(255,0,0,0.1)] mb-6 w-[700px]">
+                                    <p className="text-md text-foreground/90 px-4 py-2">Type Checker</p>
+                                    <pre className="bg-zinc-900 flex flex-row p-4 text-sm font-mono overflow-x-auto">
+                                        <code className="pr-4 select-none">
+                                            {`> `}
+                                        </code>
+                                        <code className="text-red-400">
+                                            {`helix check
+❌ Checking Helix queries
+error: 'Know' is not a valid edge type (in QUERY named 'get_user*)
+      |--queries.hx: 16:38
+16    |   user_nodes <- N<User> (node_1d):: 0ut<Know>
+---> help: check the schema for valid edge types
+...
+`}
+                                        </code>
+                                    </pre>
+                                </div>
+                            )}
+
+                            {/* Success deployment output */}
+                            <div className="flex flex-col overflow-hidden bg-black rounded-xl border border-foreground/30 shadow-[0_0_30px_rgba(0,255,0,0.1)] mb-6 w-3/2 self-end hidden md:block">
+                                <p className="text-md text-foreground/90 px-4 py-2">Deploy</p>
+                                <pre className="bg-zinc-900 flex flex-row p-4 text-sm font-mono overflow-x-auto">
+                                    <code className="pr-4 select-none">
+                                        {`> `}
+                                    </code>
+                                    <code className="text-green-400">
+                                        {`helix deploy --local --path helixdb-cfg
+✓ Compiling Helix queriesNodes(Some("User"))
+Successfully compiled 2 query files
+Successfully transpiled queries
+Successfully wrote queries file
+Successfully built Helix
+Successfully started Helix instance
+└── Instance ID: aafd3dc7-21cb-4073-b330-aec71e48b623
+└── Port: 6969
+└── Available endpoints:
+    └── /get_user`}
+                                    </code>
+                                </pre>
+                            </div>
+
+
+                        </div>
                     </motion.div>
 
+                    {/* Lower Costs - bottom left */}
                     <motion.div
-                        variants={itemVariants}
-                        className="p-6 rounded-xl border border-white/5 bg-muted/10 backdrop-blur-sm"
+                        className="p-8 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] group"
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{
-                                type: "spring",
-                            }}
-                            className="w-14 h-14 rounded-lg flex items-center justify-center mb-4 relative"
-                            style={{
-                                background: `linear-gradient(135deg, 
-                                    rgba(99, 102, 241, 0.1) 0%,
-                                    rgba(139, 92, 246, 0.1) 100%)`
-                            }}
-                        >
-                            <Shield className="w-7 h-7 text-primary" />
-                        </motion.div>
-                        <h3 className="text-xl font-semibold mb-2 text-foreground">Type Safety</h3>
-                        <p className="text-muted-foreground">Catch errors at compile time with full type checking and IDE support</p>
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                                {featureCards[3].icon}
+                            </div>
+                            <div>
+                                <h3 className="text-2xl font-bold text-foreground mb-1">{featureCards[3].title}</h3>
+                            </div>
+                        </div>
+
+                        <p className="text-muted-foreground mb-6 text-lg leading-relaxed">{featureCards[3].description}</p>
+
+                        <div className="flex-1 flex flex-col justify-between">
+                            {/* Cost Savings Visualization */}
+                            <div className="space-y-4 mb-6">
+
+
+                                <div className="grid grid-cols-2 gap-3 text-center">
+                                    <div className="p-3 bg-background/50 rounded-lg border border-white/10">
+                                        <div className="text-lg font-bold text-red-400">2</div>
+                                        <div className="text-xs text-muted-foreground">Databases</div>
+                                    </div>
+                                    <div className="p-3 bg-background/50 rounded-lg border border-emerald-500/30 bg-emerald-500/10">
+                                        <div className="text-lg font-bold text-emerald-400">1</div>
+                                        <div className="text-xs text-emerald-300">Database</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
                     </motion.div>
 
+                    {/* High Speeds - bottom center */}
                     <motion.div
-                        variants={itemVariants}
-                        className="p-6 rounded-xl border border-white/5 bg-muted/10 backdrop-blur-sm"
+                        className="p-8 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex shadow-[0_0_30px_rgba(0,0,0,0.5)] flex-col min-h-[380px] lg:col-start-2 group"
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{
-                                type: "spring",
-                            }}
-                            className="w-14 h-14 rounded-lg flex items-center justify-center mb-4 relative"
-                            style={{
-                                background: `linear-gradient(135deg, 
-                                    rgba(99, 102, 241, 0.1) 0%,
-                                    rgba(139, 92, 246, 0.1) 100%)`
-                            }}
-                        >
-                            <Brain className="w-7 h-7 text-primary" />
-                        </motion.div>
-                        <h3 className="text-xl font-semibold mb-2 text-foreground">Native Vector Support</h3>
-                        <p className="text-muted-foreground">Seamlessly combine graph traversals with vector operations</p>
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                                {featureCards[2].icon}
+                            </div>
+                            <div>
+                                <h3 className="text-2xl font-bold text-foreground mb-1">{featureCards[2].title}</h3>
+                            </div>
+                        </div>
+
+                        <p className="text-muted-foreground mb-6 text-lg leading-relaxed">{featureCards[2].description}</p>
+
+                        <div className="flex-1 flex flex-col justify-between">
+                            {/* Speed Visualization */}
+                            <div className="space-y-4 mb-6">
+
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="text-center p-3 bg-background/50 rounded-lg border border-white/10">
+                                        <div className="text-sm font-medium text-emerald-400 mb-1">Vector</div>
+                                        <div className="text-lg font-bold text-foreground">2ms</div>
+                                    </div>
+                                    <div className="text-center p-3 bg-background/50 rounded-lg border border-white/10">
+                                        <div className="text-sm font-medium text-cyan-400 mb-1">Graph</div>
+                                        <div className="text-lg font-bold text-foreground">1M/s</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </motion.div>
-                </motion.div>
+                </div>
             </div>
         </motion.div>
     );
