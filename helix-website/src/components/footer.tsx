@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { File, Github, Linkedin, Twitter, Bug } from "lucide-react";
 import Link from "next/link";
-import { ThemeToggle } from "./ui/theme-toggle";
 import { Button } from "./ui/button";
 
 const navigation = {

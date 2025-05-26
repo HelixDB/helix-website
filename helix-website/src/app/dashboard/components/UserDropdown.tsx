@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, LogOut, Sun, Moon, Laptop } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -8,19 +8,14 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getCurrentUser, signOut } from "aws-amplify/auth";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 
 export function UserDropdown() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
-    const { theme, setTheme } = useTheme();
     const router = useRouter();
     useEffect(() => {
         const getUser = async () => {
