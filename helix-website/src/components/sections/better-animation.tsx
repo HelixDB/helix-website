@@ -112,31 +112,31 @@ export const BetterInfographic: React.FC = () => {
     };
 
     return (
-        <div className="w-full py-8 relative">
+        <div className="w-full py-2 lg:py-8 relative">
             <motion.div
-                className="max-w-6xl mx-auto relative z-10"
+                className="max-w-6xl mx-auto relative z-10 px-2 lg:px-0"
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
             >
-                <div className="grid grid-cols-2 gap-12 lg:gap-16">
+                <div className="grid grid-cols-2 sm:grid-cols-2 gap-6 lg:gap-12 xl:gap-16">
                     {/* Traditional Setup Side */}
                     <motion.div
                         variants={containerVariants}
-                        className="space-y-6"
+                        className="space-y-3 lg:space-y-6"
                     >
                         <motion.div
                             variants={itemVariants}
-                            className="flex items-center space-x-4 mb-8"
+                            className="flex items-center space-x-4 mb-4 lg:mb-8"
                         >
-                            <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
+                            <h3 className="text-lg lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
                                 Traditional Setup
                             </h3>
                             <div className="h-px flex-grow bg-gradient-to-r from-border via-border/50 to-transparent"></div>
                         </motion.div>
 
-                        <div className="space-y-8 max-w-sm">
+                        <div className="space-y-4 lg:space-y-8 max-w-sm mx-auto lg:mx-0">
                             {traditionalStack.map((category, categoryIndex) => (
                                 <motion.div
                                     key={category.title}
@@ -146,7 +146,7 @@ export const BetterInfographic: React.FC = () => {
                                     {/* Connection line */}
                                     {categoryIndex < traditionalStack.length - 1 && (
                                         <motion.div
-                                            className="absolute left-[6px] top-[24px] w-[2px] h-[calc(100%+1.5rem)] z-0"
+                                            className="absolute left-[6px] top-[20px] w-[2px] h-[calc(100%+1rem)] z-0 hidden lg:block"
                                             initial={{
                                                 background: "linear-gradient(to bottom, transparent, transparent)",
                                                 scaleY: 0
@@ -164,10 +164,10 @@ export const BetterInfographic: React.FC = () => {
                                         />
                                     )}
 
-                                    <div className="flex items-start gap-4 relative z-10">
+                                    <div className="flex items-start gap-2 lg:gap-4 relative z-10">
                                         {/* Timeline dot */}
                                         <motion.div
-                                            className="relative mt-2 flex-shrink-0"
+                                            className="relative mt-1 lg:mt-2 flex-shrink-0"
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{
@@ -176,41 +176,41 @@ export const BetterInfographic: React.FC = () => {
                                                 stiffness: 200
                                             }}
                                         >
-                                            <div className="w-3 h-3 rounded-full bg-gradient-to-br from-primary to-purple-500 shadow-lg" />
-                                            <div className="absolute inset-0 w-3 h-3 rounded-full bg-gradient-to-br from-primary to-purple-500 animate-ping opacity-30" />
+                                            <div className="w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-gradient-to-br from-primary to-purple-500 shadow-lg" />
+                                            <div className="absolute inset-0 w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-gradient-to-br from-primary to-purple-500 animate-ping opacity-30" />
                                         </motion.div>
 
                                         {/* Content card */}
                                         <motion.div
-                                            className="flex-1 bg-card/60 backdrop-blur-sm border border-primary/10 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-primary/30"
+                                            className="flex-1 bg-card/60 backdrop-blur-sm border border-primary/10 rounded-lg lg:rounded-xl p-2 lg:p-4 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-primary/30"
                                             whileHover={{ y: -2 }}
                                         >
                                             <motion.div
-                                                className="mb-4"
+                                                className="mb-2 lg:mb-4"
                                                 variants={itemVariants}
                                             >
-                                                <h4 className="text-lg font-semibold text-foreground mb-1">
+                                                <h4 className="text-sm lg:text-lg font-semibold text-foreground mb-1">
                                                     {category.title}
                                                 </h4>
-                                                <p className="text-sm text-muted-foreground">
+                                                <p className="text-xs lg:text-sm text-muted-foreground hidden lg:block">
                                                     {category.description}
                                                 </p>
                                             </motion.div>
 
                                             <motion.div
-                                                className="grid grid-cols-3 gap-3"
+                                                className="grid grid-cols-3 gap-1 lg:gap-3"
                                                 variants={containerVariants}
                                             >
                                                 {category.images.map((img, index) => (
                                                     <div
                                                         key={img.alt}
-                                                        className="relative aspect-square bg-background/80 rounded-lg p-2  transition-all duration-300 border border-transparent bg-white/20 hover:border-primary/30"
+                                                        className="relative aspect-square bg-background/80 rounded p-0.5 lg:p-2 transition-all duration-300 border border-transparent bg-white/20 hover:border-primary/30"
                                                     >
                                                         <Image
                                                             src={img.src}
                                                             alt={img.alt}
                                                             fill
-                                                            className="object-contain p-1"
+                                                            className="object-contain p-0.5 lg:p-1"
                                                         />
                                                     </div>
                                                 ))}
@@ -225,20 +225,20 @@ export const BetterInfographic: React.FC = () => {
                     {/* Helix Side */}
                     <motion.div
                         variants={helixVariants}
-                        className="relative flex flex-col"
+                        className="relative flex flex-col order-1 lg:order-2"
                     >
                         <motion.div
                             variants={itemVariants}
-                            className="flex items-center space-x-4 mb-8"
+                            className="flex items-center space-x-4 mb-4 lg:mb-8"
                         >
-                            <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
+                            <h3 className="text-lg lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
                                 Helix Setup
                             </h3>
                             <div className="h-px flex-grow bg-gradient-to-r from-border via-border/50 to-transparent"></div>
                         </motion.div>
 
                         <motion.div
-                            className="relative bg-card/60 backdrop-blur-sm border border-primary/10 rounded-2xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-500 flex-1 flex flex-col items-center justify-center group overflow-hidden"
+                            className="relative bg-card/60 backdrop-blur-sm border border-primary/10 rounded-xl lg:rounded-2xl p-4 lg:p-8 shadow-2xl hover:shadow-3xl transition-all duration-500 flex-1 flex flex-col items-center justify-center group overflow-hidden min-h-[200px] lg:min-h-[400px]"
                             whileHover={{
                                 scale: 1.02
                             }}
@@ -250,8 +250,8 @@ export const BetterInfographic: React.FC = () => {
                             {/* Background gradient effect */}
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                            {/* Floating particles effect */}
-                            <div className="absolute inset-0 overflow-hidden">
+                            {/* Floating particles effect - hidden on mobile */}
+                            <div className="absolute inset-0 overflow-hidden hidden lg:block">
                                 {[...Array(6)].map((_, i) => (
                                     <motion.div
                                         key={i}
@@ -287,7 +287,7 @@ export const BetterInfographic: React.FC = () => {
                                     type: "spring",
                                     stiffness: 150
                                 }}
-                                className="relative w-40 h-40 mb-6 z-10"
+                                className="relative w-16 h-16 lg:w-40 lg:h-40 mb-3 lg:mb-6 z-10"
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
                                 style={{
@@ -317,21 +317,21 @@ export const BetterInfographic: React.FC = () => {
                                 variants={itemVariants}
                             >
                                 <motion.h4
-                                    className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-foreground/80 mb-4"
+                                    className="text-base lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-foreground/80 mb-2 lg:mb-4"
                                     whileHover={{ scale: 1.05 }}
                                 >
                                     One Simple Solution
                                 </motion.h4>
 
                                 <motion.p
-                                    className="text-base font-medium text-muted-foreground mb-6 leading-relaxed"
+                                    className="text-xs lg:text-base font-medium text-muted-foreground mb-3 lg:mb-6 leading-relaxed"
                                     variants={itemVariants}
                                 >
                                     Replace your complex stack with a single platform
                                 </motion.p>
 
                                 <motion.div
-                                    className="space-y-3 hidden md:block"
+                                    className="space-y-1 lg:space-y-3 hidden lg:block"
                                     variants={containerVariants}
                                 >
                                     {[
@@ -342,7 +342,7 @@ export const BetterInfographic: React.FC = () => {
                                         <motion.div
                                             key={index}
                                             variants={itemVariants}
-                                            className="flex items-center gap-3 text-sm text-foreground/80 bg-background/50 rounded-lg p-3 border border-border/30 shadow-sm hover:shadow-md transition-all duration-300"
+                                            className="flex items-center gap-2 lg:gap-3 text-xs lg:text-sm text-foreground/80 bg-background/50 rounded-lg p-2 lg:p-3 border border-border/30 shadow-sm hover:shadow-md transition-all duration-300"
                                             whileHover={{
                                                 x: 5,
                                                 backgroundColor: "rgba(99, 102, 241, 0.05)"

@@ -398,10 +398,29 @@ const UseCases = () => {
                 >
                     {/* Grid of Use Case Buttons */}
                     <motion.div
-                        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-16"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-16"
                     >
-                        {/* Show limited items on small screens, all items on large+ screens */}
-                        <div className="contents lg:hidden">
+                        {/* Show 3 items on xs screens */}
+                        <div className="contents sm:hidden">
+                            {(showAll ? useCases : useCases.slice(0, 3)).map((useCase, index) => (
+                                <motion.div
+                                    key={useCase.title}
+                                    variants={buttonVariants}
+                                    custom={index}
+                                >
+                                    <UseCaseButton
+                                        title={useCase.title}
+                                        icon={useCase.icon}
+                                        isSelected={selectedUseCase === index}
+                                        onClick={() => setSelectedUseCase(index)}
+                                        index={index}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* Show 6 items on sm screens */}
+                        <div className="contents hidden sm:contents lg:hidden">
                             {(showAll ? useCases : useCases.slice(0, 6)).map((useCase, index) => (
                                 <motion.div
                                     key={useCase.title}

@@ -83,7 +83,7 @@ export function Hero() {
 
     return (
         <motion.div
-            className="min-h-[1080px] py-16 flex items-center relative overflow-hidden"
+            className="min-h-screen sm:min-h-[1080px] py-12 sm:py-16 flex items-center relative overflow-hidden"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -94,9 +94,9 @@ export function Hero() {
             </div>
 
             <div className="container mx-auto px-4 sm:px-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
                     <motion.div
-                        className="flex flex-col relative w-full col-span-2"
+                        className="flex flex-col relative w-full col-span-1 sm:col-span-2"
                         variants={containerVariants}
                     >
                         {/* Radial gradient underlay for better contrast with the graph */}
@@ -106,12 +106,12 @@ export function Hero() {
                             transition={{ duration: 0.5, ease: "easeOut", delay: 1 }}
                         />
                         <motion.div
-                            className="flex flex-row space-x-4"
+                            className="flex flex-col sm:flex-row sm:space-x-4"
                             variants={pillVariants}
                         >
                             {/* Y Combinator Badge */}
                             <motion.div
-                                className="flex items-center gap-2 mb-6 bg-[#FF5733]/10 dark:bg-[#FF5733]/5 w-fit px-3 py-1.5 rounded-full border border-[#FF5733]/20"
+                                className="flex items-center gap-2 mb-4 sm:mb-6 bg-[#FF5733]/10 dark:bg-[#FF5733]/5 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-[#FF5733]/20"
 
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -120,14 +120,14 @@ export function Hero() {
                                 <img
                                     src="/yc-logo.png"
                                     alt="Y Combinator Logo"
-                                    className="w-5 h-5"
+                                    className="w-4 sm:w-5 h-4 sm:h-5"
                                 />
-                                <span className="text-sm font-medium text-[#FF5733] dark:text-[#FF5733]/90">
+                                <span className="text-xs sm:text-sm font-medium text-[#FF5733] dark:text-[#FF5733]/90">
                                     Backed by Y Combinator
                                 </span>
                             </motion.div>
                             <motion.div
-                                className="flex items-center gap-2 mb-6 bg-[#76b900]/10 dark:bg-[#76b900]/5 w-fit px-3 py-1.5 rounded-full pointer border border-[#76b900]/20"
+                                className="flex items-center gap-2 mb-4 sm:mb-6 bg-[#76b900]/10 dark:bg-[#76b900]/5 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-full cursor-pointer border border-[#76b900]/20"
 
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -137,9 +137,9 @@ export function Hero() {
                                 <img
                                     src="/nvidia.png"
                                     alt="Nvidia Logo"
-                                    className="h-5"
+                                    className="h-4 sm:h-5"
                                 />
-                                <span className="text-sm font-medium text-[#76b900] dark:text-[#76b900]/90">
+                                <span className="text-xs sm:text-sm font-medium text-[#76b900] dark:text-[#76b900]/90">
                                     Backed by NVIDIA
                                 </span>
                             </motion.div>
@@ -154,28 +154,28 @@ export function Hero() {
                         </motion.div>
 
                         <motion.h1
-                            className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-6 "
+                            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-4 sm:mb-6 leading-tight px-2 sm:px-0"
                             variants={headingVariants}
                         >
                             Unified <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span> Database for AI Retrieval
                         </motion.h1>
 
                         <motion.p
-                            className="text-xl text-foreground bg-gradient-to-r bg-clip-text from-foreground to-foreground/80 mb-8 mr-16"
+                            className="text-base sm:text-xl text-foreground bg-gradient-to-r bg-clip-text from-foreground to-foreground/80 mb-6 sm:mb-8 sm:mr-16 leading-relaxed px-2 sm:px-0 max-w-2xl"
                             variants={paragraphVariants}
                         >
                             Get more relevant context for AI with the fastest and most cost-effective graph-vector database, built in Rust.
                         </motion.p>
 
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 px-2 sm:px-0">
                             <motion.div
-                                className="flex flex-col"
+                                className="flex flex-col w-full sm:w-auto"
                                 variants={buttonVariants}
                                 custom={1.2}
                             >
                                 <Button
                                     size="lg"
-                                    className="px-8 py-6 lg:py-8 text-xl lg:text-2xl flex items-center gap-2 border-white/10 hover:bg-white/5"
+                                    className="px-6 sm:px-8 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl flex items-center gap-2 border-white/10 hover:bg-white/5 w-full sm:w-auto"
                                     variant="secondary"
                                     asChild
                                 >
@@ -184,7 +184,7 @@ export function Hero() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        <Github className="w-5 h-5" />
+                                        <Github className="w-4 sm:w-5 h-4 sm:h-5" />
                                         {stars !== null && (
                                             <span className="ml-2">
                                                 {formatNumber(stars)}
@@ -197,14 +197,15 @@ export function Hero() {
                             <motion.div
                                 variants={buttonVariants}
                                 custom={1.5}
+                                className="w-full sm:w-auto"
                             >
                                 <Button
-                                    className="px-8 py-6 lg:py-8 text-xl lg:text-2xl mb-4 sm:mb-0 w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
+                                    className="px-6 sm:px-8 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-0 w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
                                 ><a
                                     href="https://cal.com/helix-db/30min"
-                                    className="flex items-center gap-4"
+                                    className="flex items-center gap-3 sm:gap-4"
                                 >
-                                        <Calendar className="w-5 h-5" />
+                                        <Calendar className="w-4 sm:w-5 h-4 sm:h-5" />
                                         <span>Book a Call</span>
                                     </a>
                                 </Button>

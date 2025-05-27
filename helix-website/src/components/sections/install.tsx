@@ -117,7 +117,7 @@ interface SectionLayoutProps {
 }
 
 const SectionLayout = ({ header, content }: SectionLayoutProps) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 p-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-16 p-4 md:p-8">
         {header}
         {content}
     </div>
@@ -222,7 +222,7 @@ export function Install() {
                     </Button>
                 </div>
                 <motion.div
-                    className="grid grid-cols-3 gap-8 lg:gap-8 items-center max-w-8xl mx-auto"
+                    className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-8 items-center max-w-8xl mx-auto"
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
@@ -232,14 +232,14 @@ export function Install() {
                         <Card
                             key={text}
                             onClick={() => handleStepClick(index)}
-                            className={`relative overflow-hidden cursor-pointer col-span-1 p-8 group space-y-4 transition-all duration-1000 hover:opacity-100 select-none ${index === activeStep
+                            className={`relative overflow-hidden cursor-pointer col-span-1 p-4 sm:p-8 group space-y-2 sm:space-y-4 transition-all duration-1000 hover:opacity-100 select-none ${index === activeStep
                                 ? "shadow-[inset_0_0_60px_rgba(255,255,255,0.1)] shadow-white/5"
                                 : "border-transparent opacity-30"
                                 }`}
                         >
-                            <div className="space-y-4">
-                                <Icon className="w-8 h-8 group-hover:scale-[1.2] transition-transform" />
-                                <p className="text-xl md:text-2xl font-bold">{text}</p>
+                            <div className="space-y-2 sm:space-y-4 flex flex-col items-center sm:items-start">
+                                <Icon className="w-6 h-6 sm:w-8 sm:h-8 group-hover:scale-[1.2] transition-transform" />
+                                <p className="text-sm sm:text-xl md:text-2xl font-bold hidden sm:block">{text}</p>
                             </div>
                             <div className={`hidden md:block z-[-1] absolute transition duration-1000 bottom-[-25px] left-1/2 group-hover:scale-[1.05]`}>
                                 <CodeBlock

@@ -237,13 +237,13 @@ export function ComparisonSection() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-8xl mx-auto grid-flow-dense">
                     {/* Hybrid Query Traversals - spans two columns on top row */}
                     <motion.div
-                        className="p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-row min-h-[380px] col-span-1 md:col-span-2 group overflow-hidden"
+                        className="p-4 sm:p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col sm:flex-row min-h-[380px] col-span-1 md:col-span-2 group overflow-hidden"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <div className="flex flex-col gap-6 w-2/3 md:w-1/2 pr-6 ">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                        <div className="flex flex-col gap-6 w-full sm:w-2/3 lg:w-1/2 sm:pr-6 z-[1000] drop-shadow-xl">
+                            <div className="flex items-center gap-4 sm:mb-6">
+                                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors drop-shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                                     {featureCards[0].icon}
                                 </div>
                                 <div>
@@ -252,13 +252,21 @@ export function ComparisonSection() {
                             </div>
                             {/* Left side - Code with custom highlighting */}
                             <div className="flex-1 flex flex-col gap-6">
-                                <p className="text-muted-foreground mb-4 text-base leading-relaxed">{featureCards[0].description}</p>
-                                <div className="bg-background/90 border border-white/20 rounded-lg p-3 overflow-hidden">
+                                <div className="relative ">
+                                    <p className="text-muted-foreground mb-4 text-base leading-relaxed sm:pr-0 pr-24 z-[1000]">{featureCards[0].description}</p>
+                                    {/* Mobile graph positioned to the right of paragraph */}
+                                    <div className="absolute top-0 -right-8 w-64 h-48 sm:hidden overflow-visible z-[-100] ">
+                                        <div className="scale-90 origin-top-left">
+                                            <GraphVisualization />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="bg-background/90 border border-white/20 rounded-lg p-3 overflow-hidden z-[1000]">
                                     <pre className="text-xs font-mono leading-relaxed">
                                         <div className="text-cyan-400">QUERY <span className="text-emerald-400">findSimilarFriends</span><span className="text-slate-200">(userID: String, queryVec: Vector) =&gt;</span></div>
                                         <div className="mt-2">
                                             <span className="text-slate-200">similar &lt;- </span>
-                                            <span className="bg-purple-500/30 text-purple-200 px-2 py-1 rounded">V&lt;User&gt;::VectorSearch</span>
+                                            <span className="bg-purple-500/30 text-purple-200 px-2 py-1 rounded">SearchV</span>
                                             <span className="text-slate-200">(queryVec, topK: 5)</span>
                                         </div>
                                         <div className="mt-1">
@@ -274,9 +282,9 @@ export function ComparisonSection() {
                             </div>
                         </div>
 
-                        <div className="w-1/3 md:w-1/2 flex flex-col items-center justify-center pl-4">
+                        <div className="w-full sm:w-1/3 lg:w-1/2 flex-col z-[0] items-center justify-center sm:pl-4 mt-6 sm:mt-0 hidden sm:flex">
                             <GraphVisualization />
-                            <div className="flex justify-between w-full mt-2 px-4 md:flex-row flex-col space-y-4">
+                            <div className="flex  w-full mt-2 sm:flex-row flex-col space-x-4 hidden sm:flex">
                                 <div className="flex items-center gap-2 flex-row">
                                     <div className="w-4 h-4 bg-purple-500 rounded"></div>
                                     <span className="text-purple-200 text-xs font-semibold">Vector Entry</span>
@@ -291,7 +299,7 @@ export function ComparisonSection() {
 
                     {/* Type-Safety - spans two rows on the right */}
                     <motion.div
-                        className="p-8 rounded-xl border shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] md:row-span-2 lg:col-start-3 md:col-span-1 group"
+                        className="px-4 pt-4 sm:p-8 rounded-xl border shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] md:row-span-2 lg:col-start-3 md:col-span-1 group"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
@@ -330,7 +338,7 @@ error: 'Know' is not a valid edge type (in QUERY named 'get_user*)
                             )}
 
                             {/* Success deployment output */}
-                            <div className="flex flex-col overflow-hidden bg-black rounded-xl border border-foreground/30 shadow-[0_0_30px_rgba(0,255,0,0.1)] mb-6 w-3/2 self-end hidden md:block">
+                            <div className="flex flex-col overflow-hidden bg-black rounded-xl border border-foreground/30 shadow-[0_0_30px_rgba(0,255,0,0.1)] w-3/2 self-end hidden md:block">
                                 <p className="text-md text-foreground/90 px-4 py-2">Deploy</p>
                                 <pre className="bg-zinc-900 flex flex-row p-4 text-sm font-mono overflow-x-auto">
                                     <code className="pr-4 select-none">
@@ -358,7 +366,7 @@ Successfully started Helix instance
 
                     {/* Lower Costs - bottom left */}
                     <motion.div
-                        className="p-8 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] group"
+                        className="p-4 sm:p-8 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] group"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
@@ -375,45 +383,32 @@ Successfully started Helix instance
 
                         <div className="flex-1 flex flex-col justify-between">
                             {/* Cost Savings Visualization */}
-                            <div className=" grid grid-cols-2 gap-4">
-                                {/* Database Comparison */}
-                                <div className="">
-                                    <div className="text-sm font-medium text-muted-foreground mb-3 text-center">Database Infrastructure</div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="relative group">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-red-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
-                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-red-500/20 aspect-square flex flex-col justify-center shadow-lg">
-                                                <div className="text-xl font-bold text-red-400 mb-2">2+</div>
-                                                <div className="text-xs text-center text-muted-foreground leading-tight">Separate Databases</div>
-                                            </div>
-                                        </div>
-                                        <div className="relative group">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-emerald-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
-                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-emerald-500/20 aspect-square flex flex-col justify-center shadow-lg">
-                                                <div className="text-xl font-bold text-emerald-400 mb-2">1</div>
-                                                <div className="text-xs text-center text-emerald-300 leading-tight">Unified Database</div>
-                                            </div>
+                            <div className="space-y-6 my-auto">
+                                <div className="grid grid-cols-3 gap-4 items-stretch">
+                                    {/* One Database */}
+                                    <div className="relative group h-full">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-transparent to-emerald-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                                        <div className="text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-emerald-500/20 aspect-square flex flex-col justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-emerald-500/40 h-full min-h-[80px]">
+                                            <div className="text-2xl font-bold text-emerald-400 mb-2">1</div>
+                                            <div className="text-xs text-emerald-300 leading-tight">Database</div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Storage Usage Comparison */}
-                                <div>
-                                    <div className="text-sm font-medium text-muted-foreground mb-3 text-center">Storage Usage</div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="relative group">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-transparent to-orange-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
-                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-orange-500/20 aspect-square flex flex-col justify-center shadow-lg">
-                                                <div className="text-xl font-bold text-orange-400 mb-2">100%</div>
-                                                <div className="text-xs text-center text-muted-foreground leading-tight">Duplicated Data</div>
-                                            </div>
+                                    {/* One Cloud */}
+                                    <div className="relative group h-full">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-blue-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                                        <div className="text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-blue-500/20 aspect-square flex flex-col justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-blue-500/40 h-full min-h-[80px]">
+                                            <div className="text-2xl font-bold text-blue-400 mb-2">1</div>
+                                            <div className="text-xs text-blue-300 leading-tight">Cloud</div>
                                         </div>
-                                        <div className="relative group">
-                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-blue-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60"></div>
-                                            <div className="text-center py-4 bg-background/80 backdrop-blur-sm rounded-xl border border-blue-500/20 aspect-square flex flex-col justify-center shadow-lg">
-                                                <div className="text-xl font-bold text-blue-400 mb-2">50%</div>
-                                                <div className="text-xs text-blue-300 leading-tight">Shared Storage</div>
-                                            </div>
+                                    </div>
+
+                                    {/* 50% Less Data */}
+                                    <div className="relative group h-full">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-transparent to-purple-500/5 rounded-xl blur-lg scale-105 -z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                                        <div className="text-center p-4 bg-background/80 backdrop-blur-sm rounded-xl border border-purple-500/20 aspect-square flex flex-col justify-center shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-purple-500/40 h-full min-h-[80px]">
+                                            <div className="text-2xl font-bold text-purple-400 mb-2">50%</div>
+                                            <div className="text-xs text-purple-300 leading-tight">Less Data</div>
                                         </div>
                                     </div>
                                 </div>
@@ -423,7 +418,7 @@ Successfully started Helix instance
 
                     {/* High Speeds - bottom center */}
                     <motion.div
-                        className="p-8 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex shadow-[0_0_30px_rgba(0,0,0,0.5)] flex-col min-h-[380px] lg:col-start-2 group"
+                        className="p-4 sm:p-8 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex shadow-[0_0_30px_rgba(0,0,0,0.5)] flex-col min-h-[380px] lg:col-start-2 group"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
