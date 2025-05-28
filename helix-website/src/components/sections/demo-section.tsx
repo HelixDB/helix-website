@@ -124,7 +124,7 @@ export function DemoSection() {
                                 asChild
                             >
                                 <a
-                                    href="https://calendly.com/helixdb/ceo-consultation"
+                                    href="https://cal.com/helix-db/30min"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center justify-center gap-3"
