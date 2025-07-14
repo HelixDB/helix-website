@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/header";
@@ -38,6 +39,7 @@ const itemVariants = {
 
 export default function WaitlistPage() {
   const [email, setEmail] = useState("");
+  const [useCase, setUseCase] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -46,13 +48,16 @@ export default function WaitlistPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://script.google.com/a/macros/helix-db.com/s/AKfycbzjLnsS-PR87qfrxrcKYJNRBQeodB8-eWN5JfMCDh8xQ5Lw_HJUUZixg1QDwi1w45Cduw/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzWh0JVN7fzJJqGTBpIeAq4KEj-FF5P3PJqjVo-VDi3zrugDJtzVv_3EMU2vwVf79OSyQ/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email,
+          useCase
+        }),
       });
 
       setSuccess(true);
@@ -90,7 +95,7 @@ export default function WaitlistPage() {
                 Join the Waitlist
               </h1>
               <p className="text-lg text-muted-foreground">
-                Be among the first to experience HelixDB's managed service. Sign up to get early access and stay updated on our development progress.
+                Be among the first to experience HelixDB's managed cloud service. Sign up to get early access and stay updated on our development progress.
               </p>
             </motion.div>
 
@@ -120,6 +125,19 @@ export default function WaitlistPage() {
                       className="h-12 text-base"
                     />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="useCase">What's your primary use case for HelixCloud?</Label>
+                    <Textarea
+                      id="useCase"
+                      placeholder="Tell us about your specific use case (e.g., real-time analytics, data warehousing, machine learning, etc.)"
+                      value={useCase}
+                      onChange={(e) => setUseCase(e.target.value)}
+                      required
+                      className="min-h-[100px] text-base"
+                    />
+                  </div>
+
                   <Button
                     type="submit"
                     className="w-full h-12 text-base"
