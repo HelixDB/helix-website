@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   const imageUrl = post.featured_image || post.coverImage || post.cover || post.image
   const publishedTime = new Date(post.publishedAt).toISOString()
-  const modifiedTime = post.updatedAt ? new Date(post.updatedAt).toISOString() : publishedTime
+  const modifiedTime = publishedTime
 
   return {
     title: `${post.title} | HelixDB Blog`,
@@ -95,7 +95,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     description: post.excerpt || post.content?.replace(/<[^>]*>/g, '').substring(0, 160),
     image: post.featured_image || post.coverImage || post.cover || post.image,
     datePublished: new Date(post.publishedAt).toISOString(),
-    dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : new Date(post.publishedAt).toISOString(),
+    dateModified: new Date(post.publishedAt).toISOString(),
     author: {
       '@type': 'Person',
       name: post.author?.name || 'HelixDB Team',

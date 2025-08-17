@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogRoutes = posts.map((post) => ({
     url: `https://helix-db.com/blog/${post.slug}`,
-    lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(post.publishedAt),
+    lastModified: new Date(post.publishedAt),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
