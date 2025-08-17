@@ -1,0 +1,19 @@
+/* Override Prism styles to remove background, border, shadows, and margins */
+code[class*="language-"],
+pre[class*="language-"] {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+pre[class*="language-"] {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
