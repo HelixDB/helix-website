@@ -73,7 +73,8 @@
 }
 
 .prose-blog blockquote {
-  @apply border-l-4 border-blue-500 pl-4 py-2 italic text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-950/20 rounded-r-lg mb-4;
+  @apply border-l-4 border-neutral-300 dark:border-neutral-500 pl-6 py-4 text-neutral-600 dark:text-neutral-300 mb-6 bg-neutral-100 dark:bg-neutral-800;
+  font-style: normal; /* Remove italic */
 }
 
 .prose-blog a {
@@ -81,7 +82,7 @@
 }
 
 .prose-blog hr {
-  @apply my-8 border-gray-200 dark:border-gray-700;
+  @apply my-8 border-neutral-200 dark:border-neutral-700;
 }
 
 .prose-blog strong {

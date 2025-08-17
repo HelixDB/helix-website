@@ -25,7 +25,7 @@ export interface BlogPost {
 export async function getBlogPosts(): Promise<BlogPost[]> {
   try {
     const response = await fetch(`${MARBLE_API_URL}/v1/${MARBLE_WORKSPACE_KEY}/posts`, {
-      next: { revalidate: 3600 } // Cache for 1 hour
+      next: { revalidate: 60 } // Cache for 1 minute (reduced for testing)
     })
     
     if (!response.ok) {
@@ -83,8 +83,9 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   try {
+    console.log(`Fetching post with slug: ${slug}`)
     const response = await fetch(`${MARBLE_API_URL}/v1/${MARBLE_WORKSPACE_KEY}/posts/${slug}`, {
-      next: { revalidate: 3600 } // Cache for 1 hour
+      next: { revalidate: 60 } // Cache for 1 minute (reduced for testing)
     })
     
     if (!response.ok) {
@@ -93,9 +94,13 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     }
     
     const data = await response.json()
+    console.log(`MarbleCMS single post response for ${slug}:`, JSON.stringify(data, null, 2))
     const post = data.post || data
     
-    if (!post) return null
+    if (!post) {
+      console.log('No post data found in response')
+      return null
+    }
     
     // Handle different author field structures
     let author = null

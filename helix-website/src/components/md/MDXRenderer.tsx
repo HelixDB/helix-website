@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Heading } from './Heading'
 import { SyntaxHighlighter } from './SyntaxHighlighter'
 
@@ -10,8 +10,9 @@ interface MDXRendererProps {
 }
 
 // Enhanced HTML parser that converts to React components
-function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) => void, copiedCode: string | null): React.ReactNode[] {
+function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) => void, copiedCode: string | null, isClient: boolean): React.ReactNode[] {
   const components: React.ReactNode[] = []
+
 
   // Clean up HTML entities first, but preserve code blocks
   let processed = html
@@ -19,12 +20,13 @@ function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) 
     .replace(/&quot;/gi, '"')
     .replace(/&#x27;/gi, "'")
     .replace(/&#x2F;/gi, '/')
+    .replace(/&gt;/gi, '>') // Also decode > characters
 
   // Handle code blocks and tables first (they span multiple paragraphs)
   const codeBlockRegex = /<p>\s*```([^<]*)<\/p>([\s\S]*?)<p>\s*```\s*<\/p>/gi
 
-  // Find all special blocks (code blocks and tables)
-  const specialBlocks: { start: number, end: number, type: 'code' | 'table', content: any }[] = []
+  // Find all special blocks (code blocks, tables, and blockquotes)
+  const specialBlocks: { start: number, end: number, type: 'code' | 'table' | 'blockquote', content: any }[] = []
 
   let match
   // Find code blocks
@@ -51,24 +53,42 @@ function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) 
     })
   }
 
-  // Find tables - look for consecutive paragraphs with pipe separators
+  // Find tables and blockquotes - look for consecutive paragraphs
   const paragraphs = processed.split(/<\/p>/gi)
   let currentIndex = 0
   let tableRows: string[] = []
   let tableStart = -1
+  let blockquoteLines: string[] = []
+  let blockquoteStart = -1
 
   for (let i = 0; i < paragraphs.length; i++) {
     const paragraph = paragraphs[i].replace(/<p[^>]*>/gi, '').trim()
     const nextIndex = currentIndex + paragraphs[i].length + 4 // +4 for </p>
+    
 
+    // Check for table rows
     if (paragraph.includes('|') && paragraph.startsWith('|') && paragraph.endsWith('|')) {
+      // End any ongoing blockquote
+      if (blockquoteLines.length > 0) {
+        specialBlocks.push({
+          start: blockquoteStart,
+          end: currentIndex,
+          type: 'blockquote',
+          content: { lines: [...blockquoteLines] }
+        })
+        blockquoteLines = []
+        blockquoteStart = -1
+      }
+      
       if (tableRows.length === 0) {
         tableStart = currentIndex
       }
       tableRows.push(paragraph)
-    } else if (tableRows.length > 0) {
-      // End of table found
-      if (tableRows.length >= 2) { // Need at least header + separator
+    }
+    // Check for blockquote lines
+    else if (paragraph.startsWith('>')) {
+      // End any ongoing table
+      if (tableRows.length >= 2) {
         specialBlocks.push({
           start: tableStart,
           end: currentIndex,
@@ -78,18 +98,54 @@ function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) 
       }
       tableRows = []
       tableStart = -1
+      
+      if (blockquoteLines.length === 0) {
+        blockquoteStart = currentIndex
+      }
+      blockquoteLines.push(paragraph)
+    }
+    // Regular content - end any ongoing special blocks
+    else {
+      if (tableRows.length >= 2) {
+        specialBlocks.push({
+          start: tableStart,
+          end: currentIndex,
+          type: 'table',
+          content: { rows: [...tableRows] }
+        })
+      }
+      if (blockquoteLines.length > 0) {
+        specialBlocks.push({
+          start: blockquoteStart,
+          end: currentIndex,
+          type: 'blockquote',
+          content: { lines: [...blockquoteLines] }
+        })
+      }
+      tableRows = []
+      tableStart = -1
+      blockquoteLines = []
+      blockquoteStart = -1
     }
 
     currentIndex = nextIndex
   }
 
-  // Handle final table if it ends at document end
+  // Handle final blocks if they end at document end
   if (tableRows.length >= 2) {
     specialBlocks.push({
       start: tableStart,
       end: processed.length,
       type: 'table',
       content: { rows: tableRows }
+    })
+  }
+  if (blockquoteLines.length > 0) {
+    specialBlocks.push({
+      start: blockquoteStart,
+      end: processed.length,
+      type: 'blockquote',
+      content: { lines: blockquoteLines }
     })
   }
 
@@ -116,28 +172,30 @@ function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) 
         <div key={key++} className="bg-neutral-900 rounded-xl overflow-hidden my-6 border border-neutral-700">
           {/* Code content with copy button in top-right */}
           <div className="overflow-x-auto relative">
-            <button 
-              onClick={() => {
-                const codeElement = document.getElementById(codeId);
-                if (codeElement) {
-                  navigator.clipboard.writeText(codeElement.textContent || '');
-                  setCopiedCode(codeId);
-                  setTimeout(() => setCopiedCode(null), 2000);
-                }
-              }}
-              className="absolute top-3 right-3 p-1.5 hover:bg-neutral-700 rounded text-neutral-400 hover:text-neutral-200 transition-colors z-10"
-              title="Copy code"
-            >
-              {codeId === copiedCode ? (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              )}
-            </button>
+            {isClient && (
+              <button 
+                onClick={() => {
+                  const codeElement = document.getElementById(codeId);
+                  if (codeElement) {
+                    navigator.clipboard.writeText(codeElement.textContent || '');
+                    setCopiedCode(codeId);
+                    setTimeout(() => setCopiedCode(null), 2000);
+                  }
+                }}
+                className="absolute top-3 right-3 p-1.5 hover:bg-neutral-700 rounded text-neutral-400 hover:text-neutral-200 transition-colors z-10"
+                title="Copy code"
+              >
+                {codeId === copiedCode ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                )}
+              </button>
+            )}
             <SyntaxHighlighter 
               code={block.content.code}
               language={block.content.language}
@@ -148,6 +206,8 @@ function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) 
       )
     } else if (block.type === 'table') {
       components.push(renderTable(block.content.rows, key++))
+    } else if (block.type === 'blockquote') {
+      components.push(renderBlockquote(block.content.lines, key++))
     }
 
     lastIndex = block.end
@@ -160,6 +220,26 @@ function parseHTMLToComponents(html: string, setCopiedCode: (id: string | null) 
   }
 
   return components
+}
+
+function renderBlockquote(lines: string[], key: number): React.ReactNode {
+  if (lines.length === 0) return null
+
+  return (
+    <blockquote key={key} className="border-l-4 border-neutral-400 dark:border-neutral-600 pl-6 py-4 my-6">
+      {lines.map((line, index) => {
+        // Remove the > markers and extract content
+        const content = line.replace(/^>+\s?/, '').trim()
+        const processedContent = processInlineStyles(content)
+        
+        return (
+          <p key={index} className="mb-2 last:mb-0 leading-relaxed font-normal not-italic">
+            <span dangerouslySetInnerHTML={{ __html: processedContent }} />
+          </p>
+        )
+      })}
+    </blockquote>
+  )
 }
 
 function renderTable(rows: string[], key: number): React.ReactNode {
@@ -248,26 +328,6 @@ function parseRegularContent(html: string, startKey: number): React.ReactNode[] 
       return
     }
 
-    // Check for blockquotes (>, >>, >>>, etc.)
-    const blockquoteMatch = content.match(/^(>+)\s*(.*)/)
-    if (blockquoteMatch) {
-      const level = blockquoteMatch[1].length
-      const quoteContent = blockquoteMatch[2]
-      const indentLevel = Math.min(level, 3) // Cap at 3 levels
-
-      components.push(
-        <blockquote
-          key={key}
-          className="border-l-4 border-blue-500 pl-4 py-2 my-4 bg-blue-50 dark:bg-blue-950/20 rounded-r-lg"
-          style={{ marginLeft: `${(indentLevel - 1) * 20}px` }}
-        >
-          <p className="italic text-gray-700 dark:text-gray-300 mb-0">
-            <span dangerouslySetInnerHTML={{ __html: processInlineStyles(quoteContent) }} />
-          </p>
-        </blockquote>
-      )
-      return
-    }
 
     // Check for list items
     if (content.match(/^-\s/)) {
@@ -292,15 +352,30 @@ function parseRegularContent(html: string, startKey: number): React.ReactNode[] 
 }
 
 function processInlineStyles(content: string): string {
-  return content
-    // Style inline code - let CSS handle the styling for consistency
-    .replace(/<code>/gi, '<code>')
-    // Style strong
-    .replace(/<strong>/gi, '<strong class="font-semibold text-gray-900 dark:text-gray-100">')
-    // Style em
-    .replace(/<em>/gi, '<em class="italic text-gray-800 dark:text-gray-200">')
-    // Style links
-    .replace(/<a\s+href="([^"]*)"[^>]*>/gi, '<a href="$1" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 transition-colors">')
+  // First handle the MarbleCMS mixed format: [text](<a href="url">...</a>)
+  let processed = content
+  
+  // Extract markdown links with embedded HTML links
+  const marbleLinkRegex = /\[([^\]]+)\]\((<a[^>]*href=["\\]*([^"\\]+)["\\]*[^>]*>.*?<\/a>)\)/g
+  processed = processed.replace(marbleLinkRegex, (match, linkText, htmlLink, url) => {
+    // Clean up the URL (remove escape characters if present)
+    const cleanUrl = url.replace(/\\/g, '')
+    return `<a href="${cleanUrl}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 transition-colors">${linkText}</a>`
+  })
+  
+  // Then handle standard markdown links [text](url)
+  processed = processed.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 transition-colors">$1</a>')
+  
+  // Style inline code
+  processed = processed.replace(/<code>/gi, '<code>')
+  
+  // Style strong
+  processed = processed.replace(/<strong>/gi, '<strong class="font-semibold text-gray-900 dark:text-gray-100">')
+  
+  // Style em
+  processed = processed.replace(/<em>/gi, '<em class="italic text-gray-800 dark:text-gray-200">')
+  
+  return processed
 }
 
 function generateSlug(text: string): string {
@@ -314,10 +389,15 @@ function generateSlug(text: string): string {
 
 export function MDXRenderer({ content, className }: MDXRendererProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const components = useMemo(() => {
-    return parseHTMLToComponents(content, setCopiedCode, copiedCode)
-  }, [content, copiedCode])
+    return parseHTMLToComponents(content, setCopiedCode, copiedCode, isClient)
+  }, [content, copiedCode, isClient])
 
   return (
     <div className={`prose prose-lg max-w-none dark:prose-invert ${className || ''}`}>
