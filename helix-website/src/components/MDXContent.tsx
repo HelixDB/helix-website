@@ -80,7 +80,7 @@ function CodeBlock({ children, language, className }: CodeBlockProps) {
             setShowCopySuccess(true)
             setTimeout(() => setShowCopySuccess(false), 2000)
         } catch (err) {
-            console.error('Failed to copy:', err)
+            // Failed to copy
         }
     }
 
@@ -187,12 +187,8 @@ export default function MDXContent({ source }: MDXContentProps) {
     useEffect(() => {
         const renderWithMintlify = async () => {
             try {
-                console.log('Raw source content:', source.substring(0, 500) + '...')
-
                 // Process Marble content for better MDX compatibility
                 const processedContent = processMarbleContent(source)
-
-                console.log('Processed content for MDX:', processedContent.substring(0, 500) + '...')
 
                 // Add timeout to prevent hanging
                 const timeoutPromise = new Promise((_, reject) =>
@@ -207,11 +203,9 @@ export default function MDXContent({ source }: MDXContentProps) {
                     throw new Error((resultAny as any).error?.message || 'Failed to serialize MDX content')
                 }
 
-                console.log('MDX serialization successful')
                 setMdxSource(resultAny as SerializeResult)
                 setError(null)
             } catch (err) {
-                console.error('Error with Mintlify MDX:', err)
                 setError(err instanceof Error ? err.message : 'Unknown error occurred')
 
                 // Fallback to basic HTML rendering if MDX fails
