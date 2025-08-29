@@ -1,3 +1,7 @@
+/* Import Prism.js theme and custom overrides */
+@import 'prismjs/themes/prism-dark.css';
+@import '../styles/prism-override.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

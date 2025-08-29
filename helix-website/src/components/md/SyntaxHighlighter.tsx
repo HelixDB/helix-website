@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Prism from 'prismjs'
 
 // Import core languages
@@ -19,10 +20,7 @@ import 'prismjs/components/prism-markdown'
 import 'prismjs/components/prism-jsx'
 import 'prismjs/components/prism-tsx'
 
-// Import standard Prism dark theme
-import 'prismjs/themes/prism-dark.css'
-// Override Prism styles to remove background/border
-import '../../styles/prism-override.css'
+// Prism theme and overrides are imported globally in globals.css
 
 interface SyntaxHighlighterProps {
   code: string
@@ -46,18 +44,48 @@ const languageMap: Record<string, string> = {
 }
 
 export function SyntaxHighlighter({ code, language, id }: SyntaxHighlighterProps) {
+  const [highlightedCode, setHighlightedCode] = useState('')
+  const [isClient, setIsClient] = useState(false)
+  
   // Get the correct language key for Prism
   const prismLanguage = languageMap[language.toLowerCase()] || language.toLowerCase()
-
-  // Use Prism to highlight the code - let Prism handle unsupported languages
-  const highlightedCode = Prism.highlight(
-    code, 
-    Prism.languages[prismLanguage] || Prism.languages.text || {}, 
-    prismLanguage
-  )
   
+  useEffect(() => {
+    setIsClient(true)
+    
+    // Check if the language is supported by Prism
+    const grammar = Prism.languages[prismLanguage]
+    
+    if (grammar) {
+      // Use Prism to highlight the code
+      const highlighted = Prism.highlight(code, grammar, prismLanguage)
+      setHighlightedCode(highlighted)
+    } else {
+      // Just use plain text
+      setHighlightedCode(code)
+    }
+  }, [code, prismLanguage])
+
+  // Check if the language is supported by Prism
+  const grammar = Prism.languages[prismLanguage]
+  
+  if (!isClient || !grammar) {
+    // Server-side render or unsupported language - plain text
+    return (
+      <pre className={`p-4 text-xs font-mono leading-relaxed language-text`}>
+        <code 
+          id={id}
+          className="language-text"
+          style={{ color: '#e5e7eb' }}
+        >
+          {code}
+        </code>
+      </pre>
+    )
+  }
+
   return (
-    <pre className={`p-4 text-sm font-mono leading-relaxed language-${prismLanguage}`}>
+    <pre className={`p-4 text-xs font-mono leading-relaxed language-${prismLanguage}`}>
       <code 
         id={id}
         className={`language-${prismLanguage}`}

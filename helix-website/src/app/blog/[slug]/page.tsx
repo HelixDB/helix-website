@@ -4,9 +4,8 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { BlogImage } from '@/components/blog-image'
 import { AuthorAvatar } from '@/components/author-avatar'
-import { MDXRenderer } from '@/components/md/MDXRenderer'
+import { MDXRendererProse } from '@/components/md/MDXRendererProse'
 import { Metadata } from 'next'
-import '../blog.css'
 
 // Revalidate this page every hour
 export const revalidate = 3600
@@ -181,9 +180,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
         </header>
 
-        <MDXRenderer 
+        <MDXRendererProse 
           content={post.content}
-          className="prose-blog"
         />
       </article>
 
