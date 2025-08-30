@@ -70,7 +70,7 @@ export function PrecompiledQueries() {
             <div className="min-h-[80vh] flex items-center relative py-24  mb-20">
                 <div className="container mx-auto px-4 sm:px-8 relative z-10">
                     <motion.div
-                        className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center max-w-8xl mx-auto"
+                        className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center max-w-7xl mx-auto"
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"

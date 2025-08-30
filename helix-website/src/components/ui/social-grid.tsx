@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Github, Linkedin } from "lucide-react";
 import { FaDiscord, FaXTwitter } from "react-icons/fa6";
 import { SocialCard } from "./social-card";
+import { Card } from "./card";
 
 export function SocialGrid() {
     return (
@@ -13,11 +14,14 @@ export function SocialGrid() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex justify-center lg:justify-end "
+            className="flex justify-center lg:justify-end"
         >
-            <div className="relative w-full">
-
-                <div className="grid grid-cols-2 gap-6 w-full p-6 bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl shadow-xl shadow-white/20 [box-shadow:0_0_100px_rgba(255,255,255,0.1)]">
+            <motion.div
+                className="relative w-full p-8 border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden group"
+                transition={{ duration: 0.2 }}
+            >
+                {/* Social grid */}
+                <div className="grid grid-cols-2 gap-6 w-full relative z-10">
                     <SocialCard
                         href="https://github.com/HelixDB/helix-db"
                         title="GitHub"
@@ -46,7 +50,7 @@ export function SocialGrid() {
                         variant="discord"
                     />
                 </div>
-            </div>
+            </motion.div>
         </motion.div>
     );
 } 

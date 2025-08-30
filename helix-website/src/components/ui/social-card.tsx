@@ -51,9 +51,12 @@ export function SocialCard({
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group relative bg-gradient-to-br from-card to-card/80 border border-border rounded-xl p-5 h-32 overflow-hidden transition-all duration-300 hover:shadow-xl ${styles.hoverBorder} ${styles.hoverShadow}`}
+            className={`group relative bg-background/80 backdrop-blur-sm border rounded-xl p-5 h-32 overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl ${styles.hoverBorder} `}
             whileTap={{ scale: 0.95 }}
         >
+            {/* Subtle gradient overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${styles.gradient} to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 blur-lg scale-105 -z-10`}></div>
+
             <span className="text-lg font-bold text-muted-foreground group-hover:text-foreground transition-colors duration-300 relative z-10">
                 {title}
             </span>

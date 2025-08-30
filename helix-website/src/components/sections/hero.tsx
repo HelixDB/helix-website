@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, Github, PhoneCall, Star } from "lucide-react";
+import { BookOpen, Github } from "lucide-react";
 import { HeroPill } from "@/components/ui/hero-pill";
 import { Graph } from "./graph";
 import { motion } from "framer-motion";
@@ -93,8 +93,8 @@ export function Hero() {
                 <Graph />
             </div>
 
-            <div className="container mx-auto px-4 sm:px-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div className="container max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 items-center">
                     <motion.div
                         className="flex flex-col relative w-full col-span-1 sm:col-span-2"
                         variants={containerVariants}
@@ -111,11 +111,12 @@ export function Hero() {
                         >
                             {/* Y Combinator Badge */}
                             <motion.div
-                                className="flex items-center gap-2 mb-4 sm:mb-6 bg-[#FF5733]/10 dark:bg-[#FF5733]/5 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-[#FF5733]/20"
+                                className="flex items-center gap-2 mb-4 sm:mb-6 bg-[#FF5733]/10 dark:bg-[#FF5733]/5 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-[#FF5733]/20 cursor-pointer"
 
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, ease: "easeOut" }}
+                                onClick={() => window.open('https://www.ycombinator.com/companies/helixdb', '_blank')}
                             >
                                 <img
                                     src="/yc-logo.png"
@@ -127,12 +128,11 @@ export function Hero() {
                                 </span>
                             </motion.div>
                             <motion.div
-                                className="flex items-center gap-2 mb-4 sm:mb-6 bg-[#76b900]/10 dark:bg-[#76b900]/5 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-full cursor-pointer border border-[#76b900]/20"
+                                className="flex items-center gap-2 mb-4 sm:mb-6 bg-[#76b900]/10 dark:bg-[#76b900]/5 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-[#76b900]/20"
 
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, ease: "easeOut" }}
-                                onClick={() => window.open('https://github.com/HelixDB/helix-db', '_blank')}
                             >
                                 <img
                                     src="/nvidia.png"
@@ -157,26 +157,25 @@ export function Hero() {
                             className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-4 sm:mb-6 leading-tight px-2 sm:px-0"
                             variants={headingVariants}
                         >
-                            Unified <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span> Database for AI Retrieval
+                            The Fastest <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span> Database <br />Built to Scale
                         </motion.h1>
 
                         <motion.p
                             className="text-base sm:text-xl text-foreground bg-gradient-to-r bg-clip-text from-foreground to-foreground/80 mb-6 sm:mb-8 sm:mr-16 leading-relaxed px-2 sm:px-0 max-w-2xl"
                             variants={paragraphVariants}
                         >
-                            Get more relevant context for AI with the fastest and most cost-effective graph-vector database, built in Rust.
+                            Feed your agents more relevant context with the fastest and most scalable graph-vector database, built in Rust.
                         </motion.p>
 
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 px-2 sm:px-0">
                             <motion.div
-                                className="flex flex-col w-full sm:w-auto"
+                                className="flex flex-col w-full sm:w-auto order-2 sm:order-1"
                                 variants={buttonVariants}
                                 custom={1.2}
                             >
                                 <Button
                                     size="lg"
-                                    className="px-6 sm:px-8 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl flex items-center gap-2 border-white/10 hover:bg-white/5 w-full sm:w-auto"
-                                    variant="secondary"
+                                    className="px-6 sm:px-8 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl flex items-center gap-2 w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20 hover:scale-105 transition-all duration-200"
                                     asChild
                                 >
                                     <a
@@ -185,28 +184,35 @@ export function Hero() {
                                         rel="noopener noreferrer"
                                     >
                                         <Github className="w-4 sm:w-5 h-4 sm:h-5" />
+                                        <span>Star on GitHub</span>
                                         {stars !== null && (
-                                            <span className="ml-2">
-                                                {formatNumber(stars)}
+                                            <span className="ml-1">
+                                                ({formatNumber(stars)})
                                             </span>
                                         )}
                                     </a>
                                 </Button>
+                                <span className="text-xs sm:text-sm text-muted-foreground mt-2 text-center">
+                                    Takes 2 seconds 🙏
+                                </span>
                             </motion.div>
 
                             <motion.div
                                 variants={buttonVariants}
                                 custom={1.5}
-                                className="w-full sm:w-auto"
+                                className="w-full sm:w-auto order-1 sm:order-2"
                             >
                                 <Button
-                                    className="px-6 sm:px-8 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-0 w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/20"
+                                    className="px-6 sm:px-8 py-4 sm:py-6 lg:py-8 text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-0 w-full sm:w-auto border-white/10 hover:bg-white/5 hover:scale-105 transition-all duration-200"
+                                    variant="secondary"
                                 ><a
-                                    href="https://cal.com/helix-db/30min"
+                                    href="https://docs.helix-db.com"
                                     className="flex items-center gap-3 sm:gap-4"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
-                                        <Calendar className="w-4 sm:w-5 h-4 sm:h-5" />
-                                        <span>Book a Call</span>
+                                        <BookOpen className="w-4 sm:w-5 h-4 sm:h-5" />
+                                        <span>View Docs</span>
                                     </a>
                                 </Button>
                             </motion.div>

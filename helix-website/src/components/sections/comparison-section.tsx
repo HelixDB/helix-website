@@ -233,11 +233,11 @@ export function ComparisonSection() {
             }}
             className="min-h-[1080px] flex items-center relative py-24 bg-background"
         >
-            <div className="container relative mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-8xl mx-auto grid-flow-dense">
+            <div className=" relative mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl px-4 sm:px-8 mx-auto grid-flow-dense">
                     {/* Hybrid Query Traversals - spans two columns on top row */}
                     <motion.div
-                        className="p-4 sm:p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col sm:flex-row min-h-[380px] col-span-1 md:col-span-2 group overflow-hidden"
+                        className="p-4 sm:p-8 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col sm:flex-row min-h-[380px] col-span-1 md:col-span-2 group overflow-hidden"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
@@ -299,7 +299,7 @@ export function ComparisonSection() {
 
                     {/* Type-Safety - spans two rows on the right */}
                     <motion.div
-                        className="px-4 pt-4 sm:p-8 rounded-xl border shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] md:row-span-2 lg:col-start-3 md:col-span-1 group"
+                        className="px-4 pt-4 sm:p-8 rounded-2xl border shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] md:row-span-2 lg:col-start-3 md:col-span-1 group"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
@@ -366,7 +366,7 @@ Successfully started Helix instance
 
                     {/* Lower Costs - bottom left */}
                     <motion.div
-                        className="p-4 sm:p-8 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] group"
+                        className="p-4 sm:p-8 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex flex-col min-h-[380px] group"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >
@@ -418,7 +418,7 @@ Successfully started Helix instance
 
                     {/* High Speeds - bottom center */}
                     <motion.div
-                        className="p-4 sm:p-8 rounded-xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex shadow-[0_0_30px_rgba(0,0,0,0.5)] flex-col min-h-[380px] lg:col-start-2 group"
+                        className="p-4 sm:p-8 rounded-2xl border border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl flex shadow-[0_0_30px_rgba(0,0,0,0.5)] flex-col min-h-[380px] lg:col-start-2 group"
                         whileHover={{ scale: 1.02, y: -5 }}
                         transition={{ duration: 0.2 }}
                     >

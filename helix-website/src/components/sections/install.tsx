@@ -203,26 +203,23 @@ export function Install() {
 
     return (
         <div className=" flex  relative py-48">
-            <div className="container mx-auto px-4 sm:px-8 relative z-10">
+            <div className="container max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
 
                 <div className="flex  justify-between mb-8">
                     <h2 className="text-5xl font-bold drop-shadow-lg">Getting Started</h2>
                     <Button
-                        variant="secondary"
-                        className="flex text-lg items-center hover:bg-secondary/80 gap-2 py-6 px-6"
+                        className="flex text-xl items-center gap-3 py-7 px-10 border-[1px] border-foreground/20 text-white  hover:text-black hover:scale-105 transition-all duration-200 bg-foreground/[0.07] border hover:bg-foreground/[0.90]"
                         size="lg"
                         asChild
                     >
-                        <a href="https://docs.helix-db.com">
-                            <span>Docs</span>
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
+                        <a href="https://docs.helix-db.com/documentation/getting-started/installation">
+                            <Download className="w-6 h-6" />
+                            <span>Install Now</span>
                         </a>
                     </Button>
                 </div>
                 <motion.div
-                    className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-8 items-center max-w-8xl mx-auto"
+                    className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-8 items-center max-w-7xl mx-auto"
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"

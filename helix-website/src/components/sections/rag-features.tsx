@@ -6,7 +6,7 @@ export function RAGFeatures() {
     return (
         <div className="min-h-screen flex items-center relative py-24 bg-gradient-to-b from-transparent via-neutral-100/10 to-neutral-100/5 dark:via-neutral-900/10 dark:to-neutral-900/5">
             <div className="container mx-auto px-4 sm:px-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center max-w-8xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-center max-w-7xl mx-auto">
                     {/* Left column - text content */}
                     <div className="flex flex-col max-w-2xl relative">
                         <div className="absolute -inset-10 bg-gradient-radial from-background/95 dark:from-black/95 via-background/70 dark:via-black/70 to-transparent rounded-3xl -z-10 blur-sm"></div>

@@ -47,7 +47,7 @@ export function Better() {
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <motion.div
-                    className="flex flex-col lg:grid lg:grid-cols-5 lg:gap-16 lg:gap-24 items-start lg:items-center max-w-8xl mx-auto"
+                    className="flex flex-col lg:grid lg:grid-cols-5 lg:gap-16 lg:gap-24 items-start lg:items-center max-w-7xl mx-auto"
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"

@@ -130,7 +130,7 @@ export function DemoSection() {
                                     className="flex items-center justify-center gap-3"
                                 >
                                     <Calendar className="w-5 h-5" />
-                                    <span className="font-semibold">Book a call</span>
+                                    <span className="font-semibold">Get a Demo</span>
                                 </a>
                             </Button>
                             <p className="text-sm text-muted-foreground mt-4">
