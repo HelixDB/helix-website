@@ -208,7 +208,7 @@ export function Install() {
                 <div className="flex  justify-between mb-8">
                     <h2 className="text-5xl font-bold drop-shadow-lg">Getting Started</h2>
                     <Button
-                        className="flex text-xl items-center gap-3 py-7 px-10 border-[1px] border-foreground/20 text-white  hover:text-black hover:scale-105 transition-all duration-200 bg-foreground/[0.07] border hover:bg-foreground/[0.90]"
+                        className="hidden sm:flex text-xl items-center gap-3 py-7 px-10 border-[1px] border-foreground/20 text-white  hover:text-black hover:scale-105 transition-all duration-200 bg-foreground/[0.07] border hover:bg-foreground/[0.90]"
                         size="lg"
                         asChild
                     >
