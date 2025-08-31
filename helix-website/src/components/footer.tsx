@@ -60,15 +60,11 @@ const navigation = {
 
 export function Footer() {
     return (
-        <footer className="pt-24 pb-0 flex items-center justify-center">
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 w-full">
-                <motion.div
-                    className="relative w-full p-8 pb-12 border-t border-l border-r border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-t-2xl overflow-hidden group"
-                    whileHover={{ scale: 1.01, y: -2 }}
-                    transition={{ duration: 0.2 }}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+        <footer className="pt-24 pb-0 flex items-end justify-center">
+            <div className="max-w-7xl mx-auto px-0 sm:px-8 w-full">
+                <div
+                    className="relative w-full p-4 sm:p-8 pb-8 sm:pb-12 border-t border-l border-r border-white/10 bg-muted/30 backdrop-blur-xl shadow-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-t-2xl overflow-hidden group"
+
                 >
                     <div className="mb-8 md:hidden flex justify-between items-center">
                         <div className="flex items-center space-x-2">
@@ -165,7 +161,7 @@ export function Footer() {
                             </p>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </div>
         </footer>
     );

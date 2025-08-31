@@ -83,13 +83,13 @@ export function Hero() {
 
     return (
         <motion.div
-            className="min-h-screen sm:min-h-[1080px] py-12 sm:py-16 flex items-center relative overflow-hidden"
+            className="min-h-[85vh] sm:min-h-[1080px] py-12 sm:py-16 flex items-center relative overflow-visible"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
         >
             {/* Absolute positioned graph behind everything */}
-            <div className="absolute inset-0 w-full h-full overflow-hidden -z-10">
+            <div className="absolute inset-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
                 <Graph />
             </div>
 
