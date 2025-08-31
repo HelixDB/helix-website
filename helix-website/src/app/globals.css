@@ -12,8 +12,16 @@
     @apply border-border;
   }
   
-  body {
+  html, body {
     @apply bg-background text-foreground;
+    height: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Force dark mode - override any light mode styles */
