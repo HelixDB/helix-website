@@ -83,7 +83,7 @@ export function Hero() {
 
     return (
         <motion.div
-            className="min-h-[85vh] sm:min-h-[1080px] py-12 sm:py-16 flex items-center relative overflow-visible"
+            className="min-h-screen py-12 sm:py-16 flex items-center relative overflow-hidden"
             variants={containerVariants}
             initial="hidden"
             animate="visible"

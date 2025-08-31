@@ -19,7 +19,7 @@ export function CommunitySection() {
             variants={fadeInUp}
             className="py-24 flex items-center justify-center"
         >
-            <div className="max-w-6xl mx-auto pt-16 px-4 sm:px-8">
+            <div className="max-w-7xl mx-auto pt-16 px-4 sm:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                     {/* Left side - Enhanced Text content */}
                     <motion.div
