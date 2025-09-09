@@ -111,19 +111,11 @@ pre[class*="language-"] {
 /* Inline code styling - override Tailwind Typography */
 .prose code:not([class*="language-"]) {
   color: #fb923c !important; /* Orange-400 for light orange */
-  background-color: #1f2937 !important; /* Gray-800 background */
+  background-color: #262626 !important; /* Neutral-800 - lighter dark background */
   padding: 0.125rem 0.375rem !important;
   border-radius: 0.25rem !important;
   font-size: 0.875rem !important;
   font-weight: 500 !important;
-}
-
-/* Light mode inline code */
-@media (prefers-color-scheme: light) {
-  .prose code:not([class*="language-"]) {
-    color: #ea580c !important; /* Orange-600 for better contrast in light mode */
-    background-color: #f3f4f6 !important; /* Gray-100 background */
-  }
 }
 
 /* Make ordered list numbers slightly transparent */
