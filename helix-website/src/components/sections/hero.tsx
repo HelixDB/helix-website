@@ -74,12 +74,53 @@ const buttonVariants = {
     })
 };
 
+const rotatingPhrases = [
+    "AI applications",
+    "RAG systems",
+    "Agents",
+    "Knowledge graphs",
+    "Fraud Detection"
+];
+
 export function Hero() {
     const [stars, setStars] = React.useState<number | null>(null);
+    const [phraseIndex, setPhraseIndex] = React.useState(0);
+    const [displayedText, setDisplayedText] = React.useState("");
+    const [isDeleting, setIsDeleting] = React.useState(false);
 
     React.useEffect(() => {
         getGithubStars().then(setStars);
     }, []);
+
+    React.useEffect(() => {
+        const currentPhrase = rotatingPhrases[phraseIndex];
+
+        let nextText = displayedText;
+        let nextIsDeleting = isDeleting;
+        let nextIndex = phraseIndex;
+        let delay = isDeleting ? 40 : 70;
+
+        if (!isDeleting && displayedText === currentPhrase) {
+            delay = 1200; // hold before deleting
+            nextIsDeleting = true;
+        } else if (isDeleting && displayedText === "") {
+            nextIsDeleting = false;
+            nextIndex = (phraseIndex + 1) % rotatingPhrases.length;
+            delay = 300; // brief pause before typing next phrase
+        } else {
+            nextText = isDeleting
+                ? currentPhrase.substring(0, displayedText.length - 1)
+                : currentPhrase.substring(0, displayedText.length + 1);
+        }
+
+        const timeoutId = setTimeout(() => {
+            setDisplayedText(nextText);
+            setIsDeleting(nextIsDeleting);
+            setPhraseIndex(nextIndex);
+        }, delay);
+
+        return () => clearTimeout(timeoutId);
+    }, [displayedText, isDeleting, phraseIndex]);
 
     return (
         <motion.div
@@ -157,7 +198,10 @@ export function Hero() {
                             className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-4 sm:mb-6 leading-tight px-2 sm:px-0"
                             variants={headingVariants}
                         >
-                            The Fastest <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span> Database <br />Built to Scale
+                            A <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span><br className="hidden sm:block" /> Database <br className="sm:hidden " /> Built For <br className="hidden sm:block" />
+                            <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
+                                {displayedText}
+                            </span><span className="typing-caret" aria-hidden="true"></span>
                         </motion.h1>
 
                         <motion.p

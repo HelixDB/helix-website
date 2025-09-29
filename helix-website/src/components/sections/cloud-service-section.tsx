@@ -37,7 +37,7 @@ export function CloudServiceSection() {
                             {/* Central cloud icon */}
                             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                 <div className="relative">
-                                    <Cloud className="w-32 h-32 text-foreground/20" />
+                                    <Cloud className="w-32 h-32 text-orange-400/20" />
                                     <div className="absolute inset-0 blur-3xl bg-foreground/10 rounded-full"></div>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@ export function CloudServiceSection() {
                                 animate={{ y: [0, -10, 0] }}
                                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                             >
-                                <Cloud className="w-8 h-8 text-foreground/30" />
+                                <Cloud className="w-8 h-8 text-orange-400/30" />
                             </motion.div>
 
                             <motion.div
@@ -56,7 +56,7 @@ export function CloudServiceSection() {
                                 animate={{ y: [0, 10, 0] }}
                                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                             >
-                                <Cloud className="w-6 h-6 text-foreground/25" />
+                                <Cloud className="w-6 h-6 text-orange-400/25" />
                             </motion.div>
 
                             <motion.div
@@ -64,7 +64,7 @@ export function CloudServiceSection() {
                                 animate={{ y: [0, -8, 0] }}
                                 transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                             >
-                                <Cloud className="w-10 h-10 text-foreground/35" />
+                                <Cloud className="w-10 h-10 text-orange-400/35" />
                             </motion.div>
 
                             <motion.div
@@ -72,7 +72,7 @@ export function CloudServiceSection() {
                                 animate={{ y: [0, 12, 0] }}
                                 transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
                             >
-                                <Cloud className="w-7 h-7 text-foreground/20" />
+                                <Cloud className="w-7 h-7 text-orange-400/20" />
                             </motion.div>
 
                             {/* Status indicators */}

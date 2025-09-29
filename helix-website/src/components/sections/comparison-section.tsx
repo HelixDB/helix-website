@@ -102,32 +102,32 @@ const GraphVisualization = () => {
 
                 {/* Animated edges - highlighted during animation */}
                 {/* First vector (60,60) to all its neighbors */}
-                <line x1="60" y1="60" x2="120" y2="80" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="60" y1="60" x2="120" y2="80" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </line>
-                <line x1="60" y1="60" x2="80" y2="120" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="60" y1="60" x2="80" y2="120" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </line>
-                <line x1="60" y1="60" x2="40" y2="100" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="60" y1="60" x2="40" y2="100" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </line>
 
                 {/* Second vector (100,140) to all its neighbors */}
-                <line x1="100" y1="140" x2="140" y2="120" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="100" y1="140" x2="140" y2="120" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </line>
-                <line x1="100" y1="140" x2="160" y2="160" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="100" y1="140" x2="160" y2="160" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </line>
-                <line x1="100" y1="140" x2="60" y2="180" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="100" y1="140" x2="60" y2="180" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </line>
 
                 {/* Third vector (180,60) to all its neighbors */}
-                <line x1="180" y1="60" x2="200" y2="120" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="180" y1="60" x2="200" y2="120" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;0" dur="20s" repeatCount="indefinite" />
                 </line>
-                <line x1="180" y1="60" x2="240" y2="80" stroke="#9333ea" strokeWidth="3" opacity="0">
+                <line x1="180" y1="60" x2="240" y2="80" stroke="#FF6A00" strokeWidth="3" opacity="0">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1" dur="20s" repeatCount="indefinite" />
                 </line>
 
@@ -150,13 +150,13 @@ const GraphVisualization = () => {
                 <rect x="166" y="46" width="28" height="28" fill="#374151" rx="4" opacity="0.4" />
 
                 {/* Animated vector squares - cycle through different ones */}
-                <rect x="46" y="46" width="28" height="28" fill="#9333ea" rx="4" opacity="0" stroke="#a855f7" strokeWidth="2" className="drop-shadow-lg">
+                <rect x="46" y="46" width="28" height="28" fill="#FF6A00" rx="4" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-lg">
                     <animate attributeName="opacity" values="0;1;1;1;1;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </rect>
-                <rect x="86" y="126" width="28" height="28" fill="#9333ea" rx="4" opacity="0" stroke="#a855f7" strokeWidth="2" className="drop-shadow-lg">
+                <rect x="86" y="126" width="28" height="28" fill="#FF6A00" rx="4" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-lg">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;1;1;1;1;1;1;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </rect>
-                <rect x="166" y="46" width="28" height="28" fill="#9333ea" rx="4" opacity="0" stroke="#a855f7" strokeWidth="2" className="drop-shadow-lg">
+                <rect x="166" y="46" width="28" height="28" fill="#FF6A00" rx="4" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-lg">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;1" dur="20s" repeatCount="indefinite" />
                 </rect>
 
@@ -185,32 +185,32 @@ const GraphVisualization = () => {
                 <circle cx="240" cy="80" r="11" fill="#374151" opacity="0.4" />
 
                 {/* Animated circles - first vector's neighbors */}
-                <circle cx="120" cy="80" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="120" cy="80" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;1;1;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="80" cy="120" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="80" cy="120" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;0;0;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="40" cy="100" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="40" cy="100" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </circle>
 
                 {/* Animated circles - second vector's neighbors */}
-                <circle cx="140" cy="120" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="140" cy="120" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;1;1;1;1;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="160" cy="160" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="160" cy="160" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;0;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="60" cy="180" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="60" cy="180" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0" dur="20s" repeatCount="indefinite" />
                 </circle>
 
                 {/* Animated circles - third vector's neighbors */}
-                <circle cx="200" cy="120" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="200" cy="120" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;0" dur="20s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="240" cy="80" r="11" fill="#3b82f6" opacity="0" stroke="#60a5fa" strokeWidth="2" className="drop-shadow-md">
+                <circle cx="240" cy="80" r="11" fill="#FF6A00" opacity="0" stroke="#FDE68A" strokeWidth="2" className="drop-shadow-md">
                     <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1" dur="20s" repeatCount="indefinite" />
                 </circle>
             </svg>
@@ -266,12 +266,12 @@ export function ComparisonSection() {
                                         <div className="text-cyan-400">QUERY <span className="text-emerald-400">findSimilarFriends</span><span className="text-slate-200">(userID: String, queryVec: Vector) =&gt;</span></div>
                                         <div className="mt-2">
                                             <span className="text-slate-200">similar &lt;- </span>
-                                            <span className="bg-purple-500/30 text-purple-200 px-2 py-1 rounded">SearchV</span>
+                                            <span className="bg-yellow-500/30 text-yellow-100 px-2 py-1 rounded">SearchV</span>
                                             <span className="text-slate-200">(queryVec, topK: 5)</span>
                                         </div>
                                         <div className="mt-1">
                                             <span className="text-slate-200">friends &lt;- </span>
-                                            <span className="bg-blue-500/30 text-blue-200 px-2 py-1 rounded">similar::Out&lt;Friends&gt;</span>
+                                            <span className="bg-orange-500/30 text-orange-100 px-2 py-1 rounded">similar::Out&lt;Friends&gt;</span>
                                         </div>
                                         <div className="mt-2">
                                             <span className="text-cyan-400">RETURN</span>
@@ -286,12 +286,12 @@ export function ComparisonSection() {
                             <GraphVisualization />
                             <div className="flex  w-full mt-2 sm:flex-row flex-col space-x-4 hidden sm:flex">
                                 <div className="flex items-center gap-2 flex-row">
-                                    <div className="w-4 h-4 bg-purple-500 rounded"></div>
-                                    <span className="text-purple-200 text-xs font-semibold">Vector Entry</span>
+                                    <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+                                    <span className="text-yellow-100 text-xs font-semibold">Vector Entry</span>
                                 </div>
                                 <div className="flex items-center gap-2 flex-row">
-                                    <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                                    <span className="text-blue-200 text-xs font-semibold">Connected Node</span>
+                                    <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
+                                    <span className="text-orange-100 text-xs font-semibold">Connected Node</span>
                                 </div>
                             </div>
                         </div>

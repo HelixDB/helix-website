@@ -183,34 +183,14 @@ export function Graph() {
                     }
                 }
 
-                // Create gradient colors for lines
+                // Create grayscale colors for lines (theme-aware)
                 const lineColors: number[] = [];
+                const darkGrayValues = [0.65, 0.7, 0.75, 0.8, 0.85];
+                const lightGrayValues = [0.25, 0.3, 0.35, 0.4, 0.45];
+                const grayValues = isLightMode ? lightGrayValues : darkGrayValues;
                 for (let i = 0; i < lineSegments.length; i++) {
-                    if (isLightMode) {
-                        // Darker colors for edges in light mode for better contrast
-                        const darkBase = 0.05 + Math.random() * 0.15; // 5-20% dark (very dark base)
-                        const blueHint = Math.random() * 0.3; // Blue hint
-                        const purpleHint = Math.random() * 0.2; // Purple hint
-
-                        // RGB values (very dark with hints of blue/purple)
-                        const r = Math.min(0.5, darkBase + purpleHint * 0.5); // Add some red for purple
-                        const g = Math.min(0.5, darkBase); // Keep green very low
-                        const b = Math.min(0.5, darkBase + blueHint * 0.8 + purpleHint * 0.2); // Emphasize blue
-
-                        lineColors.push(r, g, b);
-                    } else {
-                        // Lighter colors for edges in dark mode for better contrast
-                        const whiteBase = 0.85 + Math.random() * 0.15; // 85-100% white (very bright base)
-                        const blueHint = Math.random() * 0.1; // Subtle blue hint
-                        const purpleHint = Math.random() * 0.05; // Very subtle purple hint
-
-                        // RGB values (very bright with subtle hints)
-                        const r = Math.max(0.8, whiteBase - purpleHint); // Very high red
-                        const g = Math.max(0.8, whiteBase - purpleHint - blueHint); // Very high green
-                        const b = Math.max(0.85, whiteBase); // Very high blue with slight boost
-
-                        lineColors.push(r, g, b);
-                    }
+                    const v = grayValues[Math.floor(Math.random() * grayValues.length)];
+                    lineColors.push(v, v, v);
                 }
 
                 // Create line segments with colors for the connections
@@ -228,28 +208,32 @@ export function Graph() {
                 // Create node points with color variation
                 const pointsGeometry = new THREE.BufferGeometry().setFromPoints(nodes);
 
-                // Add more saturated colors with blue and purple hints
-                const colors = new Float32Array(nodes.length * 3);
+                // Orange hues for node points (more vibrant; brighter in dark, vivid in light)
+                const nodeColors = new Float32Array(nodes.length * 3);
+                const darkNodePalette: number[][] = [
+                    [1.0, 0.416, 0.0],   // #FF6A00
+                    [1.0, 0.478, 0.0],   // #FF7A00
+                    [1.0, 0.549, 0.0],   // #FF8C00
+                    [1.0, 0.620, 0.0],   // #FF9E00
+                    [1.0, 0.765, 0.0],   // #FFC300
+                ];
+                const lightNodePalette: number[][] = [
+                    [1.0, 0.416, 0.0],   // #FF6A00
+                    [1.0, 0.478, 0.0],   // #FF7A00
+                    [0.976, 0.451, 0.086], // #F97316
+                    [0.984, 0.573, 0.235], // #FB923C
+                    [1.0, 0.549, 0.0],   // #FF8C00
+                ];
+                const nodePalette = isLightMode ? lightNodePalette : darkNodePalette;
                 for (let i = 0; i < nodes.length; i++) {
                     const i3 = i * 3;
-                    // Create deeper, more saturated colors
-                    const blueValue = 0.7 + Math.random() * 0.3; // 70-100% blue
-                    const purpleValue = Math.random() > 0.6; // Some nodes more purple
-
-                    if (purpleValue) {
-                        // Purple-leaning node
-                        colors[i3] = 0.4 + Math.random() * 0.3; // Red component for purple
-                        colors[i3 + 1] = 0.2 + Math.random() * 0.2; // Low green
-                        colors[i3 + 2] = blueValue; // High blue
-                    } else {
-                        // Blue-leaning node
-                        colors[i3] = 0.1 + Math.random() * 0.2; // Low red
-                        colors[i3 + 1] = 0.3 + Math.random() * 0.3; // Some green for teal/cyan hints
-                        colors[i3 + 2] = blueValue; // High blue
-                    }
+                    const [r, g, b] = nodePalette[Math.floor(Math.random() * nodePalette.length)];
+                    nodeColors[i3] = r;
+                    nodeColors[i3 + 1] = g;
+                    nodeColors[i3 + 2] = b;
                 }
 
-                pointsGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                pointsGeometry.setAttribute('color', new THREE.BufferAttribute(nodeColors, 3));
 
                 const pointsMaterial = new THREE.PointsMaterial({
                     size: 0.07, // Increased from 0.05 for better visibility
@@ -267,22 +251,25 @@ export function Graph() {
                     hubNodes.map(index => nodes[index])
                 );
 
-                // Create more saturated colors for hub nodes
+                // Highlight hub nodes with the most vibrant orange accents
                 const hubColors = new Float32Array(hubNodes.length * 3);
+                const hubPalette: number[][] = isLightMode
+                    ? [
+                        [1.0, 0.416, 0.0],   // #FF6A00
+                        [1.0, 0.478, 0.0],   // #FF7A00
+                        [0.976, 0.451, 0.086], // #F97316
+                    ]
+                    : [
+                        [1.0, 0.416, 0.0],   // #FF6A00
+                        [1.0, 0.549, 0.0],   // #FF8C00
+                        [1.0, 0.765, 0.0],   // #FFC300
+                    ];
                 for (let i = 0; i < hubNodes.length; i++) {
                     const i3 = i * 3;
-                    // More intense blue or purple for hub nodes with higher saturation
-                    if (Math.random() > 0.5) {
-                        // Blue hub - more saturated
-                        hubColors[i3] = 0.2; // Lower red
-                        hubColors[i3 + 1] = 0.5; // Medium green for cyan hint
-                        hubColors[i3 + 2] = 1; // Full blue
-                    } else {
-                        // Purple hub - more saturated
-                        hubColors[i3] = 0.6; // Higher red
-                        hubColors[i3 + 1] = 0.2; // Lower green
-                        hubColors[i3 + 2] = 1; // Full blue
-                    }
+                    const [r, g, b] = hubPalette[Math.floor(Math.random() * hubPalette.length)];
+                    hubColors[i3] = r;
+                    hubColors[i3 + 1] = g;
+                    hubColors[i3 + 2] = b;
                 }
 
                 hubPointsGeometry.setAttribute('color', new THREE.BufferAttribute(hubColors, 3));
