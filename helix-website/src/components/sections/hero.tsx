@@ -195,7 +195,7 @@ export function Hero() {
                         </motion.div>
 
                         <motion.h1
-                            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 mb-4 sm:mb-6 leading-tight px-2 sm:px-0"
+                            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80  leading-tight px-2 sm:px-0 pb-4 sm:pb-6"
                             variants={headingVariants}
                         >
                             A <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span><br className="hidden sm:block" /> Database <br className="sm:hidden " /> Built For <br className="hidden sm:block" />
