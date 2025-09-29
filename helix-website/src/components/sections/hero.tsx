@@ -198,7 +198,7 @@ export function Hero() {
                             className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80  leading-tight px-2 sm:px-0 pb-4 sm:pb-6"
                             variants={headingVariants}
                         >
-                            A <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span><br className="hidden sm:block" /> Database <br className="sm:hidden " /> Built For <br className="hidden sm:block" />
+                            A <span className="iridescent-text drop-shadow-lg drop-shadow-primary/20 [text-shadow:_0_0_30px_rgb(0_0_0/_20%)]">Graph-Vector</span><br className="block xs:hidden sm:block" /> Database <br className="hidden sm:block md:hidden " /> Built For <br className="block xs:hidden sm:block" />
                             <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
                                 {displayedText}
                             </span><span className="typing-caret" aria-hidden="true"></span>
