@@ -279,7 +279,7 @@ const InstallDisplay = () => {
                 <SectionHeader
                     icon={Download}
                     title="Install HelixDB"
-                    description="Get started with HelixDB in minutes, install the CLI and then install the database."
+                    description="Get started with HelixDB in minutes, install the CLI and then initialize a project."
                 />
             }
             content={
@@ -288,7 +288,7 @@ const InstallDisplay = () => {
                         <CodeBlock
                             title="Terminal"
                             code={`$ curl -sSL "https://install.helix-db.com" | bash\n`}
-
+                            description="This will install the Helix CLI to your machine."
                             color="green"
                         />
                     </div>
@@ -299,7 +299,7 @@ const InstallDisplay = () => {
                             color="green"
                             additionalCode={{
                                 code: "helix init",
-                                description: "If you want to define the directory then:"
+                                description: "Initialize the project"
                             }}
                         />
                     </div>
@@ -307,7 +307,7 @@ const InstallDisplay = () => {
                         <SectionHeader
                             icon={Terminal}
                             title="Initialize Project"
-                            description="Now that the Helix CLI and HelixDB are installed on your device, initialize a project."
+                            description="Now that the Helix CLI is installed on your machine, initialize a project."
                         />
                     </div>
                 </>
@@ -385,7 +385,7 @@ const DeployDisplay = () => {
                             title="Terminal"
                             code="helix push dev"
                             color="cyan"
-                            description="This will deploy your project to your localhost."
+                            description="This will deploy the `dev` project in your helix.toml file locally."
                         />
                     </div>
                     <div className="col-span-2 order-last md:order-none">
