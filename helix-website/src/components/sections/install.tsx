@@ -212,7 +212,7 @@ export function Install() {
                         size="lg"
                         asChild
                     >
-                        <a href="https://docs.helix-db.com/documentation/getting-started/installation">
+                        <a href="https://docs.helix-db.com/documentation/cli-v2/getting-started">
                             <Download className="w-6 h-6" />
                             <span>Install Now</span>
                         </a>
@@ -288,19 +288,17 @@ const InstallDisplay = () => {
                         <CodeBlock
                             title="Terminal"
                             code={`$ curl -sSL "https://install.helix-db.com" | bash\n`}
-                            additionalCode={{
-                                code: "$ helix install",
-                            }}
+
                             color="green"
                         />
                     </div>
                     <div className="col-span-1 lg:col-span-2 order-last md:order-none">
                         <CodeBlock
                             title="Terminal"
-                            code="helix init --path"
+                            code="mkdir helix-project && cd helix-project"
                             color="green"
                             additionalCode={{
-                                code: "helix init --path <path-here>",
+                                code: "helix init",
                                 description: "If you want to define the directory then:"
                             }}
                         />
@@ -351,7 +349,7 @@ const BuildDisplay = () => {
                     <div className="col-span-1 lg:col-span-2 order-last lg:order-none">
                         <CodeBlock
                             title="queries.hx"
-                            code={`QUERY similarity(vector: [F32]) =>\n    res <- SearchV(vector, 5)\n    RETURN res\n\nQUERY getPostsUser(postId: String) =>\n    posts <- N<User>::Out<Posted>\n    RETURN posts`}
+                            code={`QUERY similarity(vector: [F64]) =>\n    res <- SearchV(vector, 5)\n    RETURN res\n\nQUERY getPostsUser(postId: String) =>\n    posts <- N<User>::Out<Posted>\n    RETURN posts`}
                             lineNumbers={`1 \n2 \n3 \n4 \n5 \n6 \n7`}
                             color="orange"
                             description="This is where you define how your database can be queried."
@@ -385,7 +383,7 @@ const DeployDisplay = () => {
                     <div className="col-span-2">
                         <CodeBlock
                             title="Terminal"
-                            code="helix deploy"
+                            code="helix push dev"
                             color="cyan"
                             description="This will deploy your project to your localhost."
                         />
