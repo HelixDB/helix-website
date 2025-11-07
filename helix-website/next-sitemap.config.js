@@ -1,8 +1,9 @@
 /** @type {import('next-sitemap').IConfig} */
-const siteUrl = (process.env.BASE_URL || 'https://www.helix-db.com').replace(/\/$/, '')
+const SITE_URL = (process.env.BASE_URL || 'https://www.helix-db.com').replace(/\/$/, '')
+const DOCS_URL = (process.env.DOCS_URL || 'https://docs.helix-db.com').replace(/\/$/, '')
 
 module.exports = {
-  siteUrl: siteUrl,
+  siteUrl: SITE_URL,
   generateRobotsTxt: true,
   generateIndexSitemap: true,
   robotsTxtOptions: {
@@ -14,8 +15,8 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      `${siteUrl}/blog/sitemap.xml`,
-      `https://docs.helix-db.com/sitemap.xml`,
+      `${SITE_URL}/blog/sitemap.xml`,
+      `${DOCS_URL}/sitemap.xml`,
     ],
   },
 
