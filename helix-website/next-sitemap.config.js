@@ -1,5 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
-import { DOCS_URL, SITE_URL } from '@/lib/const'
+const SITE_URL = (process.env.BASE_URL || 'https://www.helix-db.com').replace(/\/$/, '')
+const DOCS_URL = (process.env.DOCS_URL || 'https://docs.helix-db.com').replace(/\/$/, '')
 
 module.exports = {
   siteUrl: SITE_URL,
