@@ -1,8 +1,8 @@
 /** @type {import('next-sitemap').IConfig} */
-const siteUrl = (process.env.BASE_URL || 'https://www.helix-db.com').replace(/\/$/, '')
+import { DOCS_URL, SITE_URL } from '@/lib/const'
 
 module.exports = {
-  siteUrl: siteUrl,
+  siteUrl: SITE_URL,
   generateRobotsTxt: true,
   generateIndexSitemap: true,
   robotsTxtOptions: {
@@ -14,8 +14,8 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      `${siteUrl}/blog/sitemap.xml`,
-      `https://docs.helix-db.com/sitemap.xml`,
+      `${SITE_URL}/blog/sitemap.xml`,
+      `${DOCS_URL}/sitemap.xml`,
     ],
   },
 
