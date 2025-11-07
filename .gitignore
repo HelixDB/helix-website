@@ -47,3 +47,6 @@ next-env.d.ts
 **/.vscode-test/*
 **/node_modules/*
 
+# Ignore dynamically generated sitemaps
+helix-website/public/sitemap*.xml
+helix-website/public/robots.txt
