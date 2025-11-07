@@ -12,7 +12,11 @@ module.exports = {
         allow: '/',
         disallow: ['/api/', '/admin/', '/_next/', '/private/'],
       },
-    ]
+    ],
+    additionalSitemaps: [
+      `${siteUrl}/blog/sitemap.xml`,
+      `https://docs.helix-db.com/sitemap.xml`,
+    ],
   },
 
   exclude: [
