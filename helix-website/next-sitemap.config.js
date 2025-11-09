@@ -47,6 +47,15 @@ module.exports = {
     /** Hardcoded pages that should be excluded from the sitemap. */
     '/create-instance',
   ],
+  additionalPaths: async (config) => {
+    /** When adding a dynamic page to the sitemap, you need to add it here. */
+    const result = []
+
+    result.push(await config.transform(config, '/'))
+    result.push(await config.transform(config, '/waitlist'))
+
+    return result
+  },
   transform: async (config, path) => {
     const depth = path.split('/').filter(Boolean).length
     const priority = path === '/' ? 1.0 : depth === 1 ? 0.8 : 0.6

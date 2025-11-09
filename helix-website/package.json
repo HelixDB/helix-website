@@ -35,6 +35,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
+    "ellmo-ai-react": "^0.0.23",
     "express": "^4.21.2",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.472.0",
