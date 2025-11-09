@@ -7,6 +7,7 @@ import { Providers } from "@/components/providers";
 import { Footer } from "@/components/footer";
 import { Analytics } from "@vercel/analytics/react";
 import Script from 'next/script';
+import { EllmoContent } from "@/components/ellmo-content";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -46,6 +47,13 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${geist.variable} ${playfair.variable} font-sans antialiased`}>
+        <EllmoContent />
+        <Providers>
+          <Analytics />
+          <div className="relative flex min-h-screen flex-col">
+            <main className="">{children}</main>
+          </div>
+        </Providers>
         {/* eLLMo AI GTM - Noscript */}
         <noscript>
           <iframe
@@ -55,13 +63,6 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-
-        <Providers>
-          <Analytics />
-          <div className="relative flex min-h-screen flex-col">
-            <main className="">{children}</main>
-          </div>
-        </Providers>
       </body>
     </html>
   );
