@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+---
+
+# Adding New Pages: Sitemap & Ellmo-AI Guide
+
+## Sitemap
+- **Auto-included**: Static marketing pages (auto-indexed)
+- **Excluded**: Dashboard (`/dashboard/*`), API routes (`/api/*`)
+- **Manual addition**: Add to `additionalPaths` in `next-sitemap.config.js` for dynamic/static hybrids
+- **Separate sitemaps**: Blog uses `src/app/blog/sitemap.ts`
+
+## Ellmo-AI Content
+- **Add `<EllmoContent />`**: Marketing/landing pages for AI personalization (SEO & AEO)
+- **Middleware**: Auto-tracks all non-API page visits for analytics
+
+## Checklists
+**Marketing Page** (`/new-feature`):
+- [ ] Create `src/app/new-feature/page.tsx`
+- [ ] Add to `additionalPaths` if page is not automatically added to the sitemap
+- [ ] Include `<EllmoContent />`
+- [ ] Test: `npm run build && npm run postbuild`
+
+**User Page** (`/dashboard/settings`):
+- [ ] Create component (auto-excluded from sitemap)
+- [ ] Skips `<EllmoContent />`
+- [ ] Add authentication guards
+
