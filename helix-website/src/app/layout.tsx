@@ -32,19 +32,23 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* eLLMo AI GTM - Data Layer Initialization */}
-        <Script id="ellmo-init" strategy="beforeInteractive">
-          {`(function(w){ w.ellmoDL = w.ellmoDL || []; })(window);`}
-        </Script>
+        {/* eLLMo GTM */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+(function(w){ w.ellmoDL = w.ellmoDL || []; })(window);
+          `,
+        }} />
 
-        {/* eLLMo AI GTM - Main Script */}
-        <Script id="ellmo-gtm" strategy="beforeInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','ellmoDL','GTM-T8HFNXSQ');`}
-        </Script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','ellmoDL','GTM-T8HFNXSQ');
+          `,
+        }} />
+        {/* End eLLMo GTM */}
       </head>
       <body className={`${geist.variable} ${playfair.variable} font-sans antialiased`}>
         <EllmoContent />
