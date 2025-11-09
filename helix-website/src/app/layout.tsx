@@ -33,12 +33,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* eLLMo AI GTM - Data Layer Initialization */}
-        <Script id="ellmo-init" strategy="afterInteractive">
+        <Script id="ellmo-init" strategy="beforeInteractive">
           {`(function(w){ w.ellmoDL = w.ellmoDL || []; })(window);`}
         </Script>
 
         {/* eLLMo AI GTM - Main Script */}
-        <Script id="ellmo-gtm" strategy="afterInteractive">
+        <Script id="ellmo-gtm" strategy="beforeInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
